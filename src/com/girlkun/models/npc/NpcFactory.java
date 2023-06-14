@@ -928,20 +928,19 @@ public class NpcFactory {
         };
     }
 
-    public static Npc thodaika(int mapId, int status, int cx, int cy, int tempId, int avartar) {
+    public static Npc Mabu(int mapId, int status, int cx, int cy, int tempId, int avartar) {
         return new Npc(mapId, status, cx, cy, tempId, avartar) {
             @Override
             public void openBaseMenu(Player player) {
                 if (canOpenNpc(player)) {
                     if (this.mapId == 5) {
                         this.createOtherMenu(player, ConstNpc.BASE_MENU, "Bạn Đã Bị Bư Han Nhuốt Hãy Tìm nó để tiêu diệt<", "Tới Bụng\nBư", "Từ chối");
-                        if (player.getSession().player.nPoint.power >= 8000000L) {
-
-                            ChangeMapService.gI().changeMapBySpaceShip(player, 128, -1, 432);
-                        } else {
-                            this.npcChat(player, "Bạn chưa đủ 8tr sức mạnh để vào");
-                        }
-                        this.createOtherMenu(player, ConstNpc.BASE_MENU, "Bạn Đã Bị Bư Han Nhuốt Hãy Tìm nó để tiêu diệt?", "Quay về", "Từ chối");
+//                        if (player.getSession().player.nPoint.power >= 8_000_000L) {
+//                            ChangeMapService.gI().changeMapBySpaceShip(player, 128, -1, 432);
+//                        } else {
+//                            this.npcChat(player, "Bạn chưa đủ 8tr sức mạnh để vào");
+//                        }
+//                        this.createOtherMenu(player, ConstNpc.BASE_MENU, "Bạn Đã Bị Bư Han Nhuốt Hãy Tìm nó để tiêu diệt?", "Quay về", "Từ chối");
                     } else {
                         super.openBaseMenu(player);
                     }
@@ -956,6 +955,13 @@ public class NpcFactory {
                             if (this.mapId == 128) {
                                 if (select == 0) {
                                     ChangeMapService.gI().changeMapBySpaceShip(player, 5, -1, 870);
+                                }
+                            }
+                            else if (this.mapId == 5){
+                                if (player.getSession().player.nPoint.power >= 8_000_000L) {
+                                    ChangeMapService.gI().changeMapBySpaceShip(player, 128, -1, 432);
+                                } else {
+                                    this.npcChat(player, "Bạn chưa đủ 8tr sức mạnh để vào");
                                 }
                             }
                             break;
@@ -1878,6 +1884,7 @@ public class NpcFactory {
                 if (canOpenNpc(player)) {
 
                     if (this.mapId == 7 * player.gender) {
+                        if(player.billEgg == null) return;
                         player.billEgg.sendBillEgg();
                         if (player.billEgg.getSecondDone() != 0) {
                             this.createOtherMenu(player, ConstNpc.CAN_NOT_OPEN_EGG, "Mang Đến Gặp Vua Hùng Để Được Những Món Quà Vô Giá...", "Thu Hoạch\nSớm" + Util.numberToMoney(COST_AP_TRUNG_NHANH) + " vàng", "Đóng");
@@ -3184,7 +3191,7 @@ public class NpcFactory {
                 case ConstNpc.POPO:
                     return popo(mapId, status, cx, cy, tempId, avatar);
                 case ConstNpc.THO_DAI_CA:
-                    return thodaika(mapId, status, cx, cy, tempId, avatar);
+                    return Mabu(mapId, status, cx, cy, tempId, avatar);
                 case ConstNpc.TRUONG_LAO_GURU:
                     return truongLaoGuru(mapId, status, cx, cy, tempId, avatar);
                 case ConstNpc.VUA_VEGETA:
