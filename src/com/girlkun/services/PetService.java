@@ -108,7 +108,7 @@ public class PetService {
                     player.pet.nPoint.limitPower = limitPower[0];
                 }
                 Thread.sleep(1000);
-                Service.getInstance().chatJustForMe(player, player.pet, "Sư Phụ SooMe hiện thân tụi m quỳ xuống...");
+                Service.getInstance().chatJustForMe(player, player.pet, "Sư Phụ Ids hiện thân tụi m quỳ xuống...");
             } catch (Exception e) {
             }
         }).start();
@@ -122,154 +122,154 @@ public class PetService {
                     player.pet.nPoint.limitPower = limitPower[0];
                 }
                 Thread.sleep(1000);
-                Service.getInstance().chatJustForMe(player, player.pet, "Sư Phụ SooMe hiện thân tụi m quỳ xuống...");
+                Service.getInstance().chatJustForMe(player, player.pet, "Sư Phụ Ids hiện thân tụi m quỳ xuống...");
             } catch (Exception e) {
             }
         }).start();
     }
-       public void createBillPet(Player player, byte... limitPower) {
+       public void createPet4(Player player, byte... limitPower) {
         new Thread(() -> {
             try {
-                createNewPetBill(player, false, false,false, false, true, false, false, false);
+                createNewPet4(player);
                 if (limitPower != null && limitPower.length == 1) {
                     player.pet.nPoint.limitPower = limitPower[0];
                 }
                 Thread.sleep(1000);
-                Service.getInstance().chatJustForMe(player, player.pet, "Sư Phụ SooMe hiện thân tụi m quỳ xuống...");
+                Service.getInstance().chatJustForMe(player, player.pet, "Sư Phụ Ids hiện thân tụi m quỳ xuống...");
             } catch (Exception e) {
             }
         }).start();
     }
 
-    public void createBillPet(Player player, int gender, byte... limitPower) {
+    public void createPet4(Player player, int gender, byte... limitPower) {
         new Thread(() -> {
             try {
-                createNewPetBill(player, false,false, false, false, true, false, false, false, (byte) gender);
+                createNewPet4(player, (byte) gender);
                 if (limitPower != null && limitPower.length == 1) {
                     player.pet.nPoint.limitPower = limitPower[0];
                 }
                 Thread.sleep(1000);
-                Service.getInstance().chatJustForMe(player, player.pet, "Sư Phụ SooMe hiện thân tụi m quỳ xuống...");
+                Service.getInstance().chatJustForMe(player, player.pet, "Sư Phụ Ids hiện thân tụi m quỳ xuống...");
             } catch (Exception e) {
             }
         }).start();
     }
-    public void createWhisPet(Player player, byte... limitPower) {
+    public void createPet5(Player player, byte... limitPower) {
         new Thread(() -> {
             try {
-                createNewPetWhis(player, false, false,false, false, false, true, false, false);
+                createNewPet5(player);
                 if (limitPower != null && limitPower.length == 1) {
                     player.pet.nPoint.limitPower = limitPower[0];
                 }
                 Thread.sleep(1000);
-                Service.getInstance().chatJustForMe(player, player.pet, "Sư Phụ SooMe hiện thân tụi m quỳ xuống...");
-            } catch (Exception e) {
-            }
-        }).start();
-    }
-
-    public void createWhisPet(Player player, int gender, byte... limitPower) {
-        new Thread(() -> {
-            try {
-                createNewPetWhis(player, false, false,false, false, false, true, false, false, (byte) gender);
-                if (limitPower != null && limitPower.length == 1) {
-                    player.pet.nPoint.limitPower = limitPower[0];
-                }
-                Thread.sleep(1000);
-                Service.getInstance().chatJustForMe(player, player.pet, "Sư Phụ SooMe hiện thân tụi m quỳ xuống...");
-            } catch (Exception e) {
-            }
-        }).start();
-    }
-    public void createGokuPet(Player player, byte... limitPower) {
-        new Thread(() -> {
-            try {
-                createNewPetGokuvc(player, false, false,false, false, false, false, true, false);
-                if (limitPower != null && limitPower.length == 1) {
-                    player.pet.nPoint.limitPower = limitPower[0];
-                }
-                Thread.sleep(1000);
-                Service.getInstance().chatJustForMe(player, player.pet, "Sư Phụ SooMe hiện thân tụi m quỳ xuống...");
+                Service.getInstance().chatJustForMe(player, player.pet, "Sư Phụ Ids hiện thân tụi m quỳ xuống...");
             } catch (Exception e) {
             }
         }).start();
     }
 
-    public void createGokuPet(Player player, int gender, byte... limitPower) {
+    public void createPet5(Player player, int gender, byte... limitPower) {
         new Thread(() -> {
             try {
-                createNewPetGokuvc(player, false, false,false, false, false, false, true, false, (byte) gender);
+                createNewPet5(player, (byte) gender);
                 if (limitPower != null && limitPower.length == 1) {
                     player.pet.nPoint.limitPower = limitPower[0];
                 }
                 Thread.sleep(1000);
-                Service.getInstance().chatJustForMe(player, player.pet, "Sư Phụ SooMe hiện thân tụi m quỳ xuống...");
+                Service.getInstance().chatJustForMe(player, player.pet, "Sư Phụ Ids hiện thân tụi m quỳ xuống...");
             } catch (Exception e) {
             }
         }).start();
     }
-    public void createCumberPet(Player player, byte... limitPower) {
+    public void createPet6(Player player, byte... limitPower) {
         new Thread(() -> {
             try {
-                createNewPetCumber(player, false, false,false, false, false, false, false, true);
+                createNewPet6(player);
                 if (limitPower != null && limitPower.length == 1) {
                     player.pet.nPoint.limitPower = limitPower[0];
                 }
                 Thread.sleep(1000);
-                Service.getInstance().chatJustForMe(player, player.pet, "Sư Phụ SooMe hiện thân tụi m quỳ xuống...");
-            } catch (Exception e) {
-            }
-        }).start();
-    }
-
-    public void createCumberPet(Player player, int gender, byte... limitPower) {
-        new Thread(() -> {
-            try {
-                createNewPetCumber(player, false, false,false, false, false, false, false, true, (byte) gender);
-                if (limitPower != null && limitPower.length == 1) {
-                    player.pet.nPoint.limitPower = limitPower[0];
-                }
-                Thread.sleep(1000);
-                Service.getInstance().chatJustForMe(player, player.pet, "Sư Phụ SooMe hiện thân tụi m quỳ xuống...");
-            } catch (Exception e) {
-            }
-        }).start();
-    }
-    public void createzamatPet(Player player, byte... limitPower) {
-        new Thread(() -> {
-            try {
-                createNewPetzamat(player, false, false,false, false, false, false, false, true);
-                if (limitPower != null && limitPower.length == 1) {
-                    player.pet.nPoint.limitPower = limitPower[0];
-                }
-                Thread.sleep(1000);
-                Service.getInstance().chatJustForMe(player, player.pet, "Sư Phụ SooMe hiện thân tụi m quỳ xuống...");
+                Service.getInstance().chatJustForMe(player, player.pet, "Sư Phụ Ids hiện thân tụi m quỳ xuống...");
             } catch (Exception e) {
             }
         }).start();
     }
 
-    public void createzamatPet(Player player, int gender, byte... limitPower) {
+    public void createPet6(Player player, int gender, byte... limitPower) {
         new Thread(() -> {
             try {
-                createNewPetzamat(player, false, false,false, false, false, false, false, true, (byte) gender);
+                createNewPet6(player, (byte) gender);
                 if (limitPower != null && limitPower.length == 1) {
                     player.pet.nPoint.limitPower = limitPower[0];
                 }
                 Thread.sleep(1000);
-                Service.getInstance().chatJustForMe(player, player.pet, "Sư Phụ SooMe hiện thân tụi m quỳ xuống...");
+                Service.getInstance().chatJustForMe(player, player.pet, "Sư Phụ Ids hiện thân tụi m quỳ xuống...");
             } catch (Exception e) {
             }
         }).start();
     }
-    private void createNewPetBill(Player player,boolean iszamat, boolean isMabu, boolean isBerus,boolean isPic, boolean isbill, boolean iswhis, boolean isgoku, boolean iscumber, byte... gender){
-        int[] data = isbill ? getDataPetMabu() : getDataPetNormal();
+    public void createPet7(Player player, byte... limitPower) {
+        new Thread(() -> {
+            try {
+                createNewPet7(player);
+                if (limitPower != null && limitPower.length == 1) {
+                    player.pet.nPoint.limitPower = limitPower[0];
+                }
+                Thread.sleep(1000);
+                Service.getInstance().chatJustForMe(player, player.pet, "Sư Phụ Ids hiện thân tụi m quỳ xuống...");
+            } catch (Exception e) {
+            }
+        }).start();
+    }
+
+    public void createPet7(Player player, int gender, byte... limitPower) {
+        new Thread(() -> {
+            try {
+                createNewPet7(player, (byte) gender);
+                if (limitPower != null && limitPower.length == 1) {
+                    player.pet.nPoint.limitPower = limitPower[0];
+                }
+                Thread.sleep(1000);
+                Service.getInstance().chatJustForMe(player, player.pet, "Sư Phụ Ids hiện thân tụi m quỳ xuống...");
+            } catch (Exception e) {
+            }
+        }).start();
+    }
+    public void createPet8(Player player, byte... limitPower) {
+        new Thread(() -> {
+            try {
+                createNewPet8(player);
+                if (limitPower != null && limitPower.length == 1) {
+                    player.pet.nPoint.limitPower = limitPower[0];
+                }
+                Thread.sleep(1000);
+                Service.getInstance().chatJustForMe(player, player.pet, "Sư Phụ Ids hiện thân tụi m quỳ xuống...");
+            } catch (Exception e) {
+            }
+        }).start();
+    }
+
+    public void createPet8(Player player, int gender, byte... limitPower) {
+        new Thread(() -> {
+            try {
+                createNewPet8(player, (byte) gender);
+                if (limitPower != null && limitPower.length == 1) {
+                    player.pet.nPoint.limitPower = limitPower[0];
+                }
+                Thread.sleep(1000);
+                Service.getInstance().chatJustForMe(player, player.pet, "Sư Phụ Ids hiện thân tụi m quỳ xuống...");
+            } catch (Exception e) {
+            }
+        }).start();
+    }
+    private void createNewPet4(Player player, byte... gender){
+        int[] data = getDataPetMabu();
         Pet pet = new Pet(player);
-        pet.name = "$" + (isbill ? "uub" : "Đệ tử");
+        pet.name = "$Cell";
         pet.gender = (gender != null && gender.length != 0) ? gender[0] : (byte) Util.nextInt(0, 2);
         pet.id = -player.id;
-        pet.nPoint.power = isbill ? 1500000 : 2000;
-        pet.typePet = (byte) (isbill ? 4 : 0);
+        pet.nPoint.power = 1500000;
+        pet.typePet = (byte)4;
         pet.nPoint.stamina = 1000;
         pet.nPoint.maxStamina = 1000;
         pet.nPoint.hpg = data[0];
@@ -287,14 +287,14 @@ public class PetService {
         pet.nPoint.setFullHpMp();
         player.pet = pet;
     }
-    private void createNewPetWhis(Player player, boolean iszamat, boolean isMabu, boolean isBerus,boolean isPic, boolean isbill, boolean iswhis, boolean isgoku, boolean iscumber, byte... gender){
-        int[] data = iswhis ? getDataPetMabu() : getDataPetNormal();
+    private void createNewPet5(Player player, byte... gender){
+        int[] data = getDataPetMabu();
         Pet pet = new Pet(player);
-        pet.name = "$" + (iswhis ? "pic" : "Đệ tử");
+        pet.name = "$Semi Cell";
         pet.gender = (gender != null && gender.length != 0) ? gender[0] : (byte) Util.nextInt(0, 2);
         pet.id = -player.id;
-        pet.nPoint.power = iswhis ? 1500000 : 2000;
-        pet.typePet = (byte) (iswhis ? 5 : 0);
+        pet.nPoint.power = 1500000;
+        pet.typePet = (byte)5;
         pet.nPoint.stamina = 1000;
         pet.nPoint.maxStamina = 1000;
         pet.nPoint.hpg = data[0];
@@ -312,14 +312,14 @@ public class PetService {
         pet.nPoint.setFullHpMp();
         player.pet = pet;
     }
-    private void createNewPetGokuvc(Player player,boolean iszamat,  boolean isMabu, boolean isBerus,boolean isPic, boolean isbill, boolean iswhis, boolean isgoku, boolean iscumber, byte... gender){
-        int[] data = isgoku ? getDataPetMabu() : getDataPetNormal();
+    private void createNewPet6(Player player, byte... gender){
+        int[] data = getDataPetMabu();
         Pet pet = new Pet(player);
-        pet.name = "$" + (isgoku ? "Goku vô cực" : "Đệ tử");
+        pet.name = "$Perfect Cell";
         pet.gender = (gender != null && gender.length != 0) ? gender[0] : (byte) Util.nextInt(0, 2);
         pet.id = -player.id;
-        pet.nPoint.power = isgoku ? 1500000 : 2000;
-        pet.typePet = (byte) (isgoku ? 6 : 0);
+        pet.nPoint.power = 1500000;
+        pet.typePet = (byte)6;
         pet.nPoint.stamina = 1000;
         pet.nPoint.maxStamina = 1000;
         pet.nPoint.hpg = data[0];
@@ -337,14 +337,14 @@ public class PetService {
         pet.nPoint.setFullHpMp();
         player.pet = pet;
     }
-    private void createNewPetCumber(Player player, boolean iszamat, boolean isMabu, boolean isBerus,boolean isPic, boolean isbill, boolean iswhis, boolean isgoku, boolean iscumber, byte... gender){
-        int[] data = iscumber ? getDataPetMabu() : getDataPetNormal();
+    private void createNewPet7(Player player, byte... gender){
+        int[] data = getDataPetMabu();
         Pet pet = new Pet(player);
-        pet.name = "$" + (iscumber ? "Cumber" : "Đệ tử");
+        pet.name = "$Super Perfect Cell";
         pet.gender = (gender != null && gender.length != 0) ? gender[0] : (byte) Util.nextInt(0, 2);
         pet.id = -player.id;
-        pet.nPoint.power = iscumber ? 1500000 : 2000;
-        pet.typePet = (byte) (iscumber ? 7 : 0);
+        pet.nPoint.power = 1500000;
+        pet.typePet = (byte)7;
         pet.nPoint.stamina = 1000;
         pet.nPoint.maxStamina = 1000;
         pet.nPoint.hpg = data[0];
@@ -365,14 +365,14 @@ public class PetService {
     
     
     
-    private void createNewPetzamat(Player player, boolean iszamat, boolean isMabu, boolean isBerus,boolean isPic, boolean isbill, boolean iswhis, boolean isgoku, boolean iscumber, byte... gender){
-        int[] data = iszamat ? getDataPetMabu() : getDataPetNormal();
+    private void createNewPet8(Player player, byte... gender){
+        int[] data = getDataPetMabu();
         Pet pet = new Pet(player);
-        pet.name = "$" + (iszamat ? "Rose" : "Đệ tử");
+        pet.name = "$Gojo Satoru";
         pet.gender = (gender != null && gender.length != 0) ? gender[0] : (byte) Util.nextInt(0, 2);
         pet.id = -player.id;
-        pet.nPoint.power = iszamat ? 1500000 : 2000;
-        pet.typePet = (byte) (iszamat ? 7 : 0);
+        pet.nPoint.power = 1500000;
+        pet.typePet = (byte)8;
         pet.nPoint.stamina = 1000;
         pet.nPoint.maxStamina = 1000;
         pet.nPoint.hpg = data[0];
@@ -481,7 +481,7 @@ public class PetService {
         ChangeMapService.gI().exitMap(player.pet);
         player.pet.dispose();
         player.pet = null;
-        createBillPet(player, limitPower);
+        createPet4(player, limitPower);
     }
 
     public void changeBillPet(Player player, int gender) {
@@ -492,7 +492,7 @@ public class PetService {
         ChangeMapService.gI().exitMap(player.pet);
         player.pet.dispose();
         player.pet = null;
-        createBillPet(player, gender, limitPower);
+        createPet4(player, gender, limitPower);
     }
      public void changeWhisPet(Player player) {
         byte limitPower = player.pet.nPoint.limitPower;
@@ -502,7 +502,7 @@ public class PetService {
         ChangeMapService.gI().exitMap(player.pet);
         player.pet.dispose();
         player.pet = null;
-        createWhisPet(player, limitPower);
+        createPet5(player, limitPower);
     }
 
     public void changeWhisPet(Player player, int gender) {
@@ -513,7 +513,7 @@ public class PetService {
         ChangeMapService.gI().exitMap(player.pet);
         player.pet.dispose();
         player.pet = null;
-        createWhisPet(player, gender, limitPower);
+        createPet5(player, gender, limitPower);
     }
      public void changeGokuPet(Player player) {
         byte limitPower = player.pet.nPoint.limitPower;
@@ -523,7 +523,7 @@ public class PetService {
         ChangeMapService.gI().exitMap(player.pet);
         player.pet.dispose();
         player.pet = null;
-        createGokuPet(player, limitPower);
+        createPet6(player, limitPower);
     }
 
     public void changeGokuPet(Player player, int gender) {
@@ -534,7 +534,7 @@ public class PetService {
         ChangeMapService.gI().exitMap(player.pet);
         player.pet.dispose();
         player.pet = null;
-        createGokuPet(player, gender, limitPower);
+        createPet6(player, gender, limitPower);
     }
      public void changeCumberPet(Player player) {
         byte limitPower = player.pet.nPoint.limitPower;
@@ -544,7 +544,7 @@ public class PetService {
         ChangeMapService.gI().exitMap(player.pet);
         player.pet.dispose();
         player.pet = null;
-        createCumberPet(player, limitPower);
+        createPet7(player, limitPower);
     }
 
     public void changeCumberPet(Player player, int gender) {
@@ -555,7 +555,7 @@ public class PetService {
         ChangeMapService.gI().exitMap(player.pet);
         player.pet.dispose();
         player.pet = null;
-        createCumberPet(player, gender, limitPower);
+        createPet7(player, gender, limitPower);
     }
     
    public void changezamatPet(Player player) {
@@ -566,7 +566,7 @@ public class PetService {
         ChangeMapService.gI().exitMap(player.pet);
         player.pet.dispose();
         player.pet = null;
-        createzamatPet(player, limitPower);
+        createPet8(player, limitPower);
     }
 
     public void changezamatPet(Player player, int gender) {
@@ -577,7 +577,7 @@ public class PetService {
         ChangeMapService.gI().exitMap(player.pet);
         player.pet.dispose();
         player.pet = null;
-        createzamatPet(player, gender, limitPower);
+        createPet8(player, gender, limitPower);
     }
     public void changeNamePet(Player player, String name) {
         try {

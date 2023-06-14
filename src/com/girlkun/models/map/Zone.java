@@ -286,11 +286,7 @@ public class Zone {
                                         msg.cleanup();
                                         break;
                                     default:
-                                        if (item.template.type >= 0 && item.template.type < 5) {
-                                            msg.writer().writeUTF(item.template.name + " ngon ngon...");
-                                        } else {
-                                            msg.writer().writeUTF("Bạn mới nhặt được " + item.template.name);
-                                        }
+                                        msg.writer().writeUTF("Bạn mới nhặt được " + item.template.name);
                                         InventoryServiceNew.gI().sendItemBags(player);
                                         break;
                                 }

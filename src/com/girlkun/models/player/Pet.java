@@ -880,7 +880,7 @@ public class Pet extends Player {
         }
     }
 
-   public void fusion(boolean porata) {
+    public void fusion(boolean porata) {
         if (this.isDie()) {
             Service.getInstance().sendThongBao(master, "Không thể thực hiện");
             return;
@@ -905,6 +905,7 @@ public class Pet extends Player {
                     + TimeUtil.getTimeLeft(lastTimeUnfusion, TIME_WAIT_AFTER_UNFUSION / 1000) + " nữa");
         }
     }
+
     public void fusion2(boolean porata2) {
         if (this.isDie()) {
             Service.getInstance().sendThongBao(master, "Không thể thực hiện");
@@ -930,6 +931,7 @@ public class Pet extends Player {
                     + TimeUtil.getTimeLeft(lastTimeUnfusion, TIME_WAIT_AFTER_UNFUSION / 1000) + " nữa");
         }
     }
+
     public void fusion3(boolean porata3) {
         if (this.isDie()) {
             Service.getInstance().sendThongBao(master, "Không thể thực hiện");
@@ -955,7 +957,8 @@ public class Pet extends Player {
                     + TimeUtil.getTimeLeft(lastTimeUnfusion, TIME_WAIT_AFTER_UNFUSION / 1000) + " nữa");
         }
     }
-     public void fusion4(boolean porata4) {
+
+    public void fusion4(boolean porata4) {
         if (this.isDie()) {
             Service.getInstance().sendThongBao(master, "Không thể thực hiện");
             return;
@@ -981,7 +984,6 @@ public class Pet extends Player {
         }
     }
 
-   
 
     public void unFusion() {
         master.fusion.typeFusion = 0;
@@ -1182,7 +1184,7 @@ public class Pet extends Player {
 
     public void askPea() {
         if (Util.canDoWithTime(lastTimeAskPea, 10000)) {
-            Service.gI().chatJustForMe(master, this, "Sư phụ ơi cho con đậu thần đi, con đói sắp chết rồi !!");
+            Service.gI().chatJustForMe(master, this, "Sư phụ cho miếng đậu thần, con đói sắp chết rồi !!");
             lastTimeAskPea = System.currentTimeMillis();
         }
     }
@@ -1275,7 +1277,7 @@ public class Pet extends Player {
         }
     }
 
-//========================BETA SKILL5=====================
+    //========================BETA SKILL5=====================
     private boolean useSkill5() {
         try {
             this.playerSkill.skillSelect = getSkill(5);
@@ -1336,7 +1338,7 @@ public class Pet extends Player {
                 }
             case FOLLOW:
             case PROTECT:
-                followMaster(600);
+                followMaster(250);
                 break;
         }
     }
@@ -1362,8 +1364,8 @@ public class Pet extends Player {
         } else if (this.typePet == 2) {
             return 508;
         } else if (this.typePet == 3) {
-            return 237;            
-        }else {
+            return 237;
+        } else {
             return PET_ID[3][this.gender];
         }
     }
@@ -1378,18 +1380,18 @@ public class Pet extends Player {
             return 297;
         } else if (this.typePet == 2) {
             return 508;
-        }else if (this.typePet == 3) {
+        } else if (this.typePet == 3) {
             return 237;
-            } else if (this.typePet == 4) {
-            return 946;
+        } else if (this.typePet == 4) {
+            return 228;
         } else if (this.typePet == 5) {
-            return 1049;
-            } else if (this.typePet == 6) {
-            return 2063;
+            return 231;
+        } else if (this.typePet == 6) {
+            return 234;
         } else if (this.typePet == 7) {
-            return 1204;
-            } else if (this.typePet == 8) {
-            return 2030;
+            return 2000;
+        } else if (this.typePet == 8) {
+            return 2024;
         } else if (inventory.itemsBody.get(5).isNotNullItem()) {
             int part = inventory.itemsBody.get(5).template.head;
             if (part != -1) {
@@ -1413,18 +1415,10 @@ public class Pet extends Player {
             return 298;
         } else if (this.typePet == 2 && !this.isTransform) {
             return 509;
-        }else if (this.typePet == 3 && !this.isTransform) {
+        } else if (this.typePet == 3 && !this.isTransform) {
             return 238;
-        } else if (this.typePet == 4 && !this.isTransform) {
-            return 947;
-        } else if (this.typePet == 5 && !this.isTransform) {
-            return 1047;
-            } else if (this.typePet == 6 && !this.isTransform) {
-            return 2064;
-        } else if (this.typePet == 7 && !this.isTransform) {
-            return 2031;
-             } else if (this.typePet == 8 && !this.isTransform) {
-            return 880;
+        } else if (this.typePet >= 4 && this.typePet <= 8 && !this.isTransform) {
+            return (short) (getHead() + 1);
         } else if (inventory.itemsBody.get(5).isNotNullItem()) {
             int body = inventory.itemsBody.get(5).template.body;
             if (body != -1) {
@@ -1451,18 +1445,10 @@ public class Pet extends Player {
             return 299;
         } else if (this.typePet == 2 && !this.isTransform) {
             return 510;
-        }else if (this.typePet == 3 && !this.isTransform) {
+        } else if (this.typePet == 3 && !this.isTransform) {
             return 239;
-            } else if (this.typePet == 4 && !this.isTransform) {
-            return 948;
-        } else if (this.typePet == 5 && !this.isTransform) {
-            return 1048;
-            } else if (this.typePet == 6 && !this.isTransform) {
-            return 2032;
-        } else if (this.typePet == 7 && !this.isTransform) {
-            return 1206;
-       //   } else if (this.typePet == 8 && !this.isTransform) {
-      //      return 881;
+        } else if (this.typePet >= 4 && this.typePet <= 8 && !this.isTransform) {
+            return (short) (getBody() + 1);
         } else if (inventory.itemsBody.get(5).isNotNullItem()) {
             int leg = inventory.itemsBody.get(5).template.leg;
             if (leg != -1) {
@@ -1501,23 +1487,23 @@ public class Pet extends Player {
         if (this.playerSkill != null) {
             switch (this.playerSkill.getSizeSkill()) {
                 case 1:
-                    if (this.nPoint.power >= 150000000) {
+                    if (this.nPoint.power >= 150_000_000) {
                         openSkill2();
                     }
                     break;
                 case 2:
-                    if (this.nPoint.power >= 1500000000) {
+                    if (this.nPoint.power >= 1_500_000_000) {
                         openSkill3();
                     }
                     break;
                 case 3:
-                    if (this.nPoint.power >= 20000000000L) {
+                    if (this.nPoint.power >= 20_000_000_000L) {
                         openSkill4();
                     }
                     break;
-                
+
                 case 4:
-                    if (this.nPoint.power >= 60000000000L) {
+                    if (this.nPoint.power >= 60_000_000_000L) {
                         openSkill5();
                     }
                     break;
@@ -1618,5 +1604,5 @@ public class Pet extends Player {
         this.master = null;
         super.dispose();
     }
- }
+}
 

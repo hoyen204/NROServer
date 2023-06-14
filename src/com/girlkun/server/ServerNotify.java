@@ -2,6 +2,7 @@ package com.girlkun.server;
 
 import com.girlkun.models.player.Player;
 import com.girlkun.network.io.Message;
+import com.girlkun.network.server.GirlkunSessionManager;
 import com.girlkun.services.Service;
 import com.girlkun.utils.Util;
 import java.util.ArrayList;
@@ -43,7 +44,7 @@ public class ServerNotify extends Thread {
                     sendThongBaoBenDuoi(notifies.remove(0));
                 }
                 if (Util.canDoWithTime(this.lastTimeGK, 25000)) {
-                    sendThongBaoBenDuoi("Idsolutions");
+                    sendThongBaoBenDuoi("Số người đang online là: " + GirlkunSessionManager.gI().getSessions().size());
                     this.lastTimeGK = System.currentTimeMillis();
                 }
             } catch (Exception ignored) {

@@ -1001,8 +1001,8 @@ private void activeNamecShenron(Player pl) {
                 msg.writer().writeShort(pl.location.x);
                 msg.writer().writeShort(pl.location.y);
                 msg.writer().writeByte(1);
-             //   lastTimeShenronWait = System.currentTimeMillis();
-             //   isShenronAppear = true;
+//                lastTimeShenronWait = System.currentTimeMillis();
+//                isShenronAppear = true;
             
             Service.gI().sendMessAllPlayerInMap(pl,msg);
         } catch (Exception e) {

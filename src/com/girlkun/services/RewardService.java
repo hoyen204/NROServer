@@ -8,6 +8,7 @@ import com.girlkun.models.mob.Mob;
 import com.girlkun.models.player.Player;
 import com.girlkun.server.Manager;
 import com.girlkun.utils.Util;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,11 +17,11 @@ public class RewardService {
 
     //id option set kich hoat (tên set, hiệu ứng set, tỉ lệ, type tỉ lệ)
     private static final int[][][] ACTIVATION_SET = {
-        {{129, 141, 1, 1000}, {127, 139, 1, 1000}, {128, 140, 1, 1000}}, //songoku - thien xin hang - kirin
-        {{131, 143, 1, 1000}, {132, 144, 1, 1000}, {130, 142, 1, 1000}}, //oc tieu - pikkoro daimao - picolo
-        {{135, 138, 1, 1000}, {133, 136, 1, 1000}, {134, 137, 1, 1000}} //kakarot - cadic - nappa
+            {{129, 141, 1, 1000}, {127, 139, 1, 1000}, {128, 140, 1, 1000}}, //songoku - thien xin hang - kirin
+            {{131, 143, 1, 1000}, {132, 144, 1, 1000}, {130, 142, 1, 1000}}, //oc tieu - pikkoro daimao - picolo
+            {{135, 138, 1, 1000}, {133, 136, 1, 1000}, {134, 137, 1, 1000}} //kakarot - cadic - nappa
     };
-    
+
     private static RewardService I;
 
     private RewardService() {
@@ -753,7 +754,7 @@ public class RewardService {
 
     //vật phẩm không thể giao dịch
     private void initNotTradeOption(ItemMap item) {
-        switch(item.itemTemplate.id){
+        switch (item.itemTemplate.id) {
             case 2009:
                 item.options.add(new Item.ItemOption(30, 0));
                 break;
@@ -803,7 +804,7 @@ public class RewardService {
             case 265:
             case 276:
             case 277:
-            // đồ thần
+                // đồ thần
             case 555:
             case 556:
             case 562:
@@ -817,7 +818,7 @@ public class RewardService {
             case 566:
             case 567:
             case 561:
-                return 7;
+                return 5;
             default:
                 return 3;
         }

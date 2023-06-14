@@ -80,14 +80,14 @@ private long lastTimeHapThu;
         if (Util.isTrue(70, 100) && plAtt != null) {//tỉ lệ hụt của thiên sứ
             Util.isTrue(this.nPoint.tlNeDon, 100000);
             if (Util.isTrue(1, 100)) {
-                this.chat("Ta Chính Là Thần SooMe");
-                this.chat("Ta Chính Là Thần SooMe");
+                this.chat("Ta Chính Là Thần Ids");
+                this.chat("Ta Chính Là Thần Ids");
             } else if (Util.isTrue(1, 100)) {
-                this.chat("Ta Chính Là Thần SooMe");
+                this.chat("Ta Chính Là Thần Ids");
                 this.chat("Chỉ cần hoàn thiện nó!");
                 this.chat("Các ngươi sẽ tránh được mọi nguy hiểm");
             } else if (Util.isTrue(1, 100)) {
-                this.chat("Ta Chính Là Thần SooMe");
+                this.chat("Ta Chính Là Thần Ids");
             }
             damage = 0;
 

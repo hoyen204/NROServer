@@ -55,7 +55,7 @@ public class Referee1 extends Player {
     @Override
     public void update() {
         if (Util.canDoWithTime(lastTimeChat, 5000)) {
-            Service.getInstance().chat(this, "Xin Chúc Mừng Top Đại Gia Sever Ares");
+            Service.getInstance().chat(this, "Xin Chúc Mừng Top Đại Gia Sever Ids");
             Service.getInstance().chat(this, "Danh Sách"
                                     + "\n|3|[ Top 1 ] Chưa có "
                                     + "\n|2|[ Top 2 ] Chưa có "                                   
@@ -71,7 +71,7 @@ public class Referee1 extends Player {
             if (m.mapId == 0) {
                 for (Zone z : m.zones) {
                     Referee1 pl = new Referee1();
-                    pl.name = "nàng tiên cá";
+                    pl.name = "Nàng Tiên Cá";
                     pl.gender = 0;
                     pl.id = id++;
                     pl.nPoint.hpMax = 69;
@@ -86,7 +86,7 @@ public class Referee1 extends Player {
             } else if (m.mapId == 7) {                      
                     for (Zone z : m.zones) {
                     Referee1 pl = new Referee1();
-                    pl.name = "nàng tiên cá";
+                    pl.name = "Nàng Tiên Cá";
                     pl.gender = 0;
                     pl.id = id++;
                     pl.nPoint.hpMax = 69;
@@ -101,7 +101,7 @@ public class Referee1 extends Player {
               } else if (m.mapId == 14) {                      
                     for (Zone z : m.zones) {
                     Referee1 pl = new Referee1();
-                    pl.name = "nàng tiên cá";
+                    pl.name = "Nàng Tiên Cá";
                     pl.gender = 0;
                     pl.id = id++;
                     pl.nPoint.hpMax = 69;

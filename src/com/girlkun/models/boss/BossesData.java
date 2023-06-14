@@ -517,7 +517,7 @@ public class BossesData {
                     {Skill.KAMEJOKO, 7, 1000},
                      {Skill.KAMEJOKO, 7, 1000},
                     {Skill.LIEN_HOAN, 7, 5000},
-                    {Skill.DICH_CHUYEN_TUC_THOI, 7, 1000}},//skill
+                    {Skill.DICH_CHUYEN_TUC_THOI, 7, 10000}},//skill
             new String[]{"|-2|Cái gì kia vậy!? Đó là loài gì thế!!?",
                     "|-1|Hôm nay sẽ là ngày đáng nhớ đây!",
                     "|-1|Ta sẽ hấp thụ số 17 và 18 để đạt được dạng hoàn hảo!",
@@ -1561,10 +1561,10 @@ public class BossesData {
             new int[]{50000000},
             new int[]{120},
             new int[][]{
-                      
+
                     {Skill.KHIEN_NANG_LUONG, 7, 700},
                     {Skill.THAI_DUONG_HA_SAN, 7, 500},
-                    {Skill.DICH_CHUYEN_TUC_THOI, 7, 1000},
+                    {Skill.DICH_CHUYEN_TUC_THOI, 7, 10000},
                     {Skill.DE_TRUNG, 7, 1000},
                     {Skill.KAMEJOKO, 7, 100}},
             new String[]{"|-2|Ma nhân Bư đã xuất hiện rồi"}, //text chat 1
@@ -1663,7 +1663,7 @@ public class BossesData {
             new int[]{10000000}, //hp
             new int[]{14}, //map join
             new int[][]{
-                {Skill.DICH_CHUYEN_TUC_THOI, 7, 1000},
+                {Skill.DICH_CHUYEN_TUC_THOI, 7, 10000},
                    {Skill.DE_TRUNG, 7, 1000},
                     {Skill.LIEN_HOAN, 1, 400},
                     {Skill.MASENKO, 2, 300},},//skill//skill
@@ -1698,7 +1698,7 @@ public class BossesData {
             TypeAppear.APPEAR_WITH_ANOTHER
     );
  public static final BossData SUPER_ANDROID_17 = new BossData(
-            "Super SooMe", //name
+            "Super Ids", //name
             ConstPlayer.TRAI_DAT, //gender
             new short[]{636, 637, 638, -1, -1, -1}, //outfit {head, body, leg, bag, aura, eff}
             20000, //dame
@@ -1717,7 +1717,7 @@ public class BossesData {
             REST_10_M
     );
      public static final BossData SUPER_XEN = new BossData(
-            "Super Xên SooMe", //name
+            "Super Xên Ids", //name
             ConstPlayer.TRAI_DAT, //gender
             new short[]{2000, 2001, 2002, -1, -1, -1}, //outfit {head, body, leg, bag, aura, eff}
             0000, //dame
@@ -1806,7 +1806,7 @@ public class BossesData {
             TypeAppear.APPEAR_WITH_ANOTHER
     );
     public static final BossData CUMBERBLACK = new BossData(
-            "CumBer SooMe Black", //name
+            "CumBer Ids Black", //name
             ConstPlayer.TRAI_DAT, //gender
             new short[]{907, 908, 909, -1, -1, -1}, //outfit {head, body, leg, bag, aura, eff}
             25000, //dame
