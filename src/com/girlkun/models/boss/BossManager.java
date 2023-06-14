@@ -307,13 +307,13 @@ public class BossManager implements Runnable {
                 }
                 msg.writer().writeInt(i);
                 msg.writer().writeInt((int) boss.id);
-                msg.writer().writeShort(boss.getHead());
+                msg.writer().writeShort(boss.data[0].getOutfit()[0]);
                 if (player.getSession().version > 214) {
                     msg.writer().writeShort(-1);
                 }
-                msg.writer().writeShort(boss.getBody());
+                msg.writer().writeShort(boss.data[0].getOutfit()[1]);
 
-                msg.writer().writeShort(boss.getLeg());
+                msg.writer().writeShort(boss.data[0].getOutfit()[2]);
                 msg.writer().writeUTF(boss.data[0].getName());
                 if (boss.zone != null) {
                     msg.writer().writeUTF("Sống");
