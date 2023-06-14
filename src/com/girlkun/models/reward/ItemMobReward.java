@@ -14,7 +14,6 @@ import lombok.Data;
 
 @Data
 public class ItemMobReward {
-
     private Template.ItemTemplate temp;
     private int[] mapDrop;
     private int[] quantity;
@@ -62,7 +61,12 @@ public class ItemMobReward {
                     if(!Util.isTrue(opt.getRatio()[0], opt.getRatio()[1])){
                         continue;
                     }
+
                     itemMap.options.add(new Item.ItemOption(opt.getTemp(), Util.nextInt(opt.getParam()[0], opt.getParam()[1])));
+                    if(opt.getTemp().id >= 127 && opt.getTemp().id <= 135){
+                        itemMap.options.add(new Item.ItemOption(opt.getTemp().id + (gender == 2 ? 3 : 12), Util.nextInt(opt.getParam()[0], opt.getParam()[1])));
+                        itemMap.options.add(new Item.ItemOption(30, Util.nextInt(opt.getParam()[0], opt.getParam()[1])));
+                    }
                 }
                 return itemMap;
             }
@@ -71,8 +75,3 @@ public class ItemMobReward {
     }
 
 }
-
-/**
- * Vui lòng không sao chép mã nguồn này dưới mọi hình thức. Hãy tôn trọng tác
- * giả của mã nguồn này. Xin cảm ơn! - TiMi :)))
- */
