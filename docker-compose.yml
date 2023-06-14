@@ -1,0 +1,18 @@
+version: '3.4'
+
+services:
+  nroids:
+    image: dakmil204/nroids
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    ports:
+      - 14445:14445
+    volumes:
+      - ./data/:/data
+    networks:
+      - mysql_network
+
+networks:
+  mysql_network:
+    external: true
