@@ -98,14 +98,14 @@ public class Manager {
     public static final List<String> NOTIFY = new ArrayList<>();
     public static final ArrayList<DaiHoiVoThuat> LIST_DHVT = new ArrayList<>();
     public static final List<Item> RUBY_REWARDS = new ArrayList<>();
-    public static final String queryTopSM = "SELECT id, CAST( split_str(data_point,',',2) AS UNSIGNED) AS sm FROM player ORDER BY CAST( split_str(data_point,',',2)  AS UNSIGNED) DESC LIMIT 20;";
-    public static final String queryTopSD = "SELECT id, CAST( split_str(data_point,',',8) AS UNSIGNED) AS sd FROM player ORDER BY CAST( split_str(data_point,',',8)  AS UNSIGNED) DESC LIMIT 20;";
-    public static final String queryTopHP = "SELECT id, CAST( split_str(data_point,',',6) AS UNSIGNED) AS hp FROM player ORDER BY CAST( split_str(data_point,',',6)  AS UNSIGNED) DESC LIMIT 20;";
-    public static final String queryTopKI = "SELECT id, CAST( split_str(data_point,',',7) AS UNSIGNED) AS ki FROM player ORDER BY CAST( split_str(data_point,',',7)  AS UNSIGNED) DESC LIMIT 20;";
-    public static final String queryTopNV = "SELECT id, CAST( split_str(split_str(data_task,',',1),'[',2)  AS UNSIGNED) AS nv FROM player ORDER BY CAST( split_str(split_str(data_task,',',1),'[',2)  AS UNSIGNED) DESC, CAST(split_str(data_task,',',2)  AS UNSIGNED) DESC, CAST( split_str(data_point,',',2) AS UNSIGNED) DESC LIMIT 50;";
-    public static final String queryTopSK = "SELECT id, CAST( split_str( data_inventory,',',5)  AS UNSIGNED) AS event FROM player ORDER BY CAST( split_str( data_inventory,',',5)  AS UNSIGNED) DESC LIMIT 20;";
-    public static final String queryTopPVP = "SELECT id, CAST( split_str( data_inventory,',',3)  AS UNSIGNED) AS HONGNGOC FROM player ORDER BY CAST( split_str( data_inventory,',',3)  AS UNSIGNED) DESC LIMIT 10;";
-    public static final String queryTopNHS = "SELECT id, CAST( NguHanhSonPoint AS UNSIGNED) AS nhs FROM player ORDER BY CAST( NguHanhSonPoint AS UNSIGNED) DESC LIMIT 20;";
+    public static final String queryTopSM = "SELECT player.id, CAST( split_str(data_point,',',2) AS UNSIGNED) AS sm FROM player LEFT JOIN account on player.account_id = account.id WHERE account.is_admin = 0 ORDER BY CAST( split_str(data_point,',',2)  AS UNSIGNED) DESC LIMIT 20;";
+    public static final String queryTopSD = "SELECT player.id, CAST( split_str(data_point,',',8) AS UNSIGNED) AS sd FROM player LEFT JOIN account on player.account_id = account.id WHERE account.is_admin = 0 ORDER BY CAST( split_str(data_point,',',8)  AS UNSIGNED) DESC LIMIT 20;";
+    public static final String queryTopHP = "SELECT player.id, CAST( split_str(data_point,',',6) AS UNSIGNED) AS hp FROM player LEFT JOIN account on player.account_id = account.id WHERE account.is_admin = 0 ORDER BY CAST( split_str(data_point,',',6)  AS UNSIGNED) DESC LIMIT 20;";
+    public static final String queryTopKI = "SELECT player.id, CAST( split_str(data_point,',',7) AS UNSIGNED) AS ki FROM player LEFT JOIN account on player.account_id = account.id WHERE account.is_admin = 0 ORDER BY CAST( split_str(data_point,',',7)  AS UNSIGNED) DESC LIMIT 20;";
+    public static final String queryTopNV = "SELECT player.id, CAST( split_str(split_str(data_task,',',1),'[',2)  AS UNSIGNED) AS nv FROM player LEFT JOIN account on player.account_id = account.id WHERE account.is_admin = 0 ORDER BY CAST( split_str(split_str(data_task,',',1),'[',2)  AS UNSIGNED) DESC, CAST(split_str(data_task,',',2)  AS UNSIGNED) DESC, CAST( split_str(data_point,',',2) AS UNSIGNED) DESC LIMIT 50;";
+    public static final String queryTopSK = "SELECT player.id, CAST( split_str( data_inventory,',',5)  AS UNSIGNED) AS event FROM player LEFT JOIN account on player.account_id = account.id WHERE account.is_admin = 0 ORDER BY CAST( split_str( data_inventory,',',5)  AS UNSIGNED) DESC LIMIT 20;";
+    public static final String queryTopPVP = "SELECT player.id, CAST( split_str( data_inventory,',',3)  AS UNSIGNED) AS HONGNGOC FROM player LEFT JOIN account on player.account_id = account.id WHERE account.is_admin = 0 ORDER BY CAST( split_str( data_inventory,',',3)  AS UNSIGNED) DESC LIMIT 10;";
+    public static final String queryTopNHS = "SELECT player.id, CAST( NguHanhSonPoint AS UNSIGNED) AS nhs FROM player LEFT JOIN account on player.account_id = account.id WHERE account.is_admin = 0 ORDER BY CAST( NguHanhSonPoint AS UNSIGNED) DESC LIMIT 20;";
     
 
     public static List<TOP> topSM;
@@ -640,14 +640,6 @@ public class Manager {
                         if (item.getTemp().type < 5) {
                             item.setRatio(new int[]{Integer.parseInt(ratio[0]), Integer.parseInt(ratio[1]) / 4 * 3});
                         }
-
-
-//                        System.out.println(mobReward.getMobId());
-//                        System.out.println(item.getTemp().name);
-//                        System.out.println(item.getTemp().type);
-//                        System.out.println(item.getRatio()[0] + "/" + item.getRatio()[1]);
-//                        System.out.println(item.getQuantity()[0] + "/" + item.getQuantity()[1]);
-
                         if (item.getTemp().type == 9) { //vàng
                             mobReward.getGoldReward().add(item);
                         } else {
