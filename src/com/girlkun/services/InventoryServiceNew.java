@@ -260,7 +260,7 @@ public class InventoryServiceNew {
                 break;
             }
         }
-        for (int i = list.size() - 1; i >= 0; i--) {
+        for (int i = first; i < list.size(); i++) {
             if (list.get(i).isNotNullItem()) {
                 last = i;
                 tempLast = list.get(i);
@@ -746,7 +746,7 @@ public class InventoryServiceNew {
                         || itemAdd.template.type == 934
                         || itemAdd.template.id == 537
                         || itemAdd.template.id == 538
-                        || itemAdd.template.type == 539                      
+                        || itemAdd.template.type == 539
                         || itemAdd.template.type == 541
                         || itemAdd.template.type == 542
                         || itemAdd.template.id == 2069
@@ -761,14 +761,16 @@ public class InventoryServiceNew {
                     return true;
                 }
 
-                if (it.quantity < 99) {
-                    int add = 99 - it.quantity;
+                int maxQuantity = 9999;
+
+                if (it.quantity < maxQuantity) {
+                    int add = maxQuantity - it.quantity;
                     if (itemAdd.quantity <= add) {
                         it.quantity += itemAdd.quantity;
                         itemAdd.quantity = 0;
                         return true;
                     } else {
-                        it.quantity = 99;
+                        it.quantity = maxQuantity;
                         itemAdd.quantity -= add;
                     }
                 }
