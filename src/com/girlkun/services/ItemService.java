@@ -326,7 +326,7 @@ public class ItemService {
             } else if (rd <= rac + ruby + dbv + vb + bh) {
                 item = phuKien2011(true);
             } else if (rd <= rac + ruby + dbv + vb + bh + ct) {
-                item = caitrang2011(true);
+                item = caiTrang20_11(true);
             }
             if (item.template.id == 861) {
                 item.quantity = Util.nextInt(10, 30);
@@ -792,6 +792,11 @@ public class ItemService {
         return 0;
     }
 
+    public Integer getRandomCS(int defaultCS){
+
+        return (int) ((float)new Random().nextInt(15) / 100f * (float)defaultCS) + defaultCS;
+    }
+
 
     public Item randomCS_DHD(int itemId, int gender) {
         Item it = createItemSetKichHoat(itemId, 1);
@@ -801,19 +806,19 @@ public class ItemService {
         List<Integer> giay = Arrays.asList(658, 660, 662);
         int nhd = 656;
         if (ao.contains(itemId)) {
-            it.itemOptions.add(new Item.ItemOption(47, Util.highlightsItem(gender == 2, new Random().nextInt(1001) + 1800))); // áo từ 1800-2800 giáp
+            it.itemOptions.add(new Item.ItemOption(47, Util.highlightsItem(gender == 2, getRandomCS(1800)))); // áo từ 1800-2800 giáp
         }
         if (quan.contains(itemId)) {
-            it.itemOptions.add(new Item.ItemOption(22, Util.highlightsItem(gender == 0, new Random().nextInt(16) + 85))); // hp 85-100k
+            it.itemOptions.add(new Item.ItemOption(22, Util.highlightsItem(gender == 0,  getRandomCS(85)))); // hp 85-100k
         }
         if (gang.contains(itemId)) {
-            it.itemOptions.add(new Item.ItemOption(0, Util.highlightsItem(gender == 2, new Random().nextInt(150) + 8500))); // 8500-10000
+            it.itemOptions.add(new Item.ItemOption(0, Util.highlightsItem(gender == 2,  getRandomCS(8500)))); // 8500-10000
         }
         if (giay.contains(itemId)) {
-            it.itemOptions.add(new Item.ItemOption(23, Util.highlightsItem(gender == 1, new Random().nextInt(11) + 80))); // ki 80-90k
+            it.itemOptions.add(new Item.ItemOption(23, Util.highlightsItem(gender == 1,  getRandomCS(80)))); // ki 80-90k
         }
         if (nhd == itemId) {
-            it.itemOptions.add(new Item.ItemOption(14, new Random().nextInt(3) + 17)); //chí mạng 17-19%
+            it.itemOptions.add(new Item.ItemOption(14,  getRandomCS(17))); //chí mạng 17-19%
         }
         it.itemOptions.add(new Item.ItemOption(21, 80));// yêu cầu sm 80 tỉ
         it.itemOptions.add(new Item.ItemOption(30, 1));// ko the gd
@@ -821,7 +826,7 @@ public class ItemService {
     }
 
     //Cải trang sự kiện 20/11
-    public Item caitrang2011(boolean rating) {
+    public Item caiTrang20_11(boolean rating) {
         Item item = createItemSetKichHoat(680, 1);
         item.itemOptions.add(new Item.ItemOption(76, 1));//VIP
         item.itemOptions.add(new Item.ItemOption(77, 28));//hp 28%
@@ -830,6 +835,135 @@ public class ItemService {
         item.itemOptions.add(new Item.ItemOption(117, 18));//Đẹp + 18% sd
         if (Util.isTrue(995, 1000) && rating) {// tỉ lệ ra hsd
             item.itemOptions.add(new Item.ItemOption(93, new Random().nextInt(3) + 1));//hsd
+        }
+        return item;
+    }
+
+    public Item MiNuong(boolean rating) {
+        int[] HSDArray = new int[] {3, 7, 15, 30};
+        Item item = createItemSetKichHoat(860, 1);
+        item.itemOptions.add(new Item.ItemOption(50, 24));// Sức đánh
+        item.itemOptions.add(new Item.ItemOption(117, 20));// Đẹp
+        item.itemOptions.add(new Item.ItemOption(114, 20));// Tốc độ chạy
+        item.itemOptions.add(new Item.ItemOption(77, 24));// HP %
+        item.itemOptions.add(new Item.ItemOption(154, 1));// Không thể bán lại
+        if (Util.isTrue(80, 100) && rating) {// tỉ lệ ra hsd
+            item.itemOptions.add(new Item.ItemOption(93, HSDArray[new Random().nextInt(HSDArray.length)] + 1));// HSD
+        }
+        return item;
+    }
+
+    public void OpenItem1247(Player player, Item itemUse) {
+        try {
+            if (InventoryServiceNew.gI().getCountEmptyBag(player) <= 1) {
+                Service.gI().sendThongBao(player, "Bạn phải có ít nhất 2 ô trống hành trang");
+                return;
+            }
+            short[] icon = new short[2];
+            int rd = Util.nextInt(1, 100);
+            int rac = 50;
+            int dbv = 10;
+            int ct = 15;
+            int ct1 = 15;
+            Item item = randomRac();
+            if (rd <= rac) {
+                item = randomRac();
+//            } else if (rd <= rac + ruby) {
+//                item = Manager.RUBY_REWARDS.get(Util.nextInt(0, Manager.RUBY_REWARDS.size() - 1));
+            } else if (rd <= rac + dbv) {
+                item = daBaoVe();
+            } else if (rd <= rac + dbv + ct) {
+                item = caitrang1247(true);
+            } else if (rd <= rac + dbv + ct + ct1) {
+                item = caitrang1291(true);
+            }
+            if (item.template.id == 861) {
+                item.quantity = Util.nextInt(10, 30);
+            }
+            icon[0] = itemUse.template.iconID;
+            icon[1] = item.template.iconID;
+            InventoryServiceNew.gI().subQuantityItemsBag(player, itemUse, 1);
+            InventoryServiceNew.gI().addItemBag(player, item);
+            InventoryServiceNew.gI().sendItemBags(player);
+            player.inventory.event++;
+            Service.gI().sendThongBao(player, "Bạn đã nhận được " + item.template.name);
+//            CombineServiceNew.gI().sendEffectOpenItem(player, icon[0], icon[1]);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public Item caitrang1291(boolean rating) {
+        Item item = createItemSetKichHoat(1291, 1);
+        item.itemOptions.add(new Item.ItemOption(50, Util.nextInt(15,37)));//VIP
+        item.itemOptions.add(new Item.ItemOption(77, Util.nextInt(15,37)));//
+        item.itemOptions.add(new Item.ItemOption(103, Util.nextInt(15,37)));//%
+        if (Util.isTrue(70, 80) && rating) {// tỉ lệ ra hsd
+            item.itemOptions.add(new Item.ItemOption(93, new Random().nextInt(3) + 1));//hsd
+        }
+        return item;
+    }
+
+    public Item caitrang1247(boolean rating) {
+        Item item = createItemSetKichHoat(729, 1);
+        item.itemOptions.add(new Item.ItemOption(50, Util.nextInt(15,37)));//VIP
+        item.itemOptions.add(new Item.ItemOption(77, Util.nextInt(15,37)));//
+        item.itemOptions.add(new Item.ItemOption(103, Util.nextInt(15,37)));//%
+        if (Util.isTrue(70, 80) && rating) {// tỉ lệ ra hsd
+            item.itemOptions.add(new Item.ItemOption(93, new Random().nextInt(3) + 1));//hsd
+        }
+        return item;
+    }
+
+    public Item BuuHan(boolean rating) {
+        int[] HSDArray = new int[] {3, 7, 15, 30};
+        Item item = createItemSetKichHoat(765, 1);
+        item.itemOptions.add(new Item.ItemOption(50, 24));
+        item.itemOptions.add(new Item.ItemOption(77, 20));
+        item.itemOptions.add(new Item.ItemOption(103, 20));
+        item.itemOptions.add(new Item.ItemOption(101, 15)); // tnsm
+        if (Util.isTrue(80, 100) && rating) {// tỉ lệ ra hsd
+            item.itemOptions.add(new Item.ItemOption(93, HSDArray[new Random().nextInt(HSDArray.length)] + 1));// HSD
+        }
+        return item;
+    }
+
+    public Item Kilo(boolean rating) {
+        int[] HSDArray = new int[] {3, 7, 15, 30};
+        Item item = createItemSetKichHoat(879, 1);
+        item.itemOptions.add(new Item.ItemOption(50, 24));
+        item.itemOptions.add(new Item.ItemOption(77, 20));
+        item.itemOptions.add(new Item.ItemOption(103, 20));
+        item.itemOptions.add(new Item.ItemOption(106, 1)); // kháng lạnh
+        if (Util.isTrue(80, 100) && rating) {// tỉ lệ ra hsd
+            item.itemOptions.add(new Item.ItemOption(93, HSDArray[new Random().nextInt(HSDArray.length)] + 1));// HSD
+        }
+        return item;
+    }
+
+    public Item Hit(boolean rating) {
+        int[] HSDArray = new int[] {3, 7, 15, 30};
+        Item item = createItemSetKichHoat(884, 1);
+        item.itemOptions.add(new Item.ItemOption(50, 15));
+        item.itemOptions.add(new Item.ItemOption(77, 17));
+        item.itemOptions.add(new Item.ItemOption(106, 17));
+        item.itemOptions.add(new Item.ItemOption(5, 100)); // % sđ chí mạng
+        if (Util.isTrue(80, 100) && rating) {// tỉ lệ ra hsd
+            item.itemOptions.add(new Item.ItemOption(93, HSDArray[new Random().nextInt(HSDArray.length)] + 1));// HSD
+        }
+        return item;
+    }
+
+    public Item NoelMabuu(boolean rating) {
+        int[] HSDArray = new int[] {3, 7, 15, 30};
+        Item item = createItemSetKichHoat(937, 1);
+        item.itemOptions.add(new Item.ItemOption(50, 24));
+        item.itemOptions.add(new Item.ItemOption(77, 20));
+        item.itemOptions.add(new Item.ItemOption(103, 20));
+        item.itemOptions.add(new Item.ItemOption(106, 1)); // kháng lạnh
+        item.itemOptions.add(new Item.ItemOption(29, 1)); // Biến socola
+        if (Util.isTrue(80, 100) && rating) {// tỉ lệ ra hsd
+            item.itemOptions.add(new Item.ItemOption(93, HSDArray[new Random().nextInt(HSDArray.length)] + 1));// HSD
         }
         return item;
     }
@@ -1043,7 +1177,7 @@ public void openBoxngocboi(Player player) {
         }
         Item item;
         if (Util.isTrue(45, 100)) {
-            item = caitrang2011(false);
+            item = caiTrang20_11(false);
         } else {
             item = phuKien2011(false);
         }
@@ -1092,7 +1226,7 @@ public void openBoxngocboi(Player player) {
         }
         phukien.itemOptions.add(new Item.ItemOption(192, 1));//WORLDCUP
         phukien.itemOptions.add(new Item.ItemOption(193, 1));//(2 món kích hoạt ....)
-        if (Util.isTrue(99, 100)) {// tỉ lệ ra hsd
+        if (Util.isTrue(95, 100)) {// tỉ lệ ra hsd
             phukien.itemOptions.add(new Item.ItemOption(93, new Random().nextInt(2) + 1));//hsd
         }
         return phukien;
@@ -1106,7 +1240,7 @@ public void openBoxngocboi(Player player) {
         caitrang.itemOptions.add(new Item.ItemOption(50, 20));// sd 20%
         caitrang.itemOptions.add(new Item.ItemOption(192, 1));//WORLDCUP
         caitrang.itemOptions.add(new Item.ItemOption(193, 1));//(2 món kích hoạt ....)
-        if (Util.isTrue(99, 100) && rating) {// tỉ lệ ra hsd
+        if (Util.isTrue(95, 100) && rating) {// tỉ lệ ra hsd
             caitrang.itemOptions.add(new Item.ItemOption(93, new Random().nextInt(2) + 1));//hsd
         }
         return caitrang;
@@ -1123,7 +1257,7 @@ public void openBoxngocboi(Player player) {
             return;
         }
         if (player.combineNew.itemsCombine.size() != 3) {
-            Service.gI().sendThongBao(player, "Thiếu đồ");
+            Service.gI().sendThongBao(player, "Hãy đặt vào 2 món hủy diệt và 1 món thần linh");
             return;
         }
         if (InventoryServiceNew.gI().getCountEmptyBag(player) > 0) {

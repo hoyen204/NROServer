@@ -18,6 +18,9 @@ import com.girlkun.services.func.ChangeMapService;
 import com.girlkun.utils.SkillUtil;
 import com.girlkun.utils.Util;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
 
 public class Boss extends Player implements IBossNew, IBossOutfit {
 
@@ -50,6 +53,9 @@ public class Boss extends Player implements IBossNew, IBossOutfit {
     public Boss[][] bossAppearTogether;
 
     public Zone zoneFinal = null;
+    protected boolean isTimeout;
+
+    protected long lastTimeJoinMap;
 
     public Boss(int id, BossData... data) throws Exception {
         this.id = id;
@@ -58,7 +64,7 @@ public class Boss extends Player implements IBossNew, IBossOutfit {
             throw new Exception("Dữ liệu boss không hợp lệ");
         }
         this.data = data;
-        this.secondsRest = this.data[0].getSecondsRest();
+        this.secondsRest = this.data[0].getSecondsRest() * 1000;
         this.bossStatus = BossStatus.REST;
         BossManager.gI().addBoss(this);
 
@@ -82,7 +88,7 @@ public class Boss extends Player implements IBossNew, IBossOutfit {
         BossData data = this.data[this.currentLevel];
         this.name = String.format(data.getName(), Util.nextInt(0, 100));
         this.gender = data.getGender();
-        this.nPoint.mpg = 7_5_2002;
+        this.nPoint.mpg = 20_4_2001;
         this.nPoint.dameg = data.getDame();
         this.nPoint.hpg = data.getHp()[Util.nextInt(0, data.getHp().length - 1)];
         this.nPoint.hp = nPoint.hpg;
@@ -160,7 +166,9 @@ public class Boss extends Player implements IBossNew, IBossOutfit {
     public Zone getMapJoin() {
         int mapId = this.data[this.currentLevel].getMapJoin()[Util.nextInt(0, this.data[this.currentLevel].getMapJoin().length - 1)];
         Zone map = MapService.gI().getMapWithRandZone(mapId);
-        //to do: check boss in map
+        //to do: check boss in map (test required)
+        if (BossManager.gI().existBossOnZone(map))
+            return getMapJoin();
 
         return map;
     }
@@ -214,12 +222,14 @@ public class Boss extends Player implements IBossNew, IBossOutfit {
                 this.changeStatus(BossStatus.CHAT_S);
                 break;
             case CHAT_S:
-                if (chatS()) {
-                    this.doneChatS();
-                    this.lastTimeChatM = System.currentTimeMillis();
-                    this.timeChatM = 5000;
-                    this.changeStatus(BossStatus.ACTIVE);
+                if (!chatS()) {
+                    this.checkTimeOut();
+                    return;
                 }
+                this.doneChatS();
+                this.lastTimeChatM = System.currentTimeMillis();
+                this.timeChatM = 5000;
+                this.changeStatus(BossStatus.ACTIVE);
                 break;
             case ACTIVE:
                 this.chatM();
@@ -227,6 +237,7 @@ public class Boss extends Player implements IBossNew, IBossOutfit {
                     return;
                 }
                 this.active();
+                this.checkTimeOut();
                 break;
             case DIE:
                 this.changeStatus(BossStatus.CHAT_E);
@@ -238,8 +249,18 @@ public class Boss extends Player implements IBossNew, IBossOutfit {
                 }
                 break;
             case LEAVE_MAP:
+                isTimeout = false;
                 this.leaveMap();
                 break;
+        }
+    }
+
+    protected void checkTimeOut() {
+        if (Util.canDoWithTime(lastTimeJoinMap, secondsRest <= 0 ? BossesData.REST_15_M * 1000 : secondsRest)) {
+            if (data.length > 1)
+                currentLevel = data.length;
+            isTimeout = true;
+            leaveMap();
         }
     }
 
@@ -250,8 +271,7 @@ public class Boss extends Player implements IBossNew, IBossOutfit {
         if (nextLevel >= this.data.length) {
             nextLevel = 0;
         }
-        if (this.data[nextLevel].getTypeAppear() == TypeAppear.DEFAULT_APPEAR
-                && Util.canDoWithTime(lastTimeRest, secondsRest * 1000)) {
+        if ((this.data[nextLevel].getTypeAppear() == TypeAppear.DEFAULT_APPEAR && Util.canDoWithTime(lastTimeRest, secondsRest)) || isTimeout) {
             this.changeStatus(BossStatus.RESPAWN);
         }
     }
@@ -270,6 +290,7 @@ public class Boss extends Player implements IBossNew, IBossOutfit {
     public void joinMap() {
         if (zoneFinal != null) {
             joinMapByZone(zoneFinal);
+            this.lastTimeJoinMap = System.currentTimeMillis();
             this.notifyJoinMap();
             return;
         }
@@ -295,6 +316,7 @@ public class Boss extends Player implements IBossNew, IBossOutfit {
                 ChangeMapService.gI().changeMap(this, this.zone, this.location.x, this.location.y);
             }
             Service.gI().sendFlagBag(this);
+            this.lastTimeJoinMap = System.currentTimeMillis();
             this.notifyJoinMap();
         }
     }
@@ -316,7 +338,7 @@ public class Boss extends Player implements IBossNew, IBossOutfit {
 
     protected void notifyJoinMap() {
         if (this.id >= -22 && this.id <= -20) return;
-        if (this.zone.map.mapId == 140||MapService.gI().isMapMaBu(this.zone.map.mapId) || MapService.gI().isMapBlackBallWar(this.zone.map.mapId))
+        if (this.zone.map.mapId == 140 || MapService.gI().isMapMaBu(this.zone.map.mapId) || MapService.gI().isMapBlackBallWar(this.zone.map.mapId))
             return;
         ServerNotify.gI().notify("BOSS " + this.name + " vừa xuất hiện tại " + this.zone.map.mapName);
     }
@@ -379,14 +401,18 @@ public class Boss extends Player implements IBossNew, IBossOutfit {
 
     @Override
     public void attack() {
-        if (Util.canDoWithTime(this.lastTimeAttack, 100) && this.typePk == ConstPlayer.PK_ALL) {
+        if (Util.canDoWithTime(this.lastTimeAttack, Util.nextInt(0, 150)) && this.typePk == ConstPlayer.PK_ALL) {
             this.lastTimeAttack = System.currentTimeMillis();
             try {
+
                 Player pl = getPlayerAttack();
-                if (pl == null || pl.isDie()) {
+                if (pl == null || !pl.canBeAttack()) {
                     return;
                 }
                 this.playerSkill.skillSelect = this.playerSkill.skills.get(Util.nextInt(0, this.playerSkill.skills.size() - 1));
+                if (this.playerSkill.skillSelect.template.id == Skill.DE_TRUNG && this.mobMe != null) {
+                    return;
+                }
                 if (Util.getDistance(this, pl) <= this.getRangeCanAttackWithSkillSelect()) {
                     if (Util.isTrue(5, 20)) {
                         if (SkillUtil.isUseSkillChuong(this)) {
@@ -424,7 +450,7 @@ public class Boss extends Player implements IBossNew, IBossOutfit {
         } else if (skillId == Skill.DRAGON || skillId == Skill.DEMON || skillId == Skill.GALICK) {
             return Skill.RANGE_ATTACK_CHIEU_DAM;
         }
-        return 752002;
+        return 400;
     }
 
     @Override
@@ -558,7 +584,9 @@ public class Boss extends Player implements IBossNew, IBossOutfit {
 
     @Override
     public void wakeupAnotherBossWhenAppear() {
-        System.out.println(this.name + ":" + this.zone.map.mapName + " khu vực " + this.zone.zoneId + "(" + this.zone.map.mapId + ")");
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss - ");
+        LocalDateTime now = LocalDateTime.now();
+        System.out.println(dtf.format(now) + this.name + ":" + this.zone.map.mapName + " khu vực " + this.zone.zoneId + "(" + this.zone.map.mapId + ")");
         if (!MapService.gI().isMapMaBu(this.zone.map.mapId) && MapService.gI().isMapBlackBallWar(this.zone.map.mapId)) {
             System.out.println("BOSS " + this.name + " : " + this.zone.map.mapName + " khu vực " + this.zone.zoneId + "(" + this.zone.map.mapId + ")");
         }
@@ -583,15 +611,15 @@ public class Boss extends Player implements IBossNew, IBossOutfit {
             }
         }
     }
+
     @Override
     public void wakeupAnotherBossWhenDisappear() {
 //        System.out.println("wake up boss when disappear");
-        System.out.println("Boss " + this.name + " vừa bị tiêu diệt");
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss - ");
+        LocalDateTime now = LocalDateTime.now();
+        System.out.println(dtf.format(now) + "Boss " + this.name + " đã bị tiêu diệt");
     }
 
-}
+    
 
-/**
- * Vui lòng không sao chép mã nguồn này dưới mọi hình thức. Hãy tôn trọng tác
- * giả của mã nguồn này. Xin cảm ơn! - GirlBeo
- */
+}

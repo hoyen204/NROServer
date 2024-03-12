@@ -10,28 +10,29 @@ import com.girlkun.server.Client;
 import com.girlkun.services.func.ChangeMapService;
 import com.girlkun.utils.Logger;
 import com.girlkun.utils.Util;
+
 import java.io.IOException;
 
 
 public class FriendAndEnemyService {
-    
+
     private static final byte OPEN_LIST = 0;
-    
+
     private static final byte MAKE_FRIEND = 1;
     private static final byte REMOVE_FRIEND = 2;
-    
+
     private static final byte REVENGE = 1;
     private static final byte REMOVE_ENEMY = 2;
-    
+
     private static FriendAndEnemyService i;
-    
+
     public static FriendAndEnemyService gI() {
         if (i == null) {
             i = new FriendAndEnemyService();
         }
         return i;
     }
-    
+
     public void controllerFriend(Player player, Message msg) {
         try {
             byte action = msg.reader().readByte();
@@ -47,10 +48,10 @@ public class FriendAndEnemyService {
                     break;
             }
         } catch (IOException ex) {
-            
+
         }
     }
-    
+
     public void controllerEnemy(Player player, Message msg) {
         try {
             byte action = msg.reader().readByte();
@@ -82,10 +83,10 @@ public class FriendAndEnemyService {
                     break;
             }
         } catch (IOException ex) {
-            
+
         }
     }
-    
+
     private void reloadFriend(Player player) {
         for (Friend f : player.friends) {
             Player pl = null;
@@ -104,7 +105,7 @@ public class FriendAndEnemyService {
             }
         }
     }
-    
+
     private void reloadEnemy(Player player) {
         for (Enemy e : player.enemies) {
             Player pl = null;
@@ -123,7 +124,7 @@ public class FriendAndEnemyService {
             }
         }
     }
-    
+
     private void openListFriend(Player player) {
         reloadFriend(player);
         Message msg;
@@ -148,7 +149,7 @@ public class FriendAndEnemyService {
             Logger.logException(FriendAndEnemyService.class, e);
         }
     }
-    
+
     private void openListEnemy(Player player) {
         reloadEnemy(player);
         Message msg;
@@ -159,7 +160,7 @@ public class FriendAndEnemyService {
             for (Enemy e : player.enemies) {
                 msg.writer().writeInt(e.id);
                 msg.writer().writeShort(e.head);
-                 msg.writer().writeShort(-1);
+                msg.writer().writeShort(-1);
                 msg.writer().writeShort(e.body);
                 msg.writer().writeShort(e.leg);
                 msg.writer().writeShort(e.bag);
@@ -173,7 +174,7 @@ public class FriendAndEnemyService {
             Logger.logException(FriendAndEnemyService.class, e);
         }
     }
-    
+
     private void makeFriend(Player player, int playerId) {
         boolean madeFriend = false;
         for (Friend friend : player.friends) {
@@ -196,7 +197,7 @@ public class FriendAndEnemyService {
             }
         }
     }
-    
+
     private void removeFriend(Player player, int playerId) {
         for (int i = 0; i < player.friends.size(); i++) {
             if (player.friends.get(i).id == playerId) {
@@ -216,7 +217,7 @@ public class FriendAndEnemyService {
             }
         }
     }
-    
+
     private void removeEnemy(Player player, int playerId) {
         for (int i = 0; i < player.enemies.size(); i++) {
             if (player.enemies.get(i).id == playerId) {
@@ -226,7 +227,7 @@ public class FriendAndEnemyService {
         }
         openListEnemy(player);
     }
-    
+
     public void chatPrivate(Player player, Message msg) {
         if (Util.canDoWithTime(player.iDMark.getLastTimeChatPrivate(), 5000)) {
             player.iDMark.setLastTimeChatPrivate(System.currentTimeMillis());
@@ -241,7 +242,7 @@ public class FriendAndEnemyService {
             }
         }
     }
-    
+
     public void acceptMakeFriend(Player player, int playerId) {
         Player pl = Client.gI().getPlayer(playerId);
         if (pl != null) {
@@ -261,14 +262,14 @@ public class FriendAndEnemyService {
             Service.gI().sendThongBao(player, "Không tìm thấy hoặc đang Offline, vui lòng thử lại sau");
         }
     }
-    
+
     public void goToPlayerWithYardrat(Player player, Message msg) {
         try {
             Player pl = Client.gI().getPlayer(msg.reader().readInt());
             if (pl != null) {
                 if (player.isAdmin() || player.nPoint.teleport) {
                     if (!pl.itemTime.isUseAnDanh || player.isAdmin()) {
-                        if ((player.isAdmin() || !pl.zone.isFullPlayer()) && !MapService.gI().isMapDoanhTrai(pl.zone.map.mapId)&& !MapService.gI().isMapMaBu(pl.zone.map.mapId)) {
+                        if ((player.isAdmin() || !pl.zone.isFullPlayer()) && !MapService.gI().isMapDoanhTrai(pl.zone.map.mapId) && !MapService.gI().isMapMaBu(pl.zone.map.mapId)) {
                             ChangeMapService.gI().changeMapYardrat(player, pl.zone, pl.location.x + Util.nextInt(-5, 5), pl.location.y);
                         } else {
                             Service.gI().sendThongBao(player, "Không thể thực hiện");
@@ -284,12 +285,16 @@ public class FriendAndEnemyService {
 
         }
     }
-    
+
     public void addEnemy(Player player, Player enemy) {
         boolean hadEnemy = false;
+        if (enemy == player) {
+            return;
+        }
         for (Enemy ene : player.enemies) {
-            if (ene.id == ene.id) {
+            if (ene.id == enemy.id) {
                 hadEnemy = true;
+                break;
             }
         }
         if (!hadEnemy) {

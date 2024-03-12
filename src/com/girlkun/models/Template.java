@@ -4,6 +4,7 @@ import com.girlkun.consts.ConstMap;
 import com.girlkun.models.item.Item;
 import com.girlkun.models.map.WayPoint;
 import com.girlkun.models.skill.Skill;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -50,7 +51,7 @@ public class Template {
         public boolean isUpToUp;
 
         public int strRequire;
-        
+
         public int gold;
 
         public int gem;
@@ -58,9 +59,9 @@ public class Template {
         public int ruby;
 
         public int head;
-        
+
         public int body;
-        
+
         public int leg;
 
         public ItemTemplate() {
@@ -208,7 +209,6 @@ public class Template {
     }
 
     public static class ItemLuckyRound {
-
         public Template.ItemTemplate temp;
         public int ratio;
         public int typeRatio;
@@ -220,7 +220,6 @@ public class Template {
     }
 
     public static class ItemOptionLuckyRound {
-
         public Item.ItemOption itemOption;
         public int param1;
         public int param2;

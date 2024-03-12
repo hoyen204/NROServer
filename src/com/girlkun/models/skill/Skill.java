@@ -35,6 +35,10 @@ public class Skill {
 
     public static final byte KHIEN_NANG_LUONG = 19;
 
+    public static final byte SUPER_KAME = 24;//skil new
+    public static final byte LIEN_HOAN_CHUONG = 25;
+    public static final byte MA_PHONG_BA = 26;
+
     public SkillTemplate template;
 
     public short skillId;
@@ -60,6 +64,7 @@ public class Skill {
     public String moreInfo;
 
     public short price;
+    public int currLevel;
 
     public Skill() {
 

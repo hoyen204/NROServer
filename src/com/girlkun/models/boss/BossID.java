@@ -3,47 +3,46 @@ package com.girlkun.models.boss;
 
 public class BossID {
 
-    private BossID(){
-        
+    private BossID() {
+
     }
-    
-    
+
+
     public static final int KUKU = -20;
     public static final int MAP_DAU_DINH = -21;
     public static final int RAMBO = -22;
-    
-    
-    
-//   
+
+
+    //
     public static final int SO_4 = -23;
     public static final int SO_3 = -24;
     public static final int SO_2 = -25;
     public static final int SO_1 = -26;
     public static final int TIEU_DOI_TRUONG = -27;
-    
+
     public static final int TDST = -223;
-    
+
     public static final int FIDE = -28;
-    
+
     public static final int COOLER = -29;
-    
+
     public static final int ANDROID_19 = -30;
     public static final int DR_KORE = -31;
-    
+
     public static final int ANDROID_13 = -32;
     public static final int ANDROID_14 = -33;
     public static final int ANDROID_15 = -34;
-    
+
     public static final int PIC = -35;
     public static final int POC = -36;
     public static final int KING_KONG = -37;
-    
+
     public static final int XEN_BO_HUNG = -100;
     public static final int SIEU_BO_HUNG = -101;
     public static final int XEN_CON_1 = -102;
-    
+
     public static final int TRUNG_UY_TRANG = -200;
-    
+
     public static final int COOLER_GOLD = -201;
     public static final int VUA_COLD = -202;
 
@@ -62,18 +61,18 @@ public class BossID {
     public static final int XEKO = -218;
 
     public static final int MABU = -214;
-        public static final int CUMBER = -215;
-     public static final int BLACK3 = -231;    
+    public static final int CUMBER = -215;
+    public static final int BLACK3 = -231;
     public static final int BROLY = -1;
-    
+
     public static final int SONGOKU_TA_AC = -217;
     public static final int FIDE_ROBOT = -216;
 
 
     //super 17 saga
-    public static  final int SUPER_ANDROID_17 = -247;
-    public  static final int DR_MYUU = -219;
-    public  static final  int DR_KORE_GT = -220;
+    public static final int SUPER_ANDROID_17 = -247;
+    public static final int DR_MYUU = -219;
+    public static final int DR_KORE_GT = -220;
 
     public static final int Rong_1Sao = -224;
     public static final int Rong_2Sao = -225;
@@ -93,9 +92,6 @@ public class BossID {
     public static final int BUI_BUI_2 = -238;
 
 
-
-
-
     public static final int BLACK = -203;
     public static final int BLACK1 = -241;
     public static final int BLACK2 = -242;
@@ -106,7 +102,7 @@ public class BossID {
     public static final int THIEN_SU_WHIS = -240;
     public static final int THAN_HUY_DIET_CHAMPA = -245;
     public static final int THIEN_SU_VADOS = -246;
-    public static final int  SUPER_XEN= -248;
+    public static final int SUPER_XEN = -248;
     public static final int KAMIRIN = -253;
     public static final int KAMILOC = -249;
     public static final int KAMI_SOOME = -250;
@@ -114,8 +110,8 @@ public class BossID {
     public static final int CUMBERBLACK = -252;
     public static final byte SON_TINH = -6;
     public static final byte THUY_TINH = -8;
-    
-     public static final byte SOI_HEC_QUYN = -77;
+
+    public static final byte SOI_HEC_QUYN = -77;
     public static final byte O_DO = -78;
     public static final byte XINBATO = -79;
     public static final byte CHA_PA = -80;
@@ -130,38 +126,4 @@ public class BossID {
     public static final byte THIEN_XIN_HANG_CLONE1 = -89;
     public static final byte THIEN_XIN_HANG_CLONE2 = -90;
     public static final byte THIEN_XIN_HANG_CLONE3 = -91;
-    
-
-
-    
-
-
-
-
-
-
-
-        
-
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

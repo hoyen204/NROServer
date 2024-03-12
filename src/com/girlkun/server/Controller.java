@@ -3,43 +3,33 @@ package com.girlkun.server;
 import com.arriety.card.Card;
 import com.arriety.card.RadarCard;
 import com.arriety.card.RadarService;
-import com.girlkun.database.GirlkunDB;
-import com.girlkun.models.item.Item;
-import com.girlkun.result.GirlkunResultSet;
 import com.girlkun.consts.ConstIgnoreName;
 import com.girlkun.consts.ConstMap;
-import com.girlkun.services.*;
-import com.girlkun.utils.Util;
-import com.girlkun.data.DataGame;
-import com.girlkun.server.io.MySession;
-
-import java.io.IOException;
-
-import com.girlkun.services.func.ChangeMapService;
-import com.girlkun.services.func.UseItem;
-import com.girlkun.services.func.Input;
 import com.girlkun.consts.ConstNpc;
 import com.girlkun.consts.ConstTask;
+import com.girlkun.data.DataGame;
 import com.girlkun.data.ItemData;
+import com.girlkun.database.GirlkunDB;
 import com.girlkun.jdbc.daos.PlayerDAO;
+import com.girlkun.models.boss.Boss;
 import com.girlkun.models.boss.BossManager;
 import com.girlkun.models.map.blackball.BlackBallWar;
+import com.girlkun.models.matches.PVPService;
 import com.girlkun.models.npc.NpcManager;
 import com.girlkun.models.player.Player;
-import com.girlkun.models.matches.PVPService;
 import com.girlkun.models.shop.ShopServiceNew;
 import com.girlkun.network.handler.IMessageHandler;
 import com.girlkun.network.io.Message;
 import com.girlkun.network.session.ISession;
-import com.girlkun.services.func.CombineServiceNew;
-
-import static com.girlkun.services.func.Input.CHOOSE_LEVEL_BDKB;
-import static com.girlkun.services.func.Input.NUMERIC;
-
-import com.girlkun.services.func.LuckyRound;
-import com.girlkun.services.func.TransactionService;
+import com.girlkun.result.GirlkunResultSet;
+import com.girlkun.server.io.MySession;
+import com.girlkun.services.*;
+import com.girlkun.services.func.*;
 import com.girlkun.utils.Logger;
+import com.girlkun.utils.Util;
 import com.kygui.ShopKyGuiService;
+
+import java.io.IOException;
 
 
 public class Controller implements IMessageHandler {
@@ -56,6 +46,9 @@ public class Controller implements IMessageHandler {
     @Override
     public void onMessage(ISession s, Message _msg) {
         MySession _session = (MySession) s;
+//        if (Manager.gI().listIPBanned.stream().anyMatch(x -> x.equals(_session.ipAddress))) {
+//            return;
+//        }
         long st = System.currentTimeMillis();
         Player player = null;
         try {
@@ -66,7 +59,7 @@ public class Controller implements IMessageHandler {
 //            }
 //            System.out.println("***************************CMD receive: " + cmd);
             switch (cmd) {
-                  case -100:
+                case -100:
                     byte action = _msg.reader().readByte();
                     switch (action) {
                         case 0:
@@ -86,7 +79,6 @@ public class Controller implements IMessageHandler {
                             break;
                         case 1:
                         case 2: // hủy ký gửi
-
                             // nhận tiền
                             idItem = _msg.reader().readShort();
                             ShopKyGuiService.gI().claimOrDel(player, action, idItem);
@@ -152,8 +144,9 @@ public class Controller implements IMessageHandler {
                     break;
                 case -105:
                     if (player.type == 0 && player.maxTime == 30) {
+                        player.maxTime = -1;
                         ChangeMapService.gI().changeMap(player, 102, 0, 100, 336);
-                    } else if (player.type == 1 && player.maxTime == 5) {
+                    } else if (player.type == 1 && player.maxTime == 6) {
                         ChangeMapService.gI().changeMap(player, 160, 0, -1, 5);
                     }
                     break;
@@ -218,7 +211,6 @@ public class Controller implements IMessageHandler {
                     }
                     break;
                 case -107:
-
                     if (player != null) {
                         Service.gI().showInfoPet(player);
                     }
@@ -226,6 +218,21 @@ public class Controller implements IMessageHandler {
                 case -108:
                     if (player != null && player.pet != null) {
                         player.pet.changeStatus(_msg.reader().readByte());
+                    }
+                    break;
+                case -118:
+                    if (player != null) {
+                        if (player.isAdmin()) {
+                            int bossId = _msg.reader().readInt();
+                            Boss boss = BossManager.gI().getBossById(bossId);
+                            if (boss != null && boss.zone != null) {
+                                ChangeMapService.gI().changeMapInYard(player, boss.zone, boss.location.x);
+                            } else {
+                                Service.gI().sendThongBao(player, "Không tìm thấy boss id " + bossId);
+                            }
+                        } else {
+                            Service.gI().sendThongBao(player, "Chức năng đang bảo trì");
+                        }
                     }
                     break;
                 case 6: //buy item
@@ -276,7 +283,7 @@ public class Controller implements IMessageHandler {
                     break;
                 case -113:
                     if (player != null) {
-                        for (int i = 0; i < 5; i++) {
+                        for (int i = 0; i < 10; i++) {
                             player.playerSkill.skillShortCut[i] = _msg.reader().readByte();
                         }
                         player.playerSkill.sendSkillShortCut();
@@ -376,8 +383,7 @@ public class Controller implements IMessageHandler {
                     break;
                 case -45:
                     if (player != null) {
-                        byte status = _msg.reader().readByte();
-                        SkillService.gI().useSkill(player, null, null);
+                        SkillService.gI().useSkill(player, null, null, _msg);
                     }
                     break;
                 case -46:
@@ -466,7 +472,7 @@ public class Controller implements IMessageHandler {
                                 player.billEgg.sendBillEgg();
                             }
                         }
-                      if (player.zone.map.mapId == (7* player.gender)) {
+                        if (player.zone.map.mapId == (7 * player.gender)) {
                             if (player.billEgg != null) {
                                 player.billEgg.sendBillEgg();
                             }
@@ -543,7 +549,7 @@ public class Controller implements IMessageHandler {
                     break;
                 case -15: // về nhà
                     if (player != null) {
-                        ChangeMapService.gI().changeMapBySpaceShip(player, player.gender + 21, 0, -1);
+                        ChangeMapService.gI().returnTown(player, player.gender + 21, 0, -1);
                     }
                     break;
                 case -16: // hồi sinh
@@ -690,7 +696,7 @@ public class Controller implements IMessageHandler {
                                 }
                             }
                             if (isNotIgnoreName) {
-                                created = PlayerDAO.createNewPlayer(session.userId, name.toLowerCase(), (byte) gender, hair);
+                                created = PlayerDAO.createNewPlayer(session, name.toLowerCase(), (byte) gender, hair);
                             }
                         }
                     }
@@ -705,13 +711,14 @@ public class Controller implements IMessageHandler {
                 }
             }
             if (created) {
+//                System.out.println(session.uu +"/"+session.pp);
                 session.login(session.uu, session.pp);
             }
         }
     }
 
     public void login2(MySession session, Message msg) {
-        Service.gI().switchToRegisterScr(session);
+        Service.gI().switchToCreateChar(session);
 //        Service.gI().sendThongBaoOK(session, "Vui lòng đăng ký tài khoản tại trang chủ!");
     }
 
@@ -770,11 +777,15 @@ public class Controller implements IMessageHandler {
         //clear vt sk
         clearVTSK(player);
 
-        if (TaskService.gI().getIdTask(player) == ConstTask.TASK_0_0) {
+        if (player.getSession().isTempAccount) {
             NpcService.gI().createTutorial(player, -1,
-                    "Chào mừng " + player.name + " đến với ngọc rồng online server ZEUS\n"
-                    + "Nhiệm vụ đầu tiên của bạn là di chuyển\n"
-                    + "Bạn hãy di chuyển nhân vật theo mũi tên chỉ hướng");
+                    "Tài khoản hiện chưa được đăng ký hãy mau chóng đăng ký trước khi offline\n"
+                            + "Nếu không đăng ký sau khi bạn rời game tài khoản sẽ bị xóa");
+        } else if (TaskService.gI().getIdTask(player) == ConstTask.TASK_0_0) {
+            NpcService.gI().createTutorial(player, -1,
+                    "Chào mừng " + player.name + " đến với ngọc rồng online server Ids\n"
+                            + "Nhiệm vụ đầu tiên của bạn là di chuyển\n"
+                            + "Bạn hãy di chuyển nhân vật theo mũi tên chỉ hướng");
         }
 
         if (player.inventory.itemsBody.get(10).isNotNullItem()) {

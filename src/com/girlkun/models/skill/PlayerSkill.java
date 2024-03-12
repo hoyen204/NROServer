@@ -27,7 +27,7 @@ public class PlayerSkill {
         return null;
     }
 
-    public byte[] skillShortCut = new byte[5];
+    public byte[] skillShortCut = new byte[10];
 
     public void sendSkillShortCut() {
         Message msg;
@@ -47,13 +47,13 @@ public class PlayerSkill {
         } catch (Exception e) {
         }
     }
-    
-    
+
+
 
     public boolean prepareQCKK;
     public boolean prepareTuSat;
     public boolean prepareLaze;
-    
+
     public long lastTimePrepareQCKK;
     public long lastTimePrepareTuSat;
     public long lastTimePrepareLaze;
@@ -84,7 +84,7 @@ public class PlayerSkill {
         }
         return size;
     }
-    
+
     public void dispose(){
         if(this.skillSelect != null){
             this.skillSelect.dispose();

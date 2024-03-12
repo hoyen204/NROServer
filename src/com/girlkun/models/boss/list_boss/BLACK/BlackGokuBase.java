@@ -22,8 +22,8 @@ public class BlackGokuBase extends Boss {
         byte randomDo = (byte) new Random().nextInt(Manager.itemIds_TL.length - 1);
         byte randomNR = (byte) new Random().nextInt(Manager.itemIds_NR_SB.length);
         if (Util.isTrue(BossManager.ratioReward, 100)) {
-            if (Util.isTrue(1, 20)) {
-                 Service.gI().dropItemMap(this.zone, new ItemMap (zone, 865, 1, this.location.x, this.location.y, plKill.id));
+            if (Util.isTrue(1, 10)) {
+                Service.gI().dropItemMap(this.zone, new ItemMap(zone, 865, 1, this.location.x, this.location.y, plKill.id));
             } else {
                 Service.gI().dropItemMap(this.zone, Util.ratiItem(zone, Manager.itemIds_TL[randomDo], 1, this.location.x, this.location.y, plKill.id));
             }
@@ -31,6 +31,7 @@ public class BlackGokuBase extends Boss {
             Service.gI().dropItemMap(this.zone, new ItemMap(zone, Manager.itemIds_NR_SB[randomNR], 1, this.location.x, zone.map.yPhysicInTop(this.location.x, this.location.y - 24), plKill.id));
         }
     }
+
     @Override
     public int injured(Player plAtt, int damage, boolean piercing, boolean isMobAttack) {
         if (!this.isDie()) {
@@ -38,12 +39,12 @@ public class BlackGokuBase extends Boss {
                 this.chat("Xí hụt");
                 return 0;
             }
-            damage = this.nPoint.subDameInjureWithDeff(damage/2);
+            damage = this.nPoint.subDameInjureWithDeff(damage);
             if (!piercing && effectSkill.isShielding) {
                 if (damage > nPoint.hpMax) {
                     EffectSkillService.gI().breakShield(this);
                 }
-                damage = damage/2;
+                damage = damage / 2;
             }
             this.nPoint.subHP(damage);
             if (isDie()) {
@@ -55,10 +56,11 @@ public class BlackGokuBase extends Boss {
             return 0;
         }
     }
+
     @Override
     public void active() {
         super.active(); //To change body of generated methods, choose Tools | Templates.
-        if (Util.canDoWithTime(st, 900000)) {
+        if (Util.canDoWithTime(st, this.secondsRest)) {
             this.changeStatus(BossStatus.LEAVE_MAP);
         }
     }

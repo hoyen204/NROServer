@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import com.girlkun.models.matches.pvp.DaiHoiVoThuat;
 import com.girlkun.models.matches.pvp.DaiHoiVoThuatService;
 
@@ -71,6 +72,10 @@ public class Client implements Runnable {
         if (session.player != null) {
             this.remove(session.player);
             session.player.dispose();
+            if (session.isTempAccount) {
+                PlayerDAO.removePlayer(session.userId);
+                return;
+            }
         }
         if (session.joinedGame) {
             session.joinedGame = false;
@@ -89,11 +94,11 @@ public class Client implements Runnable {
         this.players_userId.remove(player.getSession().userId);
         this.players.remove(player);
         if (!player.beforeDispose) {
-            DaiHoiVoThuatService.gI(DaiHoiVoThuat.gI().getDaiHoiNow()).removePlayerWait(player);  
-            DaiHoiVoThuatService.gI(DaiHoiVoThuat.gI().getDaiHoiNow()).removePlayer(player);  
+            DaiHoiVoThuatService.gI(DaiHoiVoThuat.gI().getDaiHoiNow()).removePlayerWait(player);
+            DaiHoiVoThuatService.gI(DaiHoiVoThuat.gI().getDaiHoiNow()).removePlayer(player);
             player.beforeDispose = true;
             player.mapIdBeforeLogout = player.zone.map.mapId;
-            if(player.idNRNM != -1){
+            if (player.idNRNM != -1) {
                 ItemMap itemMap = new ItemMap(player.zone, player.idNRNM, 1, player.location.x, player.location.y, -1);
                 Service.gI().dropItemMap(player.zone, itemMap);
                 NgocRongNamecService.gI().pNrNamec[player.idNRNM - 353] = "";
@@ -129,6 +134,7 @@ public class Client implements Runnable {
                 ChangeMapService.gI().exitMap(player.pet);
             }
         }
+
         PlayerDAO.updatePlayer(player);
     }
 
@@ -152,15 +158,11 @@ public class Client implements Runnable {
     }
 
     public void close() {
-        Logger.error("BEGIN KICK OUT SESSION.............................." + players.size() + "\n");
-//        while(!GirlkunSessionManager.gI().getSessions().isEmpty()){
-//            Logger.error("LEFT PLAYER: " + this.players.size() + ".........................\n");
-//            this.kickSession((MySession) GirlkunSessionManager.gI().getSessions().remove(0));
-//        }
         while (!players.isEmpty()) {
+            Logger.error("LEFT PLAYER: " + this.players.size() + ".........................\n");
             this.kickSession((MySession) players.remove(0).getSession());
         }
-        Logger.error("...........................................SUCCESSFUL\n");
+        Logger.success("...........................................SUCCESSFUL\n");
     }
 
     public void cloneMySessionNotConnect() {

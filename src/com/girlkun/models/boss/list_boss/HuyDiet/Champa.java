@@ -30,7 +30,7 @@ public class Champa extends Boss {
         ItemMap itemMap;
         if (Util.isTrue(5, 100)) {
             if (Util.isTrue(1, 50)) {
-                itemMap = Util.ratiItem(zone, 1142, 1, this.location.x, this.location.y, plKill.id);
+                itemMap = Util.ratiItem(zone, 2044, 1, this.location.x, this.location.y, plKill.id);
             } else {
                 itemMap = Util.ratiItem(zone, Manager.itemIds_TL[randomDo], 1, this.location.x, this.location.y, plKill.id);
             }
@@ -89,28 +89,25 @@ public class Champa extends Boss {
 //    private long st;
 
     private void huydiet() {
-        if (!Util.canDoWithTime(this.lasttimehakai, this.timehakai) || !Util.isTrue(1, 100)) {
-            return;
-        }
-        Player pl = this.zone.getRandomPlayerInMap();
-        if (pl == null || pl.isDie()) {
-            return;
-        }
-        this.nPoint.dameg += (pl.nPoint.dame * 5 / 100);
-        this.nPoint.hpg += (pl.nPoint.hp * 2 / 100);
-        this.nPoint.critg++;
-        this.nPoint.calPoint();
-        PlayerService.gI().hoiPhuc(this, pl.nPoint.hp, 0);
-        pl.injured(null, pl.nPoint.hpMax, true, false);
-        Service.gI().sendThongBao(pl, "Bạn vừa bị " + this.name + " cho bay màu");
-        this.chat(2, "Hắn ta mạnh quá,coi chừng " + pl.name + ",tên " + this.name + " hắn không giống như những kẻ thù trước đây");
-        this.chat("Thật là yếu ớt " + pl.name);
-        this.lasttimehakai = System.currentTimeMillis();
-        this.timehakai = Util.nextInt(20000, 30000);
+//        if (!Util.canDoWithTime(this.lasttimehakai, this.timehakai) || !Util.isTrue(1, 100)) {
+//            return;
+//        }
+//        Player pl = this.zone.getRandomPlayerInMap();
+//        if (pl == null || pl.isDie()) {
+//            return;
+//        }
+//        this.nPoint.dameg += (pl.nPoint.dame * 5 / 100);
+//        this.nPoint.hpg += (pl.nPoint.hp * 2 / 100);
+//        this.nPoint.critg++;
+//        this.nPoint.calPoint();
+//        PlayerService.gI().hoiPhuc(this, pl.nPoint.hp, 0);
+//        pl.injured(null, pl.nPoint.hpMax, true, false);
+//        Service.gI().sendThongBao(pl, "Bạn vừa bị " + this.name + " cho bay màu");
+//        this.chat(2, "Hắn ta mạnh quá,coi chừng " + pl.name + ",tên " + this.name + " hắn không giống như những kẻ thù trước đây");
+//        this.chat("Thật là yếu ớt " + pl.name);
+//        this.lasttimehakai = System.currentTimeMillis();
+//        this.timehakai = Util.nextInt(20000, 30000);
     }
-
-
-
 }
 
 

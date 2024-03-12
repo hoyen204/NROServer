@@ -47,8 +47,10 @@ import com.girlkun.models.boss.list_boss.kami.kamiSooMe;
 import com.girlkun.models.boss.list_boss.nappa.*;
 import com.girlkun.models.boss.list_boss.sontinhthuytinh.Sontinh;
 import com.girlkun.models.boss.list_boss.sontinhthuytinh.Thuytinh;
+import com.girlkun.models.map.Zone;
 import com.girlkun.models.player.Player;
 import com.girlkun.network.io.Message;
+import com.girlkun.server.Manager;
 import com.girlkun.server.ServerManager;
 import com.girlkun.services.ItemMapService;
 import com.girlkun.services.MapService;
@@ -59,7 +61,7 @@ import java.util.List;
 public class BossManager implements Runnable {
 
     private static BossManager I;
-    public static final byte ratioReward = 2;
+    public static final int ratioReward = Manager.isTestServer ? 50 : 5;
 
     public static BossManager gI() {
         if (BossManager.I == null) {
@@ -143,6 +145,8 @@ public class BossManager implements Runnable {
             this.createBoss(BossID.ANDROID_14);
             this.createBoss(BossID.SUPER_ANDROID_17);
             this.createBoss(BossID.MABU);
+
+            this.createBoss(BossID.SIEU_BO_HUNG);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -290,6 +294,10 @@ public class BossManager implements Runnable {
         return player.zone.getBosses().size() > 0;
     }
 
+    public boolean existBossOnZone(Zone zone) {
+        return zone.getBosses().size() > 0;
+    }
+
     public void showListBoss(Player player) {
         if (!player.isAdmin()) {
             return;
@@ -297,7 +305,7 @@ public class BossManager implements Runnable {
         Message msg;
         try {
             msg = new Message(-96);
-            msg.writer().writeByte(99);
+            msg.writer().writeByte(0);
             msg.writer().writeUTF("Boss");
             msg.writer().writeByte((int) bosses.stream().filter(boss -> !MapService.gI().isMapMaBu(boss.data[0].getMapJoin()[0]) && !MapService.gI().isMapBlackBallWar(boss.data[0].getMapJoin()[0])).count());
             for (int i = 0; i < bosses.size(); i++) {
@@ -308,11 +316,10 @@ public class BossManager implements Runnable {
                 msg.writer().writeInt(i);
                 msg.writer().writeInt((int) boss.id);
                 msg.writer().writeShort(boss.data[0].getOutfit()[0]);
-                if (player.getSession().version > 214) {
+                if(player.getSession().version > 214){
                     msg.writer().writeShort(-1);
                 }
                 msg.writer().writeShort(boss.data[0].getOutfit()[1]);
-
                 msg.writer().writeShort(boss.data[0].getOutfit()[2]);
                 msg.writer().writeUTF(boss.data[0].getName());
                 if (boss.zone != null) {

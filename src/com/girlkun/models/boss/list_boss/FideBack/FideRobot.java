@@ -5,8 +5,10 @@ import com.girlkun.models.boss.BossID;
 import com.girlkun.models.boss.BossesData;
 import com.girlkun.models.map.ItemMap;
 import com.girlkun.models.player.Player;
+import com.girlkun.server.Manager;
 import com.girlkun.services.Service;
 import com.girlkun.utils.Util;
+
 import java.util.Random;
 
 
@@ -16,13 +18,13 @@ public class FideRobot extends Boss {
         super(BossID.FIDE_ROBOT, BossesData.FIDE_ROBOT);
     }
 
-      @Override
+    @Override
     public void reward(Player plKill) {
-        int[] itemDos = new int[]{555, 557, 559, 556, 558, 560, 562, 564, 566, 563, 565, 567};
+        Short[] itemDos = Manager.itemIds_TL;
         int[] NRs = new int[]{15, 16};
         int randomDo = new Random().nextInt(itemDos.length);
         int randomNR = new Random().nextInt(NRs.length);
-        if (Util.isTrue(15, 100)) {
+        if (Util.isTrue(25, 100)) {
             if (Util.isTrue(1, 5)) {
                 Service.gI().dropItemMap(this.zone, Util.ratiItem(zone, 561, 1, this.location.x, this.location.y, plKill.id));
                 return;
@@ -35,6 +37,7 @@ public class FideRobot extends Boss {
 
     @Override
     public void active() {
+        super.active();
         this.attack();
     }
 
@@ -56,7 +59,7 @@ public class FideRobot extends Boss {
 //        return super.injured(plAtt, damage, piercing, isMobAttack);
 //    }
 
- 
+
 }
 
 /**

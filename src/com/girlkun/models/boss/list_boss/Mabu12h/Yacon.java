@@ -9,6 +9,8 @@ import com.girlkun.server.Manager;
 import com.girlkun.services.Service;
 import com.girlkun.utils.Util;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Random;
 
 public class Yacon extends Boss {
@@ -38,6 +40,10 @@ public class Yacon extends Boss {
             Service.gI().dropItemMap(this.zone, new ItemMap(zone, Manager.itemIds_NR_SB[randomNR], 1, this.location.x, this.location.y, plKill.id));
         }
         plKill.fightMabu.changePoint((byte) 20);
+    }
+
+    @Override
+    public void wakeupAnotherBossWhenDisappear() {
     }
 
 //    @Override

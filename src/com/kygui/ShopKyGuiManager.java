@@ -18,10 +18,6 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
 
-/**
- *
- * @author Administrator
- */
 public class ShopKyGuiManager {
     private static ShopKyGuiManager instance;
     public static ShopKyGuiManager gI() {

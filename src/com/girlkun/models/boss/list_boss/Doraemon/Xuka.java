@@ -6,6 +6,7 @@ import com.girlkun.models.boss.BossStatus;
 import com.girlkun.models.boss.BossesData;
 import com.girlkun.models.map.ItemMap;
 import com.girlkun.models.player.Player;
+import com.girlkun.server.Manager;
 import com.girlkun.services.EffectSkillService;
 import com.girlkun.services.Service;
 import com.girlkun.services.TaskService;
@@ -19,7 +20,7 @@ public class Xuka extends Boss {
     }
      @Override
     public void reward(Player plKill) {
-        int[] itemDos = new int[]{1142, 1142, 559, 556, 558, 560, 562, 564, 566, 563, 1142, 1142};
+        Short[] itemDos = Manager.itemIds_TL;
         int[] NRs = new int[]{16,18};
         int randomDo = new Random().nextInt(itemDos.length);
         int randomNR = new Random().nextInt(NRs.length);
@@ -49,9 +50,9 @@ public class Xuka extends Boss {
     }  @Override
     public void active() {
         super.active(); //To change body of generated methods, choose Tools | Templates.
-        if(Util.canDoWithTime(st,900000)){
-            this.changeStatus(BossStatus.LEAVE_MAP);
-        }
+//        if(Util.canDoWithTime(st,900000)){
+//            this.changeStatus(BossStatus.LEAVE_MAP);
+//        }
     }
 
     @Override

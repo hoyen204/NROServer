@@ -6,21 +6,16 @@ import com.girlkun.models.mob.Mob;
 import com.girlkun.models.mob.MobMe;
 import com.girlkun.models.player.Pet;
 import com.girlkun.models.player.Player;
+import com.girlkun.models.player.SkillSpecial;
 import com.girlkun.models.skill.Skill;
 import com.girlkun.network.io.Message;
-import com.girlkun.services.func.ChangeMapService;
 import com.girlkun.utils.Logger;
 import com.girlkun.utils.SkillUtil;
 import com.girlkun.utils.Util;
+
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- *
- * @author ðŸ’– Tráº§n Láº¡i ðŸ’–
- * @copyright ðŸ’– GirlkuN ðŸ’–
- *
- */
 public class SkillService {
 
     private static SkillService i;
@@ -37,10 +32,14 @@ public class SkillService {
     }
 
     public boolean useSkill(Player player, Player plTarget, Mob mobTarget) {
-        if(player.effectSkill.isHaveEffectSkill()){
-         return false;
+        return useSkill(player, plTarget, mobTarget, null);
+    }
+
+    public boolean useSkill(Player player, Player plTarget, Mob mobTarget, Message message) {
+        if (player.effectSkill.isHaveEffectSkill()) {
+            return false;
         }
-               
+
         if (player.playerSkill == null) {
             return false;
         }
@@ -63,21 +62,335 @@ public class SkillService {
         if (player.effectSkill.isCharging) {
             EffectSkillService.gI().stopCharge(player);
         }
-        if (player.isPet) {
-//            ((Pet) player).lastTimeMoveIdle = System.currentTimeMillis();
-        }
         switch (player.playerSkill.skillSelect.template.type) {
             case 1:
                 useSkillAttack(player, plTarget, mobTarget);
-//                Service.gI().releaseCooldownSkill(player);
                 break;
             case 3:
                 useSkillAlone(player);
+                break;
+            case 4:
+                userSkillSpecial(player, message);
                 break;
             default:
                 return false;
         }
         return true;
+    }
+
+    private void userSkillSpecial(Player player, Message message) {
+        if (message == null) {
+            return;
+        }
+        try {
+            byte st = message.reader().readByte();
+            byte skillId = message.reader().readByte();
+            Short dx = message.reader().readShort();
+            Short dy = message.reader().readShort();
+            byte dir = message.reader().readByte();
+            Short x = message.reader().readShort();
+            Short y = message.reader().readShort();
+            switch (skillId) {
+                case Skill.SUPER_KAME:
+                    sendEffSkillSpecialID24(player, dir);
+                    break;
+                case Skill.LIEN_HOAN_CHUONG:
+                    sendEffSkillSpecialID25(player, dir);
+                    break;
+                case Skill.MA_PHONG_BA:
+                    sendEffSkillSpecialID26(player, dir);
+                    break;
+            }
+            affterUseSkill(player, player.playerSkill.skillSelect.template.id);
+            player.skillSpecial.setSkillSpecial(dir, dx, dy, x, y);
+            setLastTimeUseSkill(player, player.playerSkill.skillSelect.template.id);
+        } catch (Exception e) {
+        }
+    }
+
+    public void updateSkillSpecial(Player player) {
+        try {
+            if (player.isDie() || player.effectSkill.isHaveEffectSkill()) {
+                player.skillSpecial.closeSkillSpecial();
+                return;
+            }
+            if (player.skillSpecial.skillSpecial.template.id == Skill.MA_PHONG_BA) {
+                if (Util.canDoWithTime(player.skillSpecial.lastTimeSkillSpecial, SkillSpecial.TIME_GONG)) {
+                    player.skillSpecial.lastTimeSkillSpecial = System.currentTimeMillis();
+                    player.skillSpecial.closeSkillSpecial();
+                    for (Player playerMap : player.zone.getPlayers()) {
+                        if (playerMap == null || playerMap.id == player.id) {
+                            continue;
+                        }
+                        if (player.skillSpecial.dir == -1 && !playerMap.isDie() && Util.getDistance(player, playerMap) <= 500 && this.canAttackPlayer(player, playerMap)) {
+                            player.skillSpecial.playersTaget.add(playerMap);
+
+                        } else if (player.skillSpecial.dir == 1 && !playerMap.isDie() && Util.getDistance(player, playerMap) <= 500 && this.canAttackPlayer(player, playerMap)) {
+                            player.skillSpecial.playersTaget.add(playerMap);
+
+                        }
+                    }
+                    for (Mob mobMap : player.zone.mobs) {
+                        if (mobMap == null) {
+                            continue;
+                        }
+                        if (player.skillSpecial.dir == -1 && !mobMap.isDie() && Util.getDistance(player, mobMap) <= 500) {
+                            player.skillSpecial.mobsTaget.add(mobMap);
+                        } else if (player.skillSpecial.dir == 1 && !mobMap.isDie() && Util.getDistance(player, mobMap) <= 500) {
+                            player.skillSpecial.mobsTaget.add(mobMap);
+                        }
+                    }
+                    this.startSkillSpecialID26(player);
+                }
+            } else {
+                if (player.skillSpecial.stepSkillSpecial == 0 && Util.canDoWithTime(player.skillSpecial.lastTimeSkillSpecial, SkillSpecial.TIME_GONG)) {
+                    player.skillSpecial.lastTimeSkillSpecial = System.currentTimeMillis();
+                    player.skillSpecial.stepSkillSpecial = 1;
+                    if (player.skillSpecial.skillSpecial.template.id == Skill.SUPER_KAME) {
+                        this.startSkillSpecialID24(player);
+                    } else {
+                        this.startSkillSpecialID25(player);
+                    }
+                } else if (player.skillSpecial.stepSkillSpecial == 1 && !Util.canDoWithTime(player.skillSpecial.lastTimeSkillSpecial, SkillSpecial.TIME_END_24_25)) {
+                    for (Player playerMap : player.zone.getHumanoids()) {
+                        if (playerMap == null) {
+                            continue;
+                        }
+                        if (player.skillSpecial.dir == -1 && !playerMap.isDie()
+                                && playerMap.location.x <= player.location.x - 15
+                                && Math.abs(playerMap.location.x - player.skillSpecial._xPlayer) <= player.skillSpecial._xObjTaget
+                                && Math.abs(playerMap.location.y - player.skillSpecial._yPlayer) <= player.skillSpecial._yObjTaget
+                                && this.canAttackPlayer(player, playerMap)) {
+                            this.playerAttackPlayer(player, playerMap, false);
+                        }
+                        if (player.skillSpecial.dir == 1 && !playerMap.isDie()
+                                && playerMap.location.x >= player.location.x + 15
+                                && Math.abs(playerMap.location.x - player.skillSpecial._xPlayer) <= player.skillSpecial._xObjTaget
+                                && Math.abs(playerMap.location.y - player.skillSpecial._yPlayer) <= player.skillSpecial._yObjTaget
+                                && this.canAttackPlayer(player, playerMap)) {
+                            this.playerAttackPlayer(player, playerMap, false);
+                        }
+                    }
+                    for (Mob mobMap : player.zone.mobs) {
+                        if (mobMap == null) {
+                            continue;
+                        }
+                        if (player.skillSpecial.dir == -1 && !mobMap.isDie()
+                                && mobMap.location.x <= player.skillSpecial._xPlayer - 15
+                                && Math.abs(mobMap.location.x - player.skillSpecial._xPlayer) <= player.skillSpecial._xObjTaget
+                                && Math.abs(mobMap.location.y - player.skillSpecial._yPlayer) <= player.skillSpecial._yObjTaget) {
+                            this.playerAttackMob(player, mobMap, false, false);
+                        }
+                        if (player.skillSpecial.dir == 1 && !mobMap.isDie()
+                                && mobMap.location.x >= player.skillSpecial._xPlayer + 15
+                                && Math.abs(mobMap.location.x - player.skillSpecial._xPlayer) <= player.skillSpecial._xObjTaget
+                                && Math.abs(mobMap.location.y - player.skillSpecial._yPlayer) <= player.skillSpecial._yObjTaget) {
+                            this.playerAttackMob(player, mobMap, false, false);
+                        }
+                    }
+                } else if (player.skillSpecial.stepSkillSpecial == 1) {
+                    player.skillSpecial.closeSkillSpecial();
+                }
+            }
+        } catch (Exception e) {
+        }
+    }
+
+    public void sendCurrLevelSpecial(Player player, Skill skill) {
+        Message message = null;
+        try {
+            message = Service.getInstance().messageSubCommand((byte) 62);
+            message.writer().writeShort(skill.skillId);
+            message.writer().writeByte(0);
+            message.writer().writeShort(skill.currLevel);
+            player.sendMessage(message);
+        } catch (final Exception ex) {
+        } finally {
+            if (message != null) {
+                message.cleanup();
+                message = null;
+            }
+        }
+    }
+
+    //============================================================================
+    // Skill SuperKame
+    public void sendEffSkillSpecialID24(Player player, byte dir) {
+        Message message = null;
+        try {
+            message = new Message(-45);// passt code k dc vcb
+            message.writer().writeByte(20);
+            message.writer().writeInt((int) player.id);
+            message.writer().writeShort(24);
+            message.writer().writeByte(1);
+            message.writer().writeByte(dir); // -1 trai | 1 phai
+            message.writer().writeShort(2000);
+            message.writer().writeByte(0);
+            message.writer().writeByte(player.gender);
+            message.writer().writeByte(0);
+            Service.getInstance().sendMessAllPlayerInMap(player, message);
+            message.cleanup();
+        } catch (Exception e) {
+        } finally {
+            if (message != null) {
+                message.cleanup();
+                message = null;
+            }
+        }
+    }
+
+    // Skill liên hoàn chưởng
+    public void sendEffSkillSpecialID25(Player player, byte dir) {
+        Message message = null;
+        try {
+            message = new Message(-45);// passt code k dc vcb
+            message.writer().writeByte(20);
+            message.writer().writeInt((int) player.id);
+            message.writer().writeShort(25);
+            message.writer().writeByte(2);
+            message.writer().writeByte(dir); // -1 trai | 1 phai
+            message.writer().writeShort(2000);
+            message.writer().writeByte(0);
+            message.writer().writeByte(player.gender);
+            message.writer().writeByte(0);
+            Service.getInstance().sendMessAllPlayerInMap(player, message);
+            message.cleanup();
+        } catch (Exception e) {
+        } finally {
+            if (message != null) {
+                message.cleanup();
+                message = null;
+            }
+        }
+    }
+
+    // Skill Ma phong ba
+    public void sendEffSkillSpecialID26(Player player, byte dir) {
+        Message message = null;
+        try {
+            message = new Message(-45);// passt code k dc vcb
+            message.writer().writeByte(20);
+            message.writer().writeInt((int) player.id);
+            message.writer().writeShort(26);
+            message.writer().writeByte(3);
+            message.writer().writeByte(dir); // -1 trai | 1 phai
+            message.writer().writeShort(SkillSpecial.TIME_GONG);
+            message.writer().writeByte(0);
+            message.writer().writeByte(player.gender);
+            message.writer().writeByte(0);
+            Service.getInstance().sendMessAllPlayerInMap(player, message);
+            message.cleanup();
+        } catch (Exception e) {
+        } finally {
+            if (message != null) {
+                message.cleanup();
+                message = null;
+            }
+        }
+    }
+
+    public void startSkillSpecialID24(Player player) {
+        Message message = null;
+        try {
+            message = new Message(-45);
+            message.writer().writeByte(21);
+            message.writer().writeInt((int) player.id);
+            message.writer().writeShort(player.skillSpecial.skillSpecial.template.id);
+            message.writer().writeShort(player.skillSpecial._xPlayer + ((player.skillSpecial.dir == -1) ? (-player.skillSpecial._xObjTaget) : player.skillSpecial._xObjTaget));
+            message.writer().writeShort(player.skillSpecial._xPlayer);
+            message.writer().writeShort(3000); // thời gian skill chưởng chưởng nè
+            message.writer().writeShort(player.skillSpecial._yObjTaget);
+            message.writer().writeByte(player.gender);
+            message.writer().writeByte(0);
+            message.writer().writeByte(0);
+            Service.getInstance().sendMessAllPlayerInMap(player, message);
+            message.cleanup();
+        } catch (final Exception ex) {
+        } finally {
+            if (message != null) {
+                message.cleanup();
+                message = null;
+            }
+        }
+    }
+
+    public void startSkillSpecialID25(Player player) {
+        Message message = null;
+        try {
+            message = new Message(-45);
+            message.writer().writeByte(21);
+            message.writer().writeInt((int) player.id);
+            message.writer().writeShort(player.skillSpecial.skillSpecial.template.id);
+            message.writer().writeShort(player.skillSpecial._xPlayer + ((player.skillSpecial.dir == -1) ? (-player.skillSpecial._xObjTaget) : player.skillSpecial._xObjTaget));
+            message.writer().writeShort(player.skillSpecial._yPlayer);
+            message.writer().writeShort(3000); // thời gian skill chưởng chưởng nè
+            message.writer().writeShort(25);
+            message.writer().writeByte(player.gender);
+            message.writer().writeByte(0);
+            message.writer().writeByte(0);
+            Service.getInstance().sendMessAllPlayerInMap(player, message);
+            message.cleanup();
+        } catch (final Exception ex) {
+        } finally {
+            if (message != null) {
+                message.cleanup();
+                message = null;
+            }
+        }
+    }
+
+    public void startSkillSpecialID26(Player player) {
+        Message message = null;
+        try {
+            message = new Message(-45);
+            message.writer().writeByte(21);
+            message.writer().writeInt((int) player.id);
+            message.writer().writeShort(26);
+            message.writer().writeShort(player.skillSpecial._xPlayer + ((player.skillSpecial.dir == -1) ? (-75) : 75));
+            message.writer().writeShort(player.skillSpecial._yPlayer);
+            message.writer().writeShort(3000);
+            message.writer().writeShort(player.skillSpecial._yObjTaget);
+            message.writer().writeByte(player.gender);
+            final byte size = (byte) (player.skillSpecial.playersTaget.size() + player.skillSpecial.mobsTaget.size());
+            message.writer().writeByte(size);
+            for (Player playerMap : player.skillSpecial.playersTaget) {
+                message.writer().writeByte(1);
+                message.writer().writeInt((int) playerMap.id);
+
+            }
+            for (Mob mobMap : player.skillSpecial.mobsTaget) {
+                message.writer().writeByte(0);
+                message.writer().writeByte(mobMap.id);
+            }
+            message.writer().writeByte(0);
+            Service.getInstance().sendMessAllPlayerInMap(player, message);
+            message.cleanup();
+        } catch (final Exception ex) {
+        } finally {
+            if (message != null) {
+                message.cleanup();
+                message = null;
+            }
+        }
+    }
+
+    // này hoc5 skill nha
+    public void learSkillSpecial(Player player, byte skillID) {
+        Message message = null;
+        try {
+            Skill curSkill = SkillUtil.createSkill(skillID, 1);
+            SkillUtil.setSkill(player, curSkill);
+            message = Service.getInstance().messageSubCommand((byte) 23);
+            message.writer().writeShort(curSkill.skillId);
+            player.sendMessage(message);
+            message.cleanup();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (message != null) {
+                message.cleanup();
+            }
+        }
     }
 
     private void useSkillAttack(Player player, Player plTarget, Mob mobTarget) {
@@ -105,7 +418,7 @@ public class SkillService {
                         }
                     }
                 } else {
-                    Service.gI().sendThongBao(player, "Thá»ƒ lá»±c Ä‘Ã£ cáº¡n kiá»‡t, hÃ£y nghá»‰ ngÆ¡i Ä‘á»ƒ láº¥y láº¡i sá»©c");
+                    Service.gI().sendThongBao(player, "Thể lực đã cạn kiệt, hãy nghỉ ngơi để lấy lại sức");
                     return;
                 }
             }
@@ -118,7 +431,7 @@ public class SkillService {
                 if (player.nPoint.hp <= hpUse) {
                     break;
                 } else {
-                    player.nPoint.setHp(player.nPoint.mp - hpUse);
+                    player.nPoint.setHp(player.nPoint.hp - hpUse);
                     PlayerService.gI().sendInfoHpMpMoney(player);
                     Service.gI().Send_Info_NV(player);
                 }
@@ -149,13 +462,13 @@ public class SkillService {
             //******************************************************************
             case Skill.QUA_CAU_KENH_KHI:
                 if (!player.playerSkill.prepareQCKK) {
-                    //báº¯t Ä‘áº§u tá»¥ quáº£ cáº§u
-                    player.playerSkill.prepareQCKK = !player.playerSkill.prepareQCKK;
+                    player.playerSkill.prepareQCKK = true;
                     player.playerSkill.lastTimePrepareQCKK = System.currentTimeMillis();
-                    sendPlayerPrepareSkill(player, 4000);
+                    int timePrepareSkill = player.isPet ? 700 : 4000;
+                    sendPlayerPrepareSkill(player, timePrepareSkill);
                 } else {
-                    //nÃ©m cáº§u
-                    player.playerSkill.prepareQCKK = !player.playerSkill.prepareQCKK;
+                    //Ném cầu
+                    player.playerSkill.prepareQCKK = false;
                     mobs = new ArrayList<>();
                     if (plTarget != null) {
                         playerAttackPlayer(player, plTarget, false);
@@ -176,7 +489,7 @@ public class SkillService {
                         }
                     }
                     for (Mob mob : mobs) {
-//                        mob.injured(player, player.point.getDameAttack(), true);
+                        mob.injured(player, player.nPoint.getDameAttack(true), true);
                     }
                     PlayerService.gI().sendInfoHpMpMoney(player);
                     affterUseSkill(player, player.playerSkill.skillSelect.template.id);
@@ -184,13 +497,12 @@ public class SkillService {
                 break;
             case Skill.MAKANKOSAPPO:
                 if (!player.playerSkill.prepareLaze) {
-                    //báº¯t Ä‘áº§u náº¡p laze
-                    player.playerSkill.prepareLaze = !player.playerSkill.prepareLaze;
+                    player.playerSkill.prepareLaze = true;
                     player.playerSkill.lastTimePrepareLaze = System.currentTimeMillis();
-                    sendPlayerPrepareSkill(player, 3000);
+                    int timePrepareSkill = player.isPet ? 700 : 4000;
+                    sendPlayerPrepareSkill(player, timePrepareSkill);
                 } else {
-                    //báº¯n laze
-                    player.playerSkill.prepareLaze = !player.playerSkill.prepareLaze;
+                    player.playerSkill.prepareLaze = false;
                     if (plTarget != null) {
                         playerAttackPlayer(player, plTarget, false);
                     }
@@ -288,7 +600,7 @@ public class SkillService {
                         if (pl != null && !player.equals(pl) && !player.nPoint.khangTDHS) {
                             if (Util.getDistance(player, pl) <= SkillUtil.getRangeStun(player.playerSkill.skillSelect.point)
                                     && canAttackPlayer(player, pl) //&& (!pl.playerSkill.prepareQCKK && !pl.playerSkill.prepareLaze && !pl.playerSkill.prepareTuSat)
-                                    ) {
+                            ) {
                                 if (player.isPet && ((Pet) player).master.equals(pl)) {
                                     continue;
                                 }
@@ -343,7 +655,7 @@ public class SkillService {
                     if (!MapService.gI().isMapOffline(player.zone.map.mapId)) {
                         List<Player> playersMap = player.zone.getHumanoids();
                         for (Player pl : playersMap) {
-                            if (pl.effectSkill.useTroi) {
+                            if (pl.effectSkill != null && pl.effectSkill.useTroi) {
                                 EffectSkillService.gI().removeUseTroi(pl);
                             }
                             if (!pl.isBoss && pl.gender != ConstPlayer.NAMEC
@@ -378,8 +690,7 @@ public class SkillService {
                 break;
             case Skill.TU_SAT:
                 if (!player.playerSkill.prepareTuSat) {
-                    //gá»“ng tá»± sÃ¡t
-                    player.playerSkill.prepareTuSat = !player.playerSkill.prepareTuSat;
+                    player.playerSkill.prepareTuSat = true;
                     player.playerSkill.lastTimePrepareTuSat = System.currentTimeMillis();
                     sendPlayerPrepareBom(player, 2000);
                 } else {
@@ -388,7 +699,7 @@ public class SkillService {
                         player.playerSkill.prepareTuSat = false;
                         return;
                     }
-                    //ná»•
+                    //Nổ
                     player.playerSkill.prepareTuSat = !player.playerSkill.prepareTuSat;
                     int rangeBom = SkillUtil.getRangeBom(player.playerSkill.skillSelect.point);
                     int dame = player.nPoint.hpMax;
@@ -407,17 +718,17 @@ public class SkillService {
                         for (Player pl : playersMap) {
                             if (!player.equals(pl) && canAttackPlayer(player, pl)
                                     && Util.getDistance(player, pl) <= rangeBom) {
-                                pl.injured(player, pl.isBoss ? dame * 1 : dame, false, false);
+                                pl.injured(player, pl.isBoss ? dame / (player.effectSkill.isMonkey ? 3 : 2) : dame, false, false);
                                 PlayerService.gI().sendInfoHpMpMoney(pl);
                                 Service.gI().Send_Info_NV(pl);
                             }
                         }
                     }
                     affterUseSkill(player, player.playerSkill.skillSelect.template.id);
-                    player.injured(null, 2100000000, true, false);
-                    if(player.effectSkill.tiLeHPHuytSao != 0){
-                       player.effectSkill.tiLeHPHuytSao = 0; 
-                       EffectSkillService.gI().removeHuytSao(player);
+                    player.injured(null, player.nPoint.hpMax, true, false);
+                    if (player.effectSkill.tiLeHPHuytSao != 0) {
+                        player.effectSkill.tiLeHPHuytSao = 0;
+                        EffectSkillService.gI().removeHuytSao(player);
                     }
                 }
                 break;
@@ -455,7 +766,8 @@ public class SkillService {
                             PlayerService.gI().sendInfoHpMp(pl);
                         }
                     }
-                    int hpHoiMe = player.nPoint.hp * percentTriThuong / 100;;
+                    int hpHoiMe = player.nPoint.hp * percentTriThuong / 100;
+                    ;
                     player.nPoint.addHp(hpHoiMe);
                     PlayerService.gI().sendInfoHp(player);
                 }
@@ -492,7 +804,7 @@ public class SkillService {
         int tiLeHutHp = player.nPoint.getTileHutHp(attackMob);
         int tiLeHutMp = player.nPoint.getTiLeHutMp();
         int hpHoi = dame * tiLeHutHp / 100;
-        int mpHoi = dame* tiLeHutMp / 100;
+        int mpHoi = dame * tiLeHutMp / 100;
         if (hpHoi > 0 || mpHoi > 0) {
             PlayerService.gI().hoiPhuc(player, hpHoi, mpHoi);
         }
@@ -510,9 +822,9 @@ public class SkillService {
             msg = new Message(-60);
             msg.writer().writeInt((int) plAtt.id); //id pem
             msg.writer().writeByte(plAtt.playerSkill.skillSelect.skillId); //skill pem
-            msg.writer().writeByte(1); //sá»‘ ngÆ°á»i pem
-            msg.writer().writeInt((int) plInjure.id); //id Äƒn pem
-            byte typeSkill = SkillUtil.getTyleSkillAttack(plAtt.playerSkill.skillSelect);
+            msg.writer().writeByte(1);
+            msg.writer().writeInt((int) plInjure.id); //
+            byte typeSkill = SkillUtil.getTypeSkillAttack(plAtt.playerSkill.skillSelect);
             msg.writer().writeByte(typeSkill == 2 ? 0 : 1); //read continue
             msg.writer().writeByte(typeSkill); //type skill
             msg.writer().writeInt(dameHit); //dame Äƒn
@@ -527,8 +839,8 @@ public class SkillService {
                 msg = new Message(-60);
                 msg.writer().writeInt((int) plAtt.id); //id pem
                 msg.writer().writeByte(plAtt.playerSkill.skillSelect.skillId); //skill pem
-                msg.writer().writeByte(1); //sá»‘ ngÆ°á»i pem
-                msg.writer().writeInt((int) plInjure.id); //id Äƒn pem
+                msg.writer().writeByte(1);
+                msg.writer().writeInt((int) plInjure.id);
                 msg.writer().writeByte(typeSkill == 2 ? 0 : 1); //read continue
                 msg.writer().writeByte(0); //type skill
                 msg.writer().writeInt(dameHit); //dame Äƒn
@@ -560,9 +872,8 @@ public class SkillService {
             if (miss) {
                 dameHit = 0;
             }
-            hutHPMP(plAtt, dameHit, true);
             sendPlayerAttackMob(plAtt, mob);
-            mob.injured(plAtt, dameHit, dieWhenHpFull);
+            hutHPMP(plAtt, mob.injured(plAtt, dameHit, dieWhenHpFull), true);
         }
     }
 
@@ -701,6 +1012,9 @@ public class SkillService {
                 }
                 break;
             case Skill.QUA_CAU_KENH_KHI:
+                if (player.isPet) {
+                    return;
+                }
                 if (intrinsic.id == 4) {
                     subTimeParam = intrinsic.param1;
                 }
@@ -732,7 +1046,7 @@ public class SkillService {
                 break;
         }
         int coolDown = player.playerSkill.skillSelect.coolDown;
-        player.playerSkill.skillSelect.lastTimeUseThisSkill = System.currentTimeMillis() - (coolDown * subTimeParam / 100);
+        player.playerSkill.skillSelect.lastTimeUseThisSkill = System.currentTimeMillis() - ((long) coolDown * subTimeParam / 100);
         if (subTimeParam != 0) {
             Service.gI().sendTimeSkill(player);
         }

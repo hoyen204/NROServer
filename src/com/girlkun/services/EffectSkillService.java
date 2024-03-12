@@ -390,4 +390,31 @@ public class EffectSkillService {
             com.girlkun.utils.Logger.logException(EffectSkillService.class, e);
         }
     }
+
+    public void SetHoaBinh(Player player, long lastTimeHoaBinh, int timeHoaBinh){
+        player.effectSkill.lastTimeHoaBinh = lastTimeHoaBinh;
+        player.effectSkill.timeBinh = timeHoaBinh;
+        player.effectSkill.isBinh = true;
+
+    }
+    public void removeBinh(Player player){
+        player.effectSkill.isBinh = false;
+        Service.gI().Send_Caitrang(player);
+    }
+
+    public void sendMobTomaphongba(Player player, Mob mob, int timeBinh) {
+        Message msg;
+        try {
+            msg = new Message(-112);
+            msg.writer().writeByte(1);
+            msg.writer().writeByte(mob.id); //mob id
+            msg.writer().writeShort(11175); //icon socola
+            Service.gI().sendMessAllPlayerInMap(player, msg);
+
+            msg.cleanup();
+            mob.effectSkill.setBinh(System.currentTimeMillis(), timeBinh);
+        } catch (Exception e) {
+            com.girlkun.utils.Logger.logException(EffectSkillService.class, e);
+        }
+    }
 }

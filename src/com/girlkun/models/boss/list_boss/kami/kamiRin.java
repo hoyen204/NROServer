@@ -40,13 +40,15 @@ public class kamiRin extends Boss {
                 this.location.y - 24), plKill.id);
         Service.gI().dropItemMap(this.zone, it);
     }
-     @Override
+
+    @Override
     public void leaveMap() {
         super.leaveMap();
         BossManager.gI().removeBoss(this);
         this.dispose();
     }
- @Override
+
+    @Override
     public int injured(Player plAtt, int damage, boolean piercing, boolean isMobAttack) {
         if (Util.isTrue(30, 100) && plAtt != null) {//tỉ lệ hụt của thiên sứ
             Util.isTrue(this.nPoint.tlNeDon, 100000);
@@ -73,15 +75,6 @@ public class kamiRin extends Boss {
                 if (damage > nPoint.hpMax) {
                     EffectSkillService.gI().breakShield(this);
                 }
-                damage = damage;
-                 if (damage > nPoint.mpMax) {
-                    EffectSkillService.gI().breakShield(this);
-                }
-                damage = damage; 
-                 if (damage > nPoint.tlNeDon) {
-                    EffectSkillService.gI().breakShield(this);
-                }
-                damage = damage; 
             }
             this.nPoint.subHP(damage);
             if (isDie()) {
@@ -93,6 +86,7 @@ public class kamiRin extends Boss {
             return 0;
         }
     }
+
     @Override
     public void active() {
         super.active(); //To change body of generated methods, choose Tools | Templates.
@@ -100,12 +94,13 @@ public class kamiRin extends Boss {
             this.changeStatus(BossStatus.LEAVE_MAP);
         }
     }
-     
+
     @Override
     public void joinMap() {
         super.joinMap(); //To change body of generated methods, choose Tools | Templates.
         st = System.currentTimeMillis();
     }
+
     private long st;
 
 }

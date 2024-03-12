@@ -12,6 +12,7 @@ import com.girlkun.models.boss.BossesData;
 import com.girlkun.models.map.ItemMap;
 import com.girlkun.models.player.Player;
 import com.girlkun.models.skill.Skill;
+import com.girlkun.server.Manager;
 import com.girlkun.services.EffectSkillService;
 import com.girlkun.services.PetService;
 import com.girlkun.services.Service;
@@ -30,7 +31,7 @@ public class SongokuTaAc extends Boss {
 
     @Override
     public void reward(Player plKill) {
-       int[] itemDos = new int[]{569,2069,2070,2071,2072};
+       Short[] itemDos = Manager.itemIds_TL;
         int[] NRs = new int[]{17, 18};
         int randomDo = new Random().nextInt(itemDos.length);
         int randomNR = new Random().nextInt(NRs.length);
@@ -56,9 +57,6 @@ public class SongokuTaAc extends Boss {
                 if (damage > nPoint.hpMax) {
                     EffectSkillService.gI().breakShield(this);
                 }
-                damage = 1;
-            }
-            if (damage >= 1) {
                 damage = 1;
             }
             this.nPoint.subHP(damage);

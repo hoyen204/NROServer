@@ -1,6 +1,6 @@
 package com.girlkun.services;
 
-import com.arriety.MaQuaTang.MaQuaTang;
+import com.arriety.MaQuaTang.GiftCode;
 import com.girlkun.models.item.Item;
 import com.girlkun.models.item.Item.ItemOption;
 import com.girlkun.models.map.blackball.BlackBallWar;
@@ -28,7 +28,7 @@ public class InventoryServiceNew {
     }
 
     //for giftcode
-    public void addItemGiftCodeToPlayer(Player p, MaQuaTang giftcode) {
+    public void addItemGiftCodeToPlayer(Player p, GiftCode giftcode) {
         Set<Integer> keySet = giftcode.detail.keySet();
         String textGift = "Bạn vừa nhận được:\b";
         for (Integer key : keySet) {
@@ -102,8 +102,7 @@ public class InventoryServiceNew {
 
     public boolean isExistItem(List<Item> list, int tempId) {
         try {
-            this.findItem(list, tempId);
-            return true;
+            return this.findItem(list, tempId) != null;
         } catch (Exception e) {
             return false;
         }
@@ -260,6 +259,8 @@ public class InventoryServiceNew {
                 break;
             }
         }
+        if (first == -1)
+            return;
         for (int i = first; i < list.size(); i++) {
             if (list.get(i).isNotNullItem()) {
                 last = i;
@@ -267,7 +268,7 @@ public class InventoryServiceNew {
                 break;
             }
         }
-        if (first != -1 && last != -1 && first < last) {
+        if (last != -1 && first < last) {
             list.set(first, tempLast);
             list.set(last, tempFirst);
             sortItems(list);
@@ -665,14 +666,9 @@ public class InventoryServiceNew {
         //gold, gem, ruby
         switch (item.template.type) {
             case 9:
-                if (player.inventory.gold + item.quantity <= Inventory.LIMIT_GOLD) {
-                    player.inventory.gold += item.quantity;
-                    Service.gI().sendMoney(player);
-                    return true;
-                } else {
-                    Service.gI().sendThongBao(player, "Vàng sau khi nhặt quá giới hạn cho phép");
-                    return false;
-                }
+                player.inventory.gold += item.quantity;
+                Service.gI().sendMoney(player);
+                return true;
             case 10:
                 player.inventory.gem += item.quantity;
                 Service.gI().sendMoney(player);
@@ -741,36 +737,35 @@ public class InventoryServiceNew {
                 if (itemAdd.template.id == 457
                         || itemAdd.template.id == 590
                         || itemAdd.template.id == 610
-                        || itemAdd.template.type == 14
-                        || itemAdd.template.type == 933
-                        || itemAdd.template.type == 934
+                        || itemAdd.template.id == 14
+                        || itemAdd.template.id == 933
+                        || itemAdd.template.id == 934
                         || itemAdd.template.id == 537
                         || itemAdd.template.id == 538
-                        || itemAdd.template.type == 539
-                        || itemAdd.template.type == 541
-                        || itemAdd.template.type == 542
+                        || itemAdd.template.id == 539
+                        || itemAdd.template.id == 541
+                        || itemAdd.template.id == 542
                         || itemAdd.template.id == 2069
                         || itemAdd.template.id == 1066
                         || itemAdd.template.id == 1067
                         || itemAdd.template.id == 1068
                         || itemAdd.template.id == 1069
                         || itemAdd.template.id == 1070
-                        || itemAdd.template.type == 540) {
+                        || itemAdd.template.id == 540
+                        || itemAdd.template.id == 1144) {
                     it.quantity += itemAdd.quantity;
                     itemAdd.quantity = 0;
                     return true;
                 }
 
-                int maxQuantity = 9999;
-
-                if (it.quantity < maxQuantity) {
-                    int add = maxQuantity - it.quantity;
+                if (it.quantity < Inventory.LIMIT_QUANTITY) {
+                    int add = Inventory.LIMIT_QUANTITY - it.quantity;
                     if (itemAdd.quantity <= add) {
                         it.quantity += itemAdd.quantity;
                         itemAdd.quantity = 0;
                         return true;
                     } else {
-                        it.quantity = maxQuantity;
+                        it.quantity = Inventory.LIMIT_QUANTITY;
                         itemAdd.quantity -= add;
                     }
                 }

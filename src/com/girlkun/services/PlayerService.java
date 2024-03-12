@@ -29,7 +29,7 @@ public class PlayerService {
             try {
                 msg = new Message(-3);
                 msg.writer().writeByte(type);// 0 là cộng sm, 1 cộng tn, 2 là cộng cả 2
-                msg.writer().writeInt((int) param);// số tn cần cộng
+                msg.writer().writeInt((int)param);// số tn cần cộng
                 player.sendMessage(msg);
                 msg.cleanup();
             } catch (Exception e) {
@@ -90,7 +90,7 @@ public class PlayerService {
             player.nPoint.addHp(hp);
             player.nPoint.addMp(mp);
             Service.gI().Send_Info_NV(player);
-            if (!player.isPet&&!player.isNewPet) {
+            if (!player.isPet && !player.isNewPet) {
                 PlayerService.gI().sendInfoHpMp(player);
             }
         }
@@ -241,7 +241,8 @@ public class PlayerService {
                             - player.inventory.gold) + " vàng");
                     return;
                 }
-            }if (MapService.gI().isMapPVP(player.zone.map.mapId)) {
+            }
+            if (MapService.gI().isMapPVP(player.zone.map.mapId)) {
                 if (player.inventory.gold >= COST_GOLD_HOI_SINH_PVP) {
                     player.inventory.gold -= COST_GOLD_HOI_SINH_PVP;
                     canHs = true;
@@ -249,7 +250,7 @@ public class PlayerService {
                     Service.gI().sendThongBao(player, "Không đủ vàng để thực hiện, còn thiếu " + Util.numberToMoney(COST_GOLD_HOI_SINH_PVP
                             - player.inventory.gold) + " vàng");
                     return;
-                }    
+                }
             } else {
                 if (player.inventory.gem >= COST_GEM_HOI_SINH) {
                     player.inventory.gem -= COST_GEM_HOI_SINH;

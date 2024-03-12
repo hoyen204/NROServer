@@ -3,7 +3,6 @@ package com.girlkun.services;
 import com.girlkun.consts.ConstMob;
 import com.girlkun.consts.ConstNpc;
 import com.girlkun.consts.ConstPlayer;
-import com.girlkun.models.player.Player;
 import com.girlkun.consts.ConstTask;
 import com.girlkun.models.boss.Boss;
 import com.girlkun.models.boss.BossID;
@@ -12,13 +11,15 @@ import com.girlkun.models.map.ItemMap;
 import com.girlkun.models.map.Zone;
 import com.girlkun.models.mob.Mob;
 import com.girlkun.models.npc.Npc;
+import com.girlkun.models.player.Player;
 import com.girlkun.models.task.SideTaskTemplate;
 import com.girlkun.models.task.SubTaskMain;
 import com.girlkun.models.task.TaskMain;
-import com.girlkun.server.Manager;
 import com.girlkun.network.io.Message;
+import com.girlkun.server.Manager;
 import com.girlkun.utils.Logger;
 import com.girlkun.utils.Util;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -314,7 +315,7 @@ public class TaskService {
                   case 380: //đùi gà
                     doneTask(player, ConstTask.TASK_26_3);
                     break; 
-                case 15: //đùi gà
+                case 16: //đùi gà
                     doneTask(player, ConstTask.TASK_27_3);
                     break;
 //                case 16: //em bé
@@ -338,6 +339,8 @@ public class TaskService {
     }
 
     //kiểm tra hoàn thành nhiệm vụ kết bạn
+    // get max count dùng vòng lặp
+    // trong đây nè
     public void checkDoneTaskMakeFriend(Player player, Player friend) {
         if (!player.isBoss && !player.isPet) {
             switch (friend.gender) {
@@ -649,7 +652,7 @@ public class TaskService {
     }
 
     //xong nhiệm vụ nào đó
-    private boolean doneTask(Player player, int idTaskCustom) {
+    public boolean doneTask(Player player, int idTaskCustom) {
         if (TaskService.gI().isCurrentTask(player, idTaskCustom)) {
             this.addDoneSubTask(player, 1);
             switch (idTaskCustom) {
@@ -703,7 +706,7 @@ public class TaskService {
                     break;
                 case ConstTask.TASK_2_1:
                     try {
-                        InventoryServiceNew.gI().subQuantityItemsBag(player, InventoryServiceNew.gI().findItemBag(player, 73), 10);
+                        InventoryServiceNew.gI().removeItemBag(player, InventoryServiceNew.gI().findItemBag(player, 73));
                     } catch (Exception ex) {
                     }
                     InventoryServiceNew.gI().sendItemBags(player);
@@ -970,9 +973,9 @@ public class TaskService {
                     break;
                 case ConstTask.TASK_20_6:
                     npcSay(player, ConstNpc.CUI,
-                            "Độc Quyền Bởi User Thâm Đít\n"
-                            + "Độc Quyền Bởi User Thâm Đít\n"
-                            + "Độc Quyền Bởi User Thâm Đít");
+                            "Tốt lắm, con đã tiêu diệt xong tiểu đội sát thủ\n"
+                            + "Đội quân Fide đã ập tới núi khỉ vàng\n"
+                            + "Con hãy đi giải cứu những chú khỉ tội nghiệp đi.");
                     break;
                 //--------------------------------------------------------------
                 case ConstTask.TASK_21_0:
@@ -985,16 +988,16 @@ public class TaskService {
                     break;
                 case ConstTask.TASK_21_4:
                     npcSay(player, ConstNpc.CUI,
-                            "Độc Quyền Bởi User Thâm Đít\n"
-                            + "Độc Quyền Bởi User Thâm Đít\n"
-                            + "Độc Quyền Bởi User Thâm Đít");
+                            "Rất giỏi, hiện tại con đã có thể tới tương lai\n"
+                            + "Tương lai là một dị điểm, ở đây mọi có thể xảy ra\n"
+                            + "Con hãy gặp bulma để biết thêm thông tin nhé");
                     break;
                 //--------------------------------------------------------------
                 case ConstTask.TASK_22_0:
                     npcSay(player, ConstNpc.BUNMA_TL,
-                          "Độc Quyền Bởi User Thâm Đít\n"
-                            + "Độc Quyền Bởi User Thâm Đít\n"
-                            + "Độc Quyền Bởi User Thâm Đít");
+                          "Chao xìn, đây là lần đầu con đến tương lai phải không\n"
+                            + "Trong dị điểm tương lai này Cell đã chiếm đóng\n"
+                            + "Con hãy giúp ta tiêu diệt lũ bè phái Cell này nhé.");
                     break;
                 case ConstTask.TASK_22_1:
                     break;
@@ -1004,9 +1007,9 @@ public class TaskService {
                     break;
                 case ConstTask.TASK_22_4:
                     npcSay(player, ConstNpc.BUNMA_TL,
-                            "Độc Quyền Bởi User Thâm Đít\n"
-                            + "Độc Quyền Bởi User Thâm Đít\n"
-                            + "Độc Quyền Bởi User Thâm Đít");
+                            "Đây chỉ là tàn dư của đám RedRibbon thôi\n"
+                            + "Ác mộng thật sự đang chờ con\n"
+                            + "Hãy giúp thành phố này");
                 //--------------------------------------------------------------
                 case ConstTask.TASK_23_0:
                     break;
@@ -1018,9 +1021,9 @@ public class TaskService {
                     break;
                 case ConstTask.TASK_23_4:
                     npcSay(player, ConstNpc.BUNMA_TL,
-                          "Độc Quyền Bởi User Thâm Đít\n"
-                            + "Độc Quyền Bởi User Thâm Đít\n"
-                            + "Độc Quyền Bởi User Thâm Đít");
+                          "Không ngờ con có thể hạ gục chúng\n"
+                            + "Thị trấn Ginder đang thất thủ\n"
+                            + "Hãy tới đó thăm dò nhé");
                     break;
                 //--------------------------------------------------------------
                 case ConstTask.TASK_24_0:
@@ -1033,9 +1036,9 @@ public class TaskService {
                     break;
                 case ConstTask.TASK_24_4:
                     npcSay(player, ConstNpc.BUNMA_TL,
-                            "Độc Quyền Bởi User Thâm Đít\n"
-                            + "Độc Quyền Bởi User Thâm Đít\n"
-                            + "Độc Quyền Bởi User Thâm Đít");
+                            "Thị trấn đã được giành lại, giỏi lắm\n"
+                            + "Ta rất tự hào về con\n"
+                            + "Nhưng đám Cell Jr vẫn còn vất vưởng xung quanh đây.");
                     break;
                  //---------------------------   
                   case ConstTask.TASK_25_0:
@@ -1050,9 +1053,7 @@ public class TaskService {
                     break;
                 case ConstTask.TASK_25_5:
                    npcSay(player, ConstNpc.BUNMA_TL,
-                            "Độc Quyền Bởi User Thâm Đít\n"
-                            + "Độc Quyền Bởi User Thâm Đít\n"
-                            + "Độc Quyền Bởi User Thâm Đít");
+                            "Chỉ còn 3 con nữa thôi, ta biết con có thể làm được");
                     break;
                     //-----------------
                  case ConstTask.TASK_26_0:
@@ -1065,9 +1066,9 @@ public class TaskService {
                     break;
                 case ConstTask.TASK_26_4:
                    npcSay(player, ConstNpc.BUNMA_TL,
-                            "Độc Quyền Bởi User Thâm Đít\n"
-                            + "Độc Quyền Bởi User Thâm Đít\n"
-                            + "Độc Quyền Bởi User Thâm Đít");
+                            "Hãy tìm bạn đồng hành nhé, bạn bè cùng nhau đồng hành\n"
+                            + "Hãy kết bạn thật nhiều\n"
+                            + "Cell đang tổ chức đại hội võ thuật, hãy tìm đồng đội và khiêu chiến hắn ở võ đài.");
                     break; 
                     //---------------------------------
                 case ConstTask.TASK_27_0:
@@ -1079,10 +1080,10 @@ public class TaskService {
                 case ConstTask.TASK_27_3:
                     break;
                 case ConstTask.TASK_27_4:
-                   npcSay(player, ConstNpc.BUNMA_TL,
-                            "Độc Quyền Bởi User Thâm Đít\n"
-                            + "Độc Quyền Bởi User Thâm Đít\n"
-                            + "Độc Quyền Bởi User Thâm Đít");
+                    npcSay(player, ConstNpc.BUNMA_TL,
+                            "Hãy tìm bạn đồng hành nhé, bạn bè cùng nhau đồng hành\n"
+                                    + "Hãy kết bạn thật nhiều\n"
+                                    + "Cell đang tổ chức đại hội võ thuật, hãy tìm đồng đội và khiêu chiến hắn ở võ đài.");
                     break;
                     //----
                      case ConstTask.TASK_28_0:

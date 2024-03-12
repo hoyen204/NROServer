@@ -7,8 +7,10 @@ import com.girlkun.models.map.Zone;
 import com.girlkun.models.player.Player;
 import com.girlkun.server.Manager;
 import com.girlkun.utils.Util;
+
 import java.util.ArrayList;
 import java.util.List;
+
 import lombok.Data;
 
 
@@ -51,19 +53,18 @@ public class ItemMobReward {
             if (mapId != -1 && mapId != zone.map.mapId) {
                 continue;
             }
-            if(this.gender != -1 && this.gender != player.gender){
+            if (this.gender != -1 && this.gender != player.gender) {
                 break;
             }
             if (Util.isTrue(this.ratio[0], this.ratio[1])) {
-                ItemMap itemMap = new ItemMap(zone, this.temp, Util.nextInt(this.quantity[0], this.quantity[1]), 
-                        x, y, player.id);
-                for(ItemOptionMobReward opt : this.option){
-                    if(!Util.isTrue(opt.getRatio()[0], opt.getRatio()[1])){
+                ItemMap itemMap = new ItemMap(zone, this.temp, Util.nextInt(this.quantity[0], this.quantity[1]), x, y, player.id);
+                for (ItemOptionMobReward opt : this.option) {
+                    if (!Util.isTrue(opt.getRatio()[0], opt.getRatio()[1])) {
                         continue;
                     }
 
                     itemMap.options.add(new Item.ItemOption(opt.getTemp(), Util.nextInt(opt.getParam()[0], opt.getParam()[1])));
-                    if(opt.getTemp().id >= 127 && opt.getTemp().id <= 135){
+                    if (opt.getTemp().id >= 127 && opt.getTemp().id <= 135) {
                         itemMap.options.add(new Item.ItemOption(opt.getTemp().id + (gender == 2 ? 3 : 12), Util.nextInt(opt.getParam()[0], opt.getParam()[1])));
                         itemMap.options.add(new Item.ItemOption(30, Util.nextInt(opt.getParam()[0], opt.getParam()[1])));
                     }

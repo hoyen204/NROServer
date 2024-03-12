@@ -94,21 +94,6 @@ public class Referee extends Player {
                     joinMap(z, pl);
                     z.setReferee(pl);
                  }         
-            }else if (m.mapId == 14) {
-                for (Zone z : m.zones) {
-                    Referee pl = new Referee();
-                    pl.name = "Kun";
-                    pl.gender = 0;
-                    pl.id = id++;
-                    pl.nPoint.hpMax = 69;
-                    pl.nPoint.hpg = 69;
-                    pl.nPoint.hp = 69;
-                    pl.nPoint.setFullHpMp();
-                    pl.location.x = 1546;
-                    pl.location.y = 408;
-                    joinMap(z, pl);
-                    z.setReferee(pl);
-                }
             }
         }
     }

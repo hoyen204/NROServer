@@ -11,6 +11,8 @@ import com.girlkun.services.EffectSkillService;
 import com.girlkun.services.Service;
 import com.girlkun.utils.Util;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Random;
 
 public class Drabura2 extends Boss {
@@ -68,6 +70,10 @@ public class Drabura2 extends Boss {
         } else {
             return 0;
         }
+    }
+
+    @Override
+    public void wakeupAnotherBossWhenDisappear() {
     }
 }
 

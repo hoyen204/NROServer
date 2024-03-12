@@ -124,19 +124,21 @@ public class ConstNpc {
     public static final byte MI_NUONG = 103;
     public static final byte MABU = 104;
     public static final int DOI_DTVIP = 558;
+    public static final int CHOOSE_GENDER_SPECIAL_DT = 559;
 
     //----------------------index menu------------------------------------------
     //menu o len tang map mabu
     public static final int GO_UPSTAIRS_MENU = 10000;
 
     //index menu base
-    public static final int IGNORE_MENU = 712002;
-    public static final int BASE_MENU = 752002;
+    public static final int IGNORE_MENU = 20042001;
+    public static final int BASE_MENU = 2042001;
 
     //index quy lão kamê
     public static final int MENU_OPEN_DBKB = 550;
     public static final int MENU_OPENED_DBKB = 501;
     public static final int MENU_ACCEPT_GO_TO_BDKB = 502;
+    public static final int MENU_ACCEPT_GO_TO_KG = 503;
     public static final int MENU_EVENT = 523;
     public static final int MENU_GIAO_BONG = 524;
     public static final int CONFIRM_DOI_THUONG_SU_KIEN = 525;
@@ -151,9 +153,7 @@ public class ConstNpc {
     //khigas
     public static final int MENU_OPEN_KG = 551;
     public static final int MENU_OPENED_KG = 552;
-    public static final int MENU_ACCEPT_GO_TO_KG = 553;
-    
-    
+
     //index menu ba hat mit
     public static final int MENU_PHA_LE_HOA_TRANG_BI = 500;
     public static final int MENU_CHUYEN_HOA_TRANG_BI = 501;

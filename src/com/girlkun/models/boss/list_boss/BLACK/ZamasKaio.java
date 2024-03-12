@@ -14,18 +14,18 @@ import java.util.Random;
 public class ZamasKaio extends Boss {
 
     public ZamasKaio() throws Exception {
-       super(BossID.ZAMASZIN, BossesData.ZAMAS);
+        super(BossID.ZAMASZIN, BossesData.ZAMAS);
     }
 
     @Override
     public void reward(Player plKill) {
         byte randomDo = (byte) new Random().nextInt(Manager.itemIds_TL.length - 1);
         byte randomNR = (byte) new Random().nextInt(Manager.itemIds_NR_SB.length);
-        int[] itemDos = new int[]{233, 237, 241, 245, 249, 253, 257, 261, 265, 269, 273, 277, 281};
+        Short[] itemDos = Manager.itemIds_TL;
         int randomc12 = new Random().nextInt(itemDos.length);
         if (Util.isTrue(BossManager.ratioReward, 100)) {
             if (Util.isTrue(1, 5)) {
-             Service.gI().dropItemMap(this.zone,new ItemMap(zone, 874, 1, this.location.x, this.location.y, plKill.id));
+                Service.gI().dropItemMap(this.zone, new ItemMap(zone, 874, 1, this.location.x, this.location.y, plKill.id));
                 return;
             }
             Service.gI().dropItemMap(this.zone, Util.ratiItem(zone, Manager.itemIds_TL[randomDo], 1, this.location.x, this.location.y, plKill.id));
@@ -44,7 +44,7 @@ public class ZamasKaio extends Boss {
             this.changeStatus(BossStatus.LEAVE_MAP);
         }
     }
-   
+
     @Override
     public void joinMap() {
         super.joinMap(); //To change body of generated methods, choose Tools | Templates.
@@ -52,19 +52,20 @@ public class ZamasKaio extends Boss {
     }
 
     private long st;
- @Override
+
+    @Override
     public int injured(Player plAtt, int damage, boolean piercing, boolean isMobAttack) {
         if (!this.isDie()) {
             if (!piercing && Util.isTrue(this.nPoint.tlNeDon, 1000)) {
                 this.chat("Xí hụt");
                 return 0;
             }
-            damage = this.nPoint.subDameInjureWithDeff(damage/2);
+            damage = this.nPoint.subDameInjureWithDeff(damage);
             if (!piercing && effectSkill.isShielding) {
                 if (damage > nPoint.hpMax) {
                     EffectSkillService.gI().breakShield(this);
                 }
-                damage = damage/2;
+                damage = damage / 2;
             }
             this.nPoint.subHP(damage);
             if (isDie()) {

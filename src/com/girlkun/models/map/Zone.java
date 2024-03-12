@@ -65,7 +65,7 @@ public class Zone {
     private Player referee;
 
     private Player referee1;
-    
+
     public boolean isFullPlayer() {
         return this.players.size() >= this.maxPlayer;
     }
@@ -79,12 +79,15 @@ public class Zone {
     private void udPlayer() {
         for (int i = this.notBosses.size() - 1; i >= 0; i--) {
             Player pl = this.notBosses.get(i);
-            if (!pl.isPet && !pl.isNewPet) {
+            if (!pl.isPet && !pl.isNewPet && !pl.isNewPet1) {
                 this.notBosses.get(i).update();
             }
         }
     }
-    
+
+    public boolean isSuperMobInZone(){
+        return mobs.stream().anyMatch(x -> x.lvMob != 0);
+    }
 
     private void udItem() {
         for (int i = this.items.size() - 1; i >= 0; i--) {
@@ -146,10 +149,10 @@ public class Zone {
             if (!this.humanoids.contains(player)) {
                 this.humanoids.add(player);
             }
-            if (!player.isBoss && !this.notBosses.contains(player)) {
+            if (!player.isBoss && !this.notBosses.contains(player) && !player.isNewPet1 && !player.isNewPet) {
                 this.notBosses.add(player);
             }
-            if (!player.isBoss &&!player.isNewPet&& !player.isPet && !this.players.contains(player)) {
+            if (!player.isBoss && !player.isNewPet && !player.isPet && !this.players.contains(player)) {
                 this.players.add(player);
             }
             if (player.isBoss) {
@@ -219,8 +222,8 @@ public class Zone {
         if (itemMap != null) {
             if (itemMap.playerId == player.id || itemMap.playerId == -1) {
                 Item item = ItemService.gI().createItemFromItemMap(itemMap);
-                 boolean picked=true;
-                if(!ItemMapService.gI().isNamecBall(item.template.id)){
+                boolean picked = true;
+                if (!ItemMapService.gI().isNamecBall(item.template.id)) {
                     picked = InventoryServiceNew.gI().addItemBag(player, item);
                 }
                 if (picked) {
@@ -248,8 +251,8 @@ public class Zone {
                                     case 357:
                                     case 358:
                                     case 359:
-                                        if(System.currentTimeMillis() >= NgocRongNamecService.gI().tOpenNrNamec) {
-                                            if(player.idNRNM == -1){
+                                        if (System.currentTimeMillis() >= NgocRongNamecService.gI().tOpenNrNamec) {
+                                            if (player.idNRNM == -1) {
                                                 PlayerService.gI().changeAndSendTypePK(player, ConstPlayer.PK_ALL);
                                                 player.idNRNM = item.template.id;
                                                 NgocRongNamecService.gI().mapNrNamec[item.template.id - 353] = player.zone.map.mapId;
@@ -259,14 +262,14 @@ public class Zone {
                                                 NgocRongNamecService.gI().idpNrNamec[item.template.id - 353] = (int) player.id;
                                                 player.lastTimePickNRNM = System.currentTimeMillis();
                                                 Service.gI().sendFlagBag(player);
-                                                msg.writer().writeUTF("Bạn đã nhặt được "+item.template.name);
+                                                msg.writer().writeUTF("Bạn đã nhặt được " + item.template.name);
                                                 msg.writer().writeShort(item.quantity);
                                                 player.sendMessage(msg);
                                                 msg.cleanup();
-                                            }else{
+                                            } else {
                                                 Service.gI().sendThongBao(player, "Bạn đã mang ngọc rồng trên người");
                                             }
-                                        }else{
+                                        } else {
                                             Service.gI().sendThongBao(player, "Chỉ là cục đá thôi, nhặt làm gì?");
                                         }
                                         break;
@@ -344,8 +347,8 @@ public class Zone {
             return null;
         }
     }
-    
-     public Player getRandomBossInMap() {
+
+    public Player getRandomBossInMap() {
         if (!this.bosses.isEmpty()) {
             return this.bosses.get(Util.nextInt(0, this.bosses.size() - 1));
         } else {
@@ -361,11 +364,11 @@ public class Zone {
                         infoPlayer(((Pet) player).master, player);
                     }
                 } else {
-                    for(int i = 0 ; i < players.size();i++){
+                    for (int i = 0; i < players.size(); i++) {
                         Player pl = players.get(i);
-                       if (!player.equals(pl)) {
+                        if (!player.equals(pl)) {
                             infoPlayer(pl, player);
-                        }        
+                        }
                     }
                 }
             }
@@ -466,7 +469,7 @@ public class Zone {
 //            Logger.logException(MapService.class, e);
         }
         Service.gI().sendFlagPlayerToMe(plReceive, plInfo);
-        if (!plInfo.isBoss && !plInfo.isPet &&!plInfo.isNewPet && !(plInfo instanceof BossDHVT) && !(plInfo instanceof Referee) & !(plInfo instanceof Referee1)) {
+        if (!plInfo.isBoss && !plInfo.isPet && !plInfo.isNewPet && !(plInfo instanceof BossDHVT) && !(plInfo instanceof Referee) & !(plInfo instanceof Referee1)) {
             Service.gI().sendPetFollowToMe(plReceive, plInfo);
         }
 

@@ -10,6 +10,8 @@ import com.girlkun.services.EffectSkillService;
 import com.girlkun.services.Service;
 import com.girlkun.utils.Util;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Random;
 
 public class MabuBoss extends Boss {
@@ -24,7 +26,8 @@ public class MabuBoss extends Boss {
                 this.location.y - 24), plKill.id);
         Service.gI().dropItemMap(this.zone, it);
     }
-     @Override
+
+    @Override
     public int injured(Player plAtt, int damage, boolean piercing, boolean isMobAttack) {
         if (Util.isTrue(50, 100) && plAtt != null) {//tỉ lệ hụt của thiên sứ
             Util.isTrue(this.nPoint.tlNeDon, 100000);
@@ -46,13 +49,13 @@ public class MabuBoss extends Boss {
                 this.chat("Xí hụt");
                 return 0;
             }
-            damage = this.nPoint.subDameInjureWithDeff(damage/3);
+            damage = this.nPoint.subDameInjureWithDeff(damage / 3);
             if (!piercing && effectSkill.isShielding) {
                 if (damage > nPoint.hpMax) {
                     EffectSkillService.gI().breakShield(this);
                 }
                 damage = damage;
-                 if (damage > nPoint.mpMax) {
+                if (damage > nPoint.mpMax) {
                     EffectSkillService.gI().breakShield(this);
                 }
                 damage = damage;
@@ -66,6 +69,10 @@ public class MabuBoss extends Boss {
         } else {
             return 0;
         }
+    }
+
+    @Override
+    public void wakeupAnotherBossWhenDisappear() {
     }
 }
 

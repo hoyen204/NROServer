@@ -246,7 +246,7 @@ public class ShopServiceNew {
             msg.writer().writeByte(items.size());
             for (Item item : items) {
                 msg.writer().writeShort(item.template.id);
-                msg.writer().writeUTF("\n|7|Nro Arriety");
+                msg.writer().writeUTF("\n|7|Nro Ids");
                 msg.writer().writeByte(item.itemOptions.size() + 1);
                 for (Item.ItemOption io : item.itemOptions) {
                     msg.writer().writeByte(io.optionTemplate.id);
@@ -335,8 +335,8 @@ public class ShopServiceNew {
             Service.gI().sendThongBao(player, "Bạn không có đủ điểm");
             return false;
         }
-        player.inventory.gold -= is.temp.gold;
-        player.inventory.gem -= is.temp.gem;
+        player.inventory.gold -= gold;
+        player.inventory.gem -= gem;
         player.inventory.ruby -= ruby;
         player.inventory.coupon -= coupon;
         return true;

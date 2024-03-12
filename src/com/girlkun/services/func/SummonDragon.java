@@ -23,11 +23,6 @@ import com.girlkun.utils.Logger;
 import com.girlkun.services.ItemTimeService;
 import java.util.List;
 
-/**
- *
- * @Stole By Arriety💖
- *
- */
 public class SummonDragon {
 
     public static final byte WISHED = 0;
@@ -87,7 +82,7 @@ public class SummonDragon {
     private final Map pl_dragonStar;
     private long lastTimeShenronAppeared;
     private long lastTimeShenronWait;
-    private final int timeResummonShenron = 600000;
+    private final int timeResummonShenron = 180000;
 
     private boolean isShenronAppear;
     private final int timeShenronWait = 300000;
@@ -180,7 +175,7 @@ public class SummonDragon {
                     return;
                 }
 
-                if (Util.canDoWithTime(lastTimeShenronAppeared, timeResummonShenron)) {
+                if (pl.isAdmin() || Util.canDoWithTime(lastTimeShenronAppeared, timeResummonShenron)) {
                     //gọi rồng
                     playerSummonShenron = pl;
                     playerSummonShenronId = (int) pl.id;
@@ -435,9 +430,8 @@ public class SummonDragon {
                         if (this.playerSummonShenron.nPoint.critg < 9) {
                             this.playerSummonShenron.nPoint.critg += 2;
                         } else {
+                            this.playerSummonShenron.nPoint.critg = 10;
                             Service.gI().sendThongBao(playerSummonShenron, "Điều ước này đã quá sức với ta, ta sẽ cho ngươi chọn lại");
-                            reOpenShenronWishes(playerSummonShenron);
-                            return;
                         }
                         break;
                     case 3: //thay chiêu 2-3 đệ tử

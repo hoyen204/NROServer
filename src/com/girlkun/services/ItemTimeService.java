@@ -61,9 +61,9 @@ public class ItemTimeService {
         if (player.itemTime.isUseAnDanhSC) {
             sendItemTime(player, 10717, (int) ((TIME_ITEM - (System.currentTimeMillis() - player.itemTime.lastTimeAnDanhSC)) / 1000));
         }
-        if (player.itemTime.isOpenPower) {
-            sendItemTime(player, 3783, (int) ((TIME_OPEN_POWER - (System.currentTimeMillis() - player.itemTime.lastTimeOpenPower)) / 1000));
-        }
+//        if (player.itemTime.isOpenPower) {
+//            sendItemTime(player, 3783, (int) ((TIME_OPEN_POWER - (System.currentTimeMillis() - player.itemTime.lastTimeOpenPower)) / 1000));
+//        }
         if (player.itemTime.isUseMayDo) {
             sendItemTime(player, 2758, (int) ((TIME_MAY_DO - (System.currentTimeMillis() - player.itemTime.lastTimeUseMayDo)) / 1000));
         }
@@ -150,6 +150,15 @@ public class ItemTimeService {
             int secondPassed = (int) ((System.currentTimeMillis() - player.clan.timeOpenBanDoKhoBau) / 1000);
             int secondsLeft = (BanDoKhoBau.TIME_BAN_DO_KHO_BAU / 1000) - secondPassed;
             sendTextTime(player, BAN_DO_KHO_BAU, "Bản đồ kho báu", secondsLeft);
+        }
+    }
+
+    public void sendTextKG(Player player) {
+        if (player.clan != null
+                && player.clan.timeOpenKhiGas != 0) {
+            int secondPassed = (int) ((System.currentTimeMillis() - player.clan.timeOpenKhiGas) / 1000);
+            int secondsLeft = (KhiGas.TIME_KHI_GAS / 1000) - secondPassed;
+            sendTextTime(player, BAN_DO_KHO_BAU, "Khí gas", secondsLeft);
         }
     }
     

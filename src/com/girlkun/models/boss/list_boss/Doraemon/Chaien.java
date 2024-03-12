@@ -6,6 +6,7 @@ import com.girlkun.models.boss.BossStatus;
 import com.girlkun.models.boss.BossesData;
 import com.girlkun.models.map.ItemMap;
 import com.girlkun.models.player.Player;
+import com.girlkun.server.Manager;
 import com.girlkun.services.EffectSkillService;
 import com.girlkun.services.Service;
 import com.girlkun.services.TaskService;
@@ -20,13 +21,13 @@ public class Chaien extends Boss {
     }
      @Override
     public void reward(Player plKill) {
-        int[] itemDos = new int[]{1142, 1142};
+        Short[] itemDos = Manager.itemIds_TL;
         int[] NRs = new int[]{16,17,18};
         int randomDo = new Random().nextInt(itemDos.length);
         int randomNR = new Random().nextInt(NRs.length);
         if (Util.isTrue(15, 100)) {
             if (Util.isTrue(1, 50)) {
-                Service.gI().dropItemMap(this.zone, Util.ratiItem(zone, 1142, 1, this.location.x, this.location.y, plKill.id));
+                Service.gI().dropItemMap(this.zone, Util.ratiItem(zone, 2044, 1, this.location.x, this.location.y, plKill.id));
                 return;
             }
             Service.gI().dropItemMap(this.zone, Util.ratiItem(zone, itemDos[randomDo], 1, this.location.x, this.location.y, plKill.id));

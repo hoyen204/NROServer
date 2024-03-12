@@ -4,6 +4,7 @@
  * and open the template in the editor.
  */
 package com.girlkun.models.boss.list_boss.kami;
+
 import com.girlkun.consts.ConstMob;
 import com.girlkun.consts.ConstPlayer;
 import com.girlkun.models.boss.Boss;
@@ -28,15 +29,17 @@ public class kamiSooMe extends Boss {
     public kamiSooMe() throws Exception {
         super(BossID.KAMI_SOOME, BossesData.KAMI_SOOME);
     }
-     @Override
+
+    @Override
     public void leaveMap() {
         super.leaveMap();
         BossManager.gI().removeBoss(this);
         this.dispose();
     }
-      @Override
+
+    @Override
     public void reward(Player plKill) {
-        ItemMap it = new ItemMap(this.zone, 1142, 1, this.location.x, this.zone.map.yPhysicInTop(this.location.x,
+        ItemMap it = new ItemMap(this.zone, 2044, 1, this.location.x, this.zone.map.yPhysicInTop(this.location.x,
                 this.location.y - 24), plKill.id);
         Service.gI().dropItemMap(this.zone, it);
     }
@@ -68,15 +71,9 @@ public class kamiSooMe extends Boss {
                 if (damage > nPoint.hpMax) {
                     EffectSkillService.gI().breakShield(this);
                 }
-                damage = damage;
-                 if (damage > nPoint.mpMax) {
+                if (damage > nPoint.tlNeDon) {
                     EffectSkillService.gI().breakShield(this);
                 }
-                damage = damage; 
-                 if (damage > nPoint.tlNeDon) {
-                    EffectSkillService.gI().breakShield(this);
-                }
-                damage = damage; 
             }
             if (damage >= 1000000) {
                 damage = 10000000;
@@ -95,19 +92,21 @@ public class kamiSooMe extends Boss {
     public void recoverHP() {
         PlayerService.gI().hoiPhuc(this, this.nPoint.hpMax, 0);
     }
-     @Override
+
+    @Override
     public void active() {
         super.active(); //To change body of generated methods, choose Tools | Templates.
         if (Util.canDoWithTime(st, 900000)) {
             this.changeStatus(BossStatus.LEAVE_MAP);
         }
     }
-     
+
     @Override
     public void joinMap() {
         super.joinMap(); //To change body of generated methods, choose Tools | Templates.
         st = System.currentTimeMillis();
     }
+
     private long st;
 }
 

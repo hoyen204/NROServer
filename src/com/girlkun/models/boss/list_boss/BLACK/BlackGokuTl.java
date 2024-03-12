@@ -31,6 +31,7 @@ public class BlackGokuTl extends Boss {
             Service.gI().dropItemMap(this.zone, new ItemMap(zone, Manager.itemIds_NR_SB[randomNR], 1, this.location.x, zone.map.yPhysicInTop(this.location.x, this.location.y - 24), plKill.id));
         }
     }
+
     @Override
     public int injured(Player plAtt, int damage, boolean piercing, boolean isMobAttack) {
         if (!this.isDie()) {
@@ -38,7 +39,7 @@ public class BlackGokuTl extends Boss {
                 this.chat("Xí hụt");
                 return 0;
             }
-            damage = this.nPoint.subDameInjureWithDeff(damage/2);
+            damage = this.nPoint.subDameInjureWithDeff(damage);
             if (!piercing && effectSkill.isShielding) {
                 if (damage > nPoint.hpMax) {
                     EffectSkillService.gI().breakShield(this);
@@ -55,12 +56,14 @@ public class BlackGokuTl extends Boss {
             return 0;
         }
     }
+
     @Override
     public void active() {
         super.active(); //To change body of generated methods, choose Tools | Templates.
-        if (Util.canDoWithTime(st, 900000)) {
-            this.changeStatus(BossStatus.LEAVE_MAP);
-        }
+//        if (Util.canDoWithTime(st, this.secondsRest)) {
+//            this.currentLevel = this.data.length;
+//            this.changeStatus(BossStatus.LEAVE_MAP);
+//        }
     }
 
     @Override

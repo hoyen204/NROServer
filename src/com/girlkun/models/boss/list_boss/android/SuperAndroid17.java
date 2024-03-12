@@ -19,20 +19,22 @@ public class SuperAndroid17 extends Boss {
 
     public SuperAndroid17() throws Exception {
         super(BossID.SUPER_ANDROID_17, BossesData.SUPER_ANDROID_17);
-          this.nPoint.defg = (short) (this.nPoint.hpg / 1000);
+        this.nPoint.defg = (short) (this.nPoint.hpg / 5000);
         if (this.nPoint.defg < 0) {
             this.nPoint.defg = (short) -this.nPoint.defg;
+        }
     }
-    }
-   @Override
+
+    @Override
     public void reward(Player plKill) {
         if (Util.isTrue(15, 100)) {
-        ItemMap it = new ItemMap(this.zone, 1142, 1, this.location.x, this.zone.map.yPhysicInTop(this.location.x,
-                this.location.y - 24), plKill.id);
-        Service.gI().dropItemMap(this.zone, it);
+            ItemMap it = new ItemMap(this.zone, 2044, 1, this.location.x, this.zone.map.yPhysicInTop(this.location.x,
+                    this.location.y - 24), plKill.id);
+            Service.gI().dropItemMap(this.zone, it);
         }
-        
-    } 
+
+    }
+
     @Override
     public int injured(Player plAtt, int damage, boolean piercing, boolean isMobAttack) {
         if (!this.isDie()) {
@@ -40,12 +42,12 @@ public class SuperAndroid17 extends Boss {
                 this.chat("Xí hụt");
                 return 0;
             }
-            damage = this.nPoint.subDameInjureWithDeff(damage/13);
+            damage = this.nPoint.subDameInjureWithDeff(damage / 13);
             if (!piercing && effectSkill.isShielding) {
                 if (damage > nPoint.hpMax) {
                     EffectSkillService.gI().breakShield(this);
                 }
-                damage = damage/4;
+                damage = damage / 4;
             }
             this.nPoint.subHP(damage);
             if (isDie()) {
@@ -58,7 +60,7 @@ public class SuperAndroid17 extends Boss {
         }
     }
 
-@Override
+    @Override
     public void active() {
         super.active();
     }
@@ -69,8 +71,10 @@ public class SuperAndroid17 extends Boss {
         super.joinMap(); //To change body of generated methods, choose Tools | Templates.
         st = System.currentTimeMillis();
     }
+
     private long st;
- @Override
+
+    @Override
     public void leaveMap() {
         super.leaveMap();
         BossManager.gI().removeBoss(this);

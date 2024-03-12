@@ -1,14 +1,13 @@
 package com.girlkun.models.boss.list_boss.ginyu;
 
-import com.girlkun.models.boss.Boss;
-import com.girlkun.models.boss.BossID;
-import com.girlkun.models.boss.BossStatus;
-import com.girlkun.models.boss.BossesData;
+import com.girlkun.models.boss.*;
 import com.girlkun.models.map.ItemMap;
 import com.girlkun.models.player.Player;
 import com.girlkun.services.Service;
 import com.girlkun.services.TaskService;
+import com.girlkun.services.func.ChangeMapService;
 import com.girlkun.utils.Util;
+
 import java.util.Random;
 
 
@@ -41,12 +40,14 @@ public class TDST extends Boss {
         }
         super.notifyJoinMap();
     }
+
     @Override
     public void active() {
         super.active(); //To change body of generated methods, choose Tools | Templates.
-        if (Util.canDoWithTime(st, 300000)) {
-            this.changeStatus(BossStatus.LEAVE_MAP);
-        }
+//        if (Util.canDoWithTime(st, this.secondsRest)) {
+//            this.currentLevel = this.data.length;
+//            this.leaveMap();
+//        }
     }
 
     @Override
@@ -54,10 +55,6 @@ public class TDST extends Boss {
         super.joinMap(); //To change body of generated methods, choose Tools | Templates.
         st = System.currentTimeMillis();
     }
+
     private long st;
 }
-
-/**
- * Vui lòng không sao chép mã nguồn này dưới mọi hình thức. Hãy tôn trọng tác
- * giả của mã nguồn này. Xin cảm ơn! - GirlBeo
- */

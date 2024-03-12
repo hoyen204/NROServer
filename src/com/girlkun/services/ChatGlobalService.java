@@ -6,6 +6,7 @@ import com.girlkun.server.io.MySession;
 import com.girlkun.utils.Logger;
 import com.girlkun.utils.TimeUtil;
 import com.girlkun.utils.Util;
+
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -34,11 +35,12 @@ public class ChatGlobalService implements Runnable {
     }
 
     public void chat(Player player, String text) {
-////        if (!player.getSession().actived) {
-////            Service.gI().sendThongBaoFromAdmin(player,
-////                    "|5|VUI LÒNG Kích Hoạt Thành Viên\n|7|Bằng Cách\n|5|Đổi Điểm Pvp Ở Npc Trong Nhà!");
-////            return;
-////        }
+        if (!player.getSession().isActived()) {
+            Service.gI().sendThongBaoFromAdmin(player, "|5|Tính năng này chỉ dùng cho tài khoản kích hoạt!");
+//            Service.gI().sendThongBaoFromAdmin(player,
+//                    "|5|VUI LÒNG Kích Hoạt Thành Viên\n|7|Bằng Cách\n|5|Đổi Điểm Pvp Ở Npc Trong Nhà!");
+            return;
+        }
         if (waitingChat.size() >= COUNT_WAIT) {
             Service.gI().sendThongBao(player, "Kênh thế giới hiện đang quá tải, không thể chat lúc này");
             return;
@@ -55,10 +57,10 @@ public class ChatGlobalService implements Runnable {
         }
 
         if (player.inventory.gem >= 5) {
-            if (player.isAdmin() || Util.canDoWithTime(player.iDMark.getLastTimeChatGlobal(), 360000)) {
-                if (player.isAdmin() || player.nPoint.power > 2000000000) {
-//                    player.inventory.subGemAndRuby(5); 
-//                    Service.gI().sendMoney(player);
+            if (player.isAdmin() || Util.canDoWithTime(player.iDMark.getLastTimeChatGlobal(), 30000)) {
+                if (player.isAdmin() || player.nPoint.power > 2_000_000_000L) {
+                    player.inventory.subGemAndRuby(5);
+                    Service.gI().sendMoney(player);
                     player.iDMark.setLastTimeChatGlobal(System.currentTimeMillis());
                     waitingChat.add(new ChatGlobal(player, text.length() > 100 ? text.substring(0, 100) : text));
                 } else {
@@ -66,7 +68,7 @@ public class ChatGlobalService implements Runnable {
                 }
             } else {
                 Service.gI().sendThongBao(player, "Không thể chat thế giới lúc này, vui lòng đợi "
-                        + TimeUtil.getTimeLeft(player.iDMark.getLastTimeChatGlobal(), 240));
+                        + TimeUtil.getTimeLeft(player.iDMark.getLastTimeChatGlobal(), 30));
             }
         } else {
             Service.gI().sendThongBao(player, "Không đủ ngọc chat thế giới");
@@ -108,7 +110,7 @@ public class ChatGlobalService implements Runnable {
             msg.writer().writeUTF("|5|" + chat.text);
             msg.writer().writeInt((int) chat.playerId);
             msg.writer().writeShort(chat.head);
-             msg.writer().writeShort(-1);
+            msg.writer().writeShort(-1);
             msg.writer().writeShort(chat.body);
             msg.writer().writeShort(chat.bag); //bag
             msg.writer().writeShort(chat.leg);
@@ -119,7 +121,9 @@ public class ChatGlobalService implements Runnable {
         }
     }
 
-    private void transformText(ChatGlobal chat) {
+    private boolean transformText(ChatGlobal chat) {
+        // todo có thể ban
+        String tmp = chat.text;
         String text = chat.text;
         text = text.replaceAll("admin", "***")
                 .replaceAll("địt", "***")
@@ -141,6 +145,7 @@ public class ChatGlobalService implements Runnable {
                 .replaceAll("như lồn", "***")
                 .replaceAll("như cặc", "***");
         chat.text = text;
+        return !chat.text.equals(tmp);
     }
 
     private class ChatGlobal {
@@ -162,7 +167,10 @@ public class ChatGlobalService implements Runnable {
             this.leg = player.getLeg();
             this.bag = player.getFlagBag();
             this.text = text;
-            transformText(this);
+            if (transformText(this)) {
+                player.ViolationCount++;
+                Service.gI().sendThongBao(player, "Bạn đã vi phạm " + player.ViolationCount + " lần. Nếu vi phạm quá nhiều tài khoản của bạn sẽ bị vô hiệu hóa");
+            }
         }
 
         private void dispose() {

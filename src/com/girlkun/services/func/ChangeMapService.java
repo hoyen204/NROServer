@@ -31,7 +31,7 @@ public class ChangeMapService {
     private static final byte EFFECT_GO_TO_TUONG_LAI = 0;
     private static final byte EFFECT_GO_TO_BDKB = 1;
     private static final byte EFFECT_GO_TO_KG = 2;
-    
+
     public static final byte AUTO_SPACE_SHIP = -1;
     public static final byte NON_SPACE_SHIP = 0;
     public static final byte DEFAULT_SPACE_SHIP = 1;
@@ -160,6 +160,10 @@ public class ChangeMapService {
      * @param zoneId
      */
     public void changeZone(Player pl, int zoneId) {
+        if (pl.isDie()) {
+            Service.gI().sendThongBaoOK(pl, "Không thể thực hiện khi kiệt sức");
+            return;
+        }
         if (pl.zone == null) {
             Service.gI().sendThongBaoOK(pl, "Không thể đổi khu vực trong map này");
             return;
@@ -186,7 +190,7 @@ public class ChangeMapService {
                 return;
             }
         }
-        if (pl.isAdmin() || pl.isBoss || Util.canDoWithTime(pl.iDMark.getLastTimeChangeZone(), 10000)) {
+        if (pl.isAdmin() || pl.isBoss || Util.canDoWithTime(pl.iDMark.getLastTimeChangeZone(), 3000)) {
             pl.iDMark.setLastTimeChangeZone(System.currentTimeMillis());
             Map map = pl.zone.map;
             if (zoneId >= 0 && zoneId <= map.zones.size() - 1) {
@@ -203,7 +207,7 @@ public class ChangeMapService {
             }
         } else {
             Service.gI().sendThongBaoOK(pl, "Không thể đổi khu vực lúc này, vui lòng đợi "
-                    + TimeUtil.getTimeLeft(pl.iDMark.getLastTimeChangeZone(), 10));
+                    + TimeUtil.getTimeLeft(pl.iDMark.getLastTimeChangeZone(), 3));
         }
     }
 
@@ -218,18 +222,15 @@ public class ChangeMapService {
     public void changeMapBySpaceShip(Player pl, int mapId, int zone, int x) {
         if (!pl.isAdmin() || !pl.isBoss) {
             if (pl.isDie()) {
-                if (pl.haveTennisSpaceShip) {
-                    Service.gI().hsChar(pl, pl.nPoint.hpMax, pl.nPoint.mpMax);
-                } else {
-                    Service.gI().hsChar(pl, 1, 1);
-                }
+                Service.gI().sendThongBaoOK(pl, "Không thể thực hiện khi kiệt sức");
+                return;
             } else {
                 if (pl.haveTennisSpaceShip) {
                     pl.nPoint.setFullHpMp();
                     PlayerService.gI().sendInfoHpMp(pl);
                 }
             }
-            if(pl.idNRNM != -1){
+            if (pl.idNRNM != -1) {
                 Service.gI().sendThongBaoOK(pl, "Không thể thực hiện khi có ngọc rồng namec");
                 return;
             }
@@ -239,18 +240,15 @@ public class ChangeMapService {
 
     public void changeMapBySpaceShip(Player pl, Zone zoneJoin, int x) {
         if (pl.isDie()) {
-            if (pl.haveTennisSpaceShip) {
-                Service.gI().hsChar(pl, pl.nPoint.hpMax, pl.nPoint.mpMax);
-            } else {
-                Service.gI().hsChar(pl, 1, 1);
-            }
+            Service.gI().sendThongBaoOK(pl, "Không thể thực hiện khi kiệt sức");
+            return;
         } else {
             if (pl.haveTennisSpaceShip) {
                 pl.nPoint.setFullHpMp();
                 PlayerService.gI().sendInfoHpMp(pl);
             }
         }
-        if(pl.idNRNM != -1){
+        if (pl.idNRNM != -1) {
             Service.gI().sendThongBaoOK(pl, "Không thể thực hiện khi có ngọc rồng namec");
             return;
         }
@@ -266,6 +264,10 @@ public class ChangeMapService {
      * @param x
      */
     public void changeMapInYard(Player pl, int mapId, int zoneId, int x) {
+        if (pl.isDie()) {
+            Service.gI().sendThongBaoOK(pl, "Không thể thực hiện khi kiệt sức");
+            return;
+        }
         Zone zoneJoin = MapService.gI().getMapCanJoin(pl, mapId, zoneId);
         if (zoneJoin != null) {
             x = x != -1 ? x : Util.nextInt(100, zoneJoin.map.mapWidth - 100);
@@ -318,7 +320,11 @@ public class ChangeMapService {
      * @param y
      */
     public void changeMapYardrat(Player pl, Zone zoneJoin, int x, int y) {
-        if(pl.idNRNM != -1){
+        if (pl.isDie()) {
+            Service.gI().sendThongBaoOK(pl, "Không thể thực hiện khi kiệt sức");
+            return;
+        }
+        if (pl.idNRNM != -1) {
             Service.gI().sendThongBaoOK(pl, "Không thể thực hiện khi có ngọc rồng namec");
             return;
         }
@@ -334,7 +340,7 @@ public class ChangeMapService {
                 zoneJoin = MapService.gI().getMapCanJoin(pl, mapId, zoneId);
             }
         }
-//        zoneJoin = checkMapCanJoin(pl, zoneJoin);
+        zoneJoin = checkMapCanJoin(pl, zoneJoin);
         if (zoneJoin != null) {
             boolean currMapIsCold = MapService.gI().isMapCold(pl.zone.map);
             boolean nextMapIsCold = MapService.gI().isMapCold(zoneJoin.map);
@@ -363,13 +369,13 @@ public class ChangeMapService {
             Service.gI().clearMap(pl);
             zoneJoin.mapInfo(pl); //-24
             pl.zone.load_Me_To_Another(pl);
-            if (!pl.isBoss && !pl.isPet&& !pl.isNewPet) {
+            if (!pl.isBoss && !pl.isPet && !pl.isNewPet) {
                 pl.timeChangeZone = System.currentTimeMillis();
                 pl.zone.load_Another_To_Me(pl);
             }
             pl.iDMark.setIdSpaceShip(NON_SPACE_SHIP);
             if (currMapIsCold != nextMapIsCold) {
-                if (!currMapIsCold && nextMapIsCold) {
+                if (!currMapIsCold) {
                     Service.gI().sendThongBao(pl, "Bạn đã đến hành tinh Cold");
                     Service.gI().sendThongBao(pl, "Sức tấn công và HP của bạn bị giảm 50% vì quá lạnh");
                 } else {
@@ -389,8 +395,7 @@ public class ChangeMapService {
                 plX = 60;
             }
             Service.gI().resetPoint(pl, plX, pl.location.y);
-            Service.gI().sendThongBaoOK(pl, "Không thể đến khu vực này");
-            System.out.println("cc");
+            Service.gI().sendThongBao(pl, "Chưa thể đến khu vực này");
         }
     }
 
@@ -419,23 +424,23 @@ public class ChangeMapService {
             }
         }
         if (zoneJoin != null) {
-            if(player.idNRNM != -1 && !Util.canDoWithTime(player.lastTimePickNRNM, 6000)){
+            if (player.idNRNM != -1 && !Util.canDoWithTime(player.lastTimePickNRNM, 5000)) {
                 resetPoint(player);
                 Service.gI().sendThongBao(player, "Ngọc rồng namec quá nặng vui lòng đợi một chút để qua map");
                 return;
             }
-            if(player.idNRNM != -1){
+            if (player.idNRNM != -1) {
                 player.lastTimePickNRNM = System.currentTimeMillis();
             }
             changeMap(player, zoneJoin, -1, -1, xGo, yGo, NON_SPACE_SHIP);
         } else {
             resetPoint(player);
-            Service.gI().sendThongBaoOK(player, "Không thể đến khu vực này");
+            Service.gI().sendThongBao(player, "Chưa thể đến khu vực này");
         }
-        
+
     }
 
-    public void resetPoint(Player player){
+    public void resetPoint(Player player) {
         int x = player.location.x;
         if (player.location.x >= player.zone.map.mapWidth - 60) {
             x = player.zone.map.mapWidth - 60;
@@ -444,7 +449,7 @@ public class ChangeMapService {
         }
         Service.gI().resetPoint(player, x, player.location.y);
     }
-    
+
     public void finishLoadMap(Player player) {
         sendEffectMapToMe(player);
         sendEffectMeToMap(player);
@@ -663,6 +668,7 @@ public class ChangeMapService {
 
     public void goToTuongLai(Player player) {
         if (!player.iDMark.isGotoFuture()) {
+            player.maxTime = 30;
             player.iDMark.setLastTimeGoToFuture(System.currentTimeMillis());
             player.iDMark.setGotoFuture(true);
             spaceShipArrive(player, (byte) 1, DEFAULT_SPACE_SHIP);
@@ -672,22 +678,24 @@ public class ChangeMapService {
 
     public void goToDBKB(Player player) {
         if (!player.iDMark.isGoToBDKB()) {
+            player.maxTime = 6;
             player.iDMark.setLastTimeGoToBDKB(System.currentTimeMillis());
             player.iDMark.setGoToBDKB(true);
             spaceShipArrive(player, (byte) 1, DEFAULT_SPACE_SHIP);
             effectChangeMap(player, 60, EFFECT_GO_TO_BDKB);
         }
     }
- 
+
     public void goToKG(Player player) {
         if (!player.iDMark.isGoToKG()) {
+            player.maxTime = 6;
             player.iDMark.setLastTimeGoToKG(System.currentTimeMillis());
             player.iDMark.setGoToKG(true);
             spaceShipArrive(player, (byte) 1, DEFAULT_SPACE_SHIP);
             effectChangeMap(player, 60, EFFECT_GO_TO_KG);
         }
     }
-    
+
     public void goToQuaKhu(Player player) {
         ChangeMapService.this.changeMapBySpaceShip(player, 24, -1, -1);
     }
@@ -704,16 +712,16 @@ public class ChangeMapService {
             msg.writer().writeByte(type);
             player.sendMessage(msg);
             msg.cleanup();
-        } catch (Exception e) {
+        } catch (Exception ignored) {
         }
     }
 
     //kiểm tra map có thể vào với nhiệm vụ hiện tại
     public Zone checkMapCanJoin(Player player, Zone zoneJoin) {
 //        //dong map 
-        if (zoneJoin.map.mapId == 154 || zoneJoin.map.mapId == 160) {
-            return null;
-        }
+//        if (zoneJoin.map.mapId == 154 || zoneJoin.map.mapId == 160) {
+//            return null;
+//        }
         if (player.isPet || player.isBoss || player.getSession() != null && player.isAdmin()) {
             return zoneJoin;
         }
@@ -727,141 +735,141 @@ public class ChangeMapService {
                         return null;
                     }
                     break;
-////                case 42: //vách aru
-////                case 43: //vách moori
-////                case 44: //vách kakarot
-////                    if (TaskService.gI().getIdTask(player) < ConstTask.TASK_3_1) {
-////                        return null;
-////                    }
-////                    break;
-////                case 2: //thung lũng tre
-////                case 9: //thị trấn moori
-////                case 16: //làng plane
-////                    if (TaskService.gI().getIdTask(player) < ConstTask.TASK_4_0) {
-////                        return null;
-////                    }
-////                    break;
-////                case 24: //trạm tàu vũ trụ trái đất
-////                case 25: //trạm tàu vũ trụ namếc
-////                case 26: //trạm tàu vũ trụ xayda
-////                    if (TaskService.gI().getIdTask(player) < ConstTask.TASK_6_0) {
-////                        return null;
-////                    }
-////                    break;
-////                case 3: //rừng nấm
-////                case 11: //thung lũng maima
-////                case 17: //rừng nguyên sinh
-////                    if (TaskService.gI().getIdTask(player) < ConstTask.TASK_7_0) {
-////                        return null;
-////                    }
-////                    break;
-////                case 27: //rừng bamboo
-////                case 28: //rừng dương xỉ
-////                case 31: //núi hoa vàng
-////                case 32: //núi hoa tím
-////                case 35: //rừng cọ
-////                case 36: //rừng đá
-////                    if (TaskService.gI().getIdTask(player) < ConstTask.TASK_14_0) {
-////                        return null;
-////                    }
-////                    break;
-////                case 30: //đảo bulong
-////                case 34: //đông nam guru
-////                case 38: //bờ vực đen
-////                    if (TaskService.gI().getIdTask(player) < ConstTask.TASK_15_0) {
-////                        return null;
-////                    }
-////                    break;
-////                case 6: //đông karin
-////                case 10: //thung lũng namếc
-////                case 19: //thành phố vegeta
-////                    if (TaskService.gI().getIdTask(player) < ConstTask.TASK_16_0) {
-////                        return null;
-////                    }
-////                    break;
-//                case 68: //thung lũng nappa
-//                case 69: //vực cấm
-//                case 70: //núi appule
-//                case 71: //căn cứ rasphery
-//                case 72: //thung lũng rasphery
-//                case 64: //núi dây leo
-//                case 65: //núi cây quỷ
-//                    if (TaskService.gI().getIdTask(player) < ConstTask.TASK_18_0) {
-//                        return null;
-//                    }
-//                    break;
-//                case 63: //trại lính fide
-//                case 66: //trại quỷ già
-//                case 67: //vực chết
-//                case 73: //thung lũng chết
-//                case 74: //đồi cây fide
-//                case 75: //khe núi tử thần
-//                case 76: //núi đá
-//                case 77: //rừng đá
-//                    if (TaskService.gI().getIdTask(player) < ConstTask.TASK_19_0) {
-//                        return null;
-//                    }
-//                    break;
-//                case 81: //hang quỷ chim
-//                case 82: //núi khỉ đen
-//                case 83: //hang khỉ đen
-//                case 79: //núi khỉ đỏ
-//                    if (TaskService.gI().getIdTask(player) < ConstTask.TASK_20_1) {
-//                        return null;
-//                    }
-//                    break;
-//                case 80: //núi khỉ vàng
-//                    if (TaskService.gI().getIdTask(player) < ConstTask.TASK_21_1) {
-//                        return null;
-//                    }
-//                    break;
-//                case 105: //cánh đồng tuyết
-//                case 106: //rừng tuyết
-//                case 107: //núi tuyết
-//                case 108: //dòng sông băng
-//                case 109: //rừng băng
-//                case 110: //hang băng
-//                    if (TaskService.gI().getIdTask(player) < ConstTask.TASK_21_4) {
-//                        return null;
-//                    }
-//                    break;
-//                case 102: //nhà bunma
-//                case 92: //thành phố phía đông
-//                case 93: //thành phố phía nam
-//                case 94: //đảo balê
-//                case 96: //cao nguyên
-//                case 97: //thành phố phía bắc
-//                case 98: //ngọn núi phía bắc
-//                case 99: //thung lũng phía bắc
-//                case 100: //thị trấn ginder
-//                    if (TaskService.gI().getIdTask(player) < ConstTask.TASK_20_0) {
-//                        return null;
-//                    }
-//                    break;
-//                case 103: //võ đài xên
-//                    if (TaskService.gI().getIdTask(player) < ConstTask.TASK_25_0) {
-//                        return null;
-//                    }
-//                    break;
-//            }
-//        }
-//        if (zoneJoin != null) {
-//            switch (player.gender) {
-//                case ConstPlayer.TRAI_DAT:
-//                    if (zoneJoin.map.mapId == 22 || zoneJoin.map.mapId == 23) {
-//                        zoneJoin = null;
-//                    }
-//                    break;
-//                case ConstPlayer.NAMEC:
-//                    if (zoneJoin.map.mapId == 21 || zoneJoin.map.mapId == 23) {
-//                        zoneJoin = null;
-//                    }
-//                    break;
-//                case ConstPlayer.XAYDA:
-//                    if (zoneJoin.map.mapId == 21 || zoneJoin.map.mapId == 22) {
-//                        zoneJoin = null;
-//                    }
-//                    break;
+                case 42: //vách aru
+                case 43: //vách moori
+                case 44: //vách kakarot
+                    if (TaskService.gI().getIdTask(player) < ConstTask.TASK_3_1) {
+                        return null;
+                    }
+                    break;
+                case 2: //thung lũng tre
+                case 9: //thị trấn moori
+                case 16: //làng plane
+                    if (TaskService.gI().getIdTask(player) < ConstTask.TASK_4_0) {
+                        return null;
+                    }
+                    break;
+                case 24: //trạm tàu vũ trụ trái đất
+                case 25: //trạm tàu vũ trụ namếc
+                case 26: //trạm tàu vũ trụ xayda
+                    if (TaskService.gI().getIdTask(player) < ConstTask.TASK_6_0) {
+                        return null;
+                    }
+                    break;
+                case 3: //rừng nấm
+                case 11: //thung lũng maima
+                case 17: //rừng nguyên sinh
+                    if (TaskService.gI().getIdTask(player) < ConstTask.TASK_7_0) {
+                        return null;
+                    }
+                    break;
+                case 27: //rừng bamboo
+                case 28: //rừng dương xỉ
+                case 31: //núi hoa vàng
+                case 32: //núi hoa tím
+                case 35: //rừng cọ
+                case 36: //rừng đá
+                    if (TaskService.gI().getIdTask(player) < ConstTask.TASK_14_0) {
+                        return null;
+                    }
+                    break;
+                case 30: //đảo bulong
+                case 34: //đông nam guru
+                case 38: //bờ vực đen
+                    if (TaskService.gI().getIdTask(player) < ConstTask.TASK_15_0) {
+                        return null;
+                    }
+                    break;
+                case 6: //đông karin
+                case 10: //thung lũng namếc
+                case 19: //thành phố vegeta
+                    if (TaskService.gI().getIdTask(player) < ConstTask.TASK_16_0) {
+                        return null;
+                    }
+                    break;
+                case 68: //thung lũng nappa
+                case 69: //vực cấm
+                case 70: //núi appule
+                case 71: //căn cứ rasphery
+                case 72: //thung lũng rasphery
+                case 64: //núi dây leo
+                case 65: //núi cây quỷ
+                    if (TaskService.gI().getIdTask(player) < ConstTask.TASK_18_0) {
+                        return null;
+                    }
+                    break;
+                case 63: //trại lính fide
+                case 66: //trại quỷ già
+                case 67: //vực chết
+                case 73: //thung lũng chết
+                case 74: //đồi cây fide
+                case 75: //khe núi tử thần
+                case 76: //núi đá
+                case 77: //rừng đá
+                    if (TaskService.gI().getIdTask(player) < ConstTask.TASK_19_0) {
+                        return null;
+                    }
+                    break;
+                case 81: //hang quỷ chim
+                case 82: //núi khỉ đen
+                case 83: //hang khỉ đen
+                case 79: //núi khỉ đỏ
+                    if (TaskService.gI().getIdTask(player) < ConstTask.TASK_20_1) {
+                        return null;
+                    }
+                    break;
+                case 80: //núi khỉ vàng
+                    if (TaskService.gI().getIdTask(player) < ConstTask.TASK_21_1) {
+                        return null;
+                    }
+                    break;
+                case 105: //cánh đồng tuyết
+                case 106: //rừng tuyết
+                case 107: //núi tuyết
+                case 108: //dòng sông băng
+                case 109: //rừng băng
+                case 110: //hang băng
+                    if (TaskService.gI().getIdTask(player) < ConstTask.TASK_21_4) {
+                        return null;
+                    }
+                    break;
+                case 102: //nhà bunma
+                case 92: //thành phố phía đông
+                case 93: //thành phố phía nam
+                case 94: //đảo balê
+                case 96: //cao nguyên
+                case 97: //thành phố phía bắc
+                case 98: //ngọn núi phía bắc
+                case 99: //thung lũng phía bắc
+                case 100: //thị trấn ginder
+                    if (TaskService.gI().getIdTask(player) < ConstTask.TASK_20_0) {
+                        return null;
+                    }
+                    break;
+                case 103: //võ đài xên
+                    if (TaskService.gI().getIdTask(player) < ConstTask.TASK_25_0) {
+                        return null;
+                    }
+                    break;
+            }
+        }
+        if (zoneJoin != null) {
+            switch (player.gender) {
+                case ConstPlayer.TRAI_DAT:
+                    if (zoneJoin.map.mapId == 22 || zoneJoin.map.mapId == 23) {
+                        zoneJoin = null;
+                    }
+                    break;
+                case ConstPlayer.NAMEC:
+                    if (zoneJoin.map.mapId == 21 || zoneJoin.map.mapId == 23) {
+                        zoneJoin = null;
+                    }
+                    break;
+                case ConstPlayer.XAYDA:
+                    if (zoneJoin.map.mapId == 21 || zoneJoin.map.mapId == 22) {
+                        zoneJoin = null;
+                    }
+                    break;
             }
         }
         return zoneJoin;
@@ -899,7 +907,7 @@ public class ChangeMapService {
             }
         }
     }
-    
+
     public Zone getZoneJoinByMapIdAndZoneId(Player player, int mapId, int zoneId) {
         Map map = getMapById(mapId);
         Zone zoneJoin = null;
@@ -912,7 +920,8 @@ public class ChangeMapService {
         }
         return zoneJoin;
     }
-     public Map getMapById(int mapId) {
+
+    public Map getMapById(int mapId) {
         for (Map map : Manager.MAPS) {
             if (map.mapId == mapId) {
                 return map;
@@ -939,5 +948,27 @@ public class ChangeMapService {
     public void changeMapNonSpaceship(Player player, int mapid, int x, int y) {
         Zone zone = getMapCanJoin(player, mapid);
         ChangeMapService.gI().changeMap(player, zone, -1, -1, x, y, NON_SPACE_SHIP);
+    }
+
+    public void returnTown(Player pl, int mapId, int zone, int x) {
+        if (!pl.isAdmin() || !pl.isBoss) {
+            if (pl.isDie()) {
+                if (pl.haveTennisSpaceShip) {
+                    Service.gI().hsChar(pl, pl.nPoint.hpMax, pl.nPoint.mpMax);
+                } else {
+                    Service.gI().hsChar(pl, 1, 1);
+                }
+            } else {
+                if (pl.haveTennisSpaceShip) {
+                    pl.nPoint.setFullHpMp();
+                    PlayerService.gI().sendInfoHpMp(pl);
+                }
+            }
+            if (pl.idNRNM != -1) {
+                Service.gI().sendThongBaoOK(pl, "Không thể thực hiện khi có ngọc rồng namec");
+                return;
+            }
+            changeMap(pl, null, mapId, zone, x, 5, AUTO_SPACE_SHIP);
+        }
     }
 }

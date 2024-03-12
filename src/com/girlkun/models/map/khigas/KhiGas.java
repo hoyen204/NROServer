@@ -1,16 +1,12 @@
 package com.girlkun.models.map.khigas;
 
-import com.girlkun.models.boss.bdkb.TrungUyXanhLo;
 import com.girlkun.models.clan.Clan;
 import com.girlkun.models.map.TrapMap;
 import com.girlkun.models.map.Zone;
 import com.girlkun.models.mob.Mob;
 import com.girlkun.models.player.Player;
 import com.girlkun.services.ItemTimeService;
-import com.girlkun.services.MapService;
-import com.girlkun.services.Service;
 import com.girlkun.services.func.ChangeMapService;
-import com.girlkun.utils.Logger;
 import com.girlkun.utils.Util;
 
 import java.util.ArrayList;
@@ -70,8 +66,8 @@ public class KhiGas {
         this.clan.khigas = this;
 
         resetBanDo();
-        ChangeMapService.gI().goToDBKB(plOpen);
-        sendTextBanDoKhoBau();
+        ChangeMapService.gI().goToKG(plOpen);
+        sendTextKG();
     }
 
     private void resetBanDo() {
@@ -82,7 +78,7 @@ public class KhiGas {
         }
         for (Zone zone : zones) {
             for (Mob m : zone.mobs) {
-                Mob.initMobBanDoKhoBau(m, this.level);
+                Mob.initMobKG(m, this.level);
                 Mob.hoiSinhMob(m);
             }
         }
@@ -90,13 +86,10 @@ public class KhiGas {
 
     //kết thúc bản đồ kho báu
     public void finish() {
-        List<Player> plOutDT = new ArrayList();
+        List<Player> plOutDT = new ArrayList<>();
         for (Zone zone : zones) {
             List<Player> players = zone.getPlayers();
-            for (Player pl : players) {
-                plOutDT.add(pl);
-            }
-
+            plOutDT.addAll(players);
         }
         for (Player pl : plOutDT) {
             ChangeMapService.gI().changeMapBySpaceShip(pl, 5, -1, 64);
@@ -120,9 +113,9 @@ public class KhiGas {
         KHI_GAS.get(idBanDo).zones.add(zone);
     }
 
-    private void sendTextBanDoKhoBau() {
+    private void sendTextKG() {
         for (Player pl : this.clan.membersInGame) {
-            ItemTimeService.gI().sendTextBanDoKhoBau(pl);
+            ItemTimeService.gI().sendTextKG(pl);
         }
     }
 }

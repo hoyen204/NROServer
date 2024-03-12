@@ -213,6 +213,9 @@ public class UseItem {
                 }
                 default:
                     switch (item.template.id) {
+                        case 457:
+                            Input.gI().createFormUseGold(pl);
+                            break;
                         case 992:
                             pl.type = 1;
                             pl.maxTime = 5;
@@ -421,7 +424,20 @@ public class UseItem {
                                 Service.gI().sendThongBao(pl, "Ít nhất đệ tử ngươi phải có chiêu 2 chứ!");
                             }
                             break;
-
+                        case 1146:
+                            Item skillBook = InventoryServiceNew.gI().findItemBag(pl, 1146);
+                            if (skillBook != null && skillBook.quantity >= 1) {
+                                if (pl.gender == 0)
+                                    SkillService.gI().learSkillSpecial(pl, Skill.SUPER_KAME);
+                                if (pl.gender == 1)
+                                    SkillService.gI().learSkillSpecial(pl, Skill.MA_PHONG_BA);
+                                if (pl.gender == 2)
+                                    SkillService.gI().learSkillSpecial(pl, Skill.LIEN_HOAN_CHUONG);
+                                InventoryServiceNew.gI().subQuantityItem(pl.inventory.itemsBag, skillBook, skillBook.quantity);
+                                InventoryServiceNew.gI().sendItemBags(pl);
+                                Service.gI().sendThongBao(pl, "Đã học kỹ năng đặc biệt");
+                            }
+                            break;
                         case 2027:
                         case 2028: {
                             if (InventoryServiceNew.gI().getCountEmptyBag(pl) == 0) {
@@ -674,9 +690,6 @@ public class UseItem {
             icon[0] = item.template.iconID;
             if (index <= 3) {
                 pl.inventory.gold += Util.nextInt(gold[0][0], gold[0][1]);
-                if (pl.inventory.gold > Inventory.LIMIT_GOLD) {
-                    pl.inventory.gold = Inventory.LIMIT_GOLD;
-                }
                 PlayerService.gI().sendInfoHpMpMoney(pl);
                 icon[1] = 930;
             } else {
@@ -696,7 +709,7 @@ public class UseItem {
 
     private void useItemHopQuaTanThu(Player pl, Item item) {
         if (InventoryServiceNew.gI().getCountEmptyBag(pl) > 0) {
-            // nr 4-7
+            // nr 4-7, item cn bh gx bk ad
             short[] temp = {17, 18, 19, 20, 381, 382, 383, 384, 385, 460};
             int[][] gold = {{100000000, 200000000}};
             byte index = (byte) Util.nextInt(0, temp.length - 1);
@@ -704,9 +717,6 @@ public class UseItem {
             icon[0] = item.template.iconID;
             if (index <= temp.length * 0.3) {
                 pl.inventory.gold += Util.nextInt(gold[0][0], gold[0][1]);
-                if (pl.inventory.gold > Inventory.LIMIT_GOLD) {
-                    pl.inventory.gold = Inventory.LIMIT_GOLD;
-                }
                 PlayerService.gI().sendInfoHpMpMoney(pl);
                 icon[1] = 930;
             } else {
@@ -734,9 +744,6 @@ public class UseItem {
             icon[0] = item.template.iconID;
             if (index < temp.length * 0.3) {
                 pl.inventory.gold += Util.nextInt(gold[0][0], gold[0][1]);
-                if (pl.inventory.gold > Inventory.LIMIT_GOLD) {
-                    pl.inventory.gold = Inventory.LIMIT_GOLD;
-                }
                 PlayerService.gI().sendInfoHpMpMoney(pl);
                 icon[1] = 930;
             } else {
@@ -1113,7 +1120,14 @@ public class UseItem {
                         Service.gI().sendThongBao(pl, "Không thể thực hiện");
                     }
                     break;
-
+//                case 759: //skill 5
+//                    if (SkillUtil.upSkillPet(pl.pet.playerSkill.skills, 3)) {
+//                        Service.gI().chatJustForMe(pl, pl.pet, "Cảm ơn sư phụ");
+//                        InventoryServiceNew.gI().subQuantityItemsBag(pl, item, 1);
+//                    } else {
+//                        Service.gI().sendThongBao(pl, "Không thể thực hiện");
+//                    }
+//                    break;
             }
 
         } catch (Exception e) {

@@ -10,6 +10,7 @@ import com.girlkun.services.GiftService;
 public class Inventory {
 
     public static final long LIMIT_GOLD = Long.MAX_VALUE;
+    public static final int LIMIT_QUANTITY = 9_999_999;
 
     public static final int MAX_ITEMS_BAG = 100;
     public static final int MAX_ITEMS_BOX = 100;

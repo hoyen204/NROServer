@@ -15,6 +15,7 @@ import com.girlkun.network.io.Message;
 import com.girlkun.services.func.ChangeMapService;
 import com.girlkun.utils.Logger;
 import com.girlkun.utils.Util;
+
 import java.io.DataInputStream;
 import java.io.FileInputStream;
 import java.util.ArrayList;
@@ -42,10 +43,6 @@ public class MapService {
         return null;
     }
 
-    /**
-     * @param tileTypeFocus tile type: top, bot, left, right...
-     * @return [tileMapId][tileType]
-     */
     public int[][] readTileIndexTileType(int tileTypeFocus) {
         int[][] tileIndexTileType = null;
         try {
@@ -155,12 +152,12 @@ public class MapService {
         if (map == null) {
             return null;
         }
-            
+
         //int z = Util.nextInt(0, map.zones.size() - 1);
-       int z = 0;
+        int z = 0;
         while (map.zones.get(z).getNumOfPlayers() >= map.zones.get(z).maxPlayer) {
-         //   z = Util.nextInt(0, map.zones.size() - 1);
-         z++;
+            //   z = Util.nextInt(0, map.zones.size() - 1);
+            z++;
         }
         return map.zones.get(z);
     }
@@ -225,11 +222,7 @@ public class MapService {
      */
     public List<Zone> getMapCapsule(Player pl) {
         List<Zone> list = new ArrayList<>();
-        if (pl.mapBeforeCapsule != null
-                && pl.mapBeforeCapsule.map.mapId != 21
-                && pl.mapBeforeCapsule.map.mapId != 22
-                && pl.mapBeforeCapsule.map.mapId != 23
-                && !isMapTuongLai(pl.mapBeforeCapsule.map.mapId)) {
+        if (pl.mapBeforeCapsule != null && pl.mapBeforeCapsule.map.mapId != 21 && pl.mapBeforeCapsule.map.mapId != 22 && pl.mapBeforeCapsule.map.mapId != 23 && !isMapTuongLai(pl.mapBeforeCapsule.map.mapId)) {
             addListMapCapsule(pl, list, pl.mapBeforeCapsule);
         }
         addListMapCapsule(pl, list, getMapCanJoin(pl, 21 + pl.gender, 0));
@@ -256,6 +249,7 @@ public class MapService {
         }
         return list;
     }
+
     public List<Zone> getMapMaBu() {
         List<Zone> list = new ArrayList<>();
         for (int i = 0; i < 7; i++) {
@@ -301,9 +295,11 @@ public class MapService {
     public boolean isMapBlackBallWar(int mapId) {
         return mapId >= 85 && mapId <= 91;
     }
+
     public boolean isMapMaBu(int mapId) {
         return mapId >= 114 && mapId <= 120;
     }
+
     public boolean isMapPVP(int mapId) {
         return mapId == 112;
     }
@@ -324,15 +320,13 @@ public class MapService {
     public boolean isMapBanDoKhoBau(int mapId) {
         return mapId >= 135 && mapId <= 138;
     }
-    
+
     public boolean isMapKhiGas(int mapId) {
         return mapId == 149 && mapId == 150 && mapId == 151 && mapId == 152;
     }
-    
+
     public boolean isMapTuongLai(int mapId) {
-        return (mapId >= 92 && mapId <= 94)
-                || (mapId >= 96 && mapId <= 100)
-                || mapId == 102 || mapId == 103;
+        return (mapId >= 92 && mapId <= 94) || (mapId >= 96 && mapId <= 100) || mapId == 102 || mapId == 103;
     }
 
     public void goToMap(Player player, Zone zoneJoin) {

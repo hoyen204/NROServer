@@ -43,8 +43,8 @@ public class ServerNotify extends Thread {
                 while (!notifies.isEmpty()) {
                     sendThongBaoBenDuoi(notifies.remove(0));
                 }
-                if (Util.canDoWithTime(this.lastTimeGK, 25000)) {
-                    sendThongBaoBenDuoi("Số người đang online là: " + GirlkunSessionManager.gI().getSessions().size());
+                if (Util.canDoWithTime(this.lastTimeGK, 60000)) {
+                    sendThongBaoBenDuoi("Số người đang online là: " + Client.gI().getPlayers().size());
                     this.lastTimeGK = System.currentTimeMillis();
                 }
             } catch (Exception ignored) {

@@ -22,35 +22,27 @@ import com.girlkun.models.map.Zone;
 import com.girlkun.models.map.blackball.BlackBallWar;
 import com.girlkun.models.matches.IPVP;
 import com.girlkun.models.matches.TYPE_LOSE_PVP;
-import com.girlkun.models.matches.TYPE_PVP;
-import com.girlkun.models.matches.pvp.DaiHoiVoThuat;
 import com.girlkun.models.npc.specialnpc.BillEgg;
 import com.girlkun.models.skill.Skill;
-import com.girlkun.server.Manager;
-import com.girlkun.services.Service;
+import com.girlkun.services.*;
 import com.girlkun.server.io.MySession;
 import com.girlkun.models.task.TaskPlayer;
 import com.girlkun.network.io.Message;
 import com.girlkun.server.Client;
-import com.girlkun.services.EffectSkillService;
-import com.girlkun.services.FriendAndEnemyService;
-import com.girlkun.services.PetService;
-import com.girlkun.services.TaskService;
 import com.girlkun.services.func.ChangeMapService;
 import com.girlkun.services.func.ChonAiDay;
 import com.girlkun.services.func.CombineNew;
-import com.girlkun.services.func.TopService;
 import com.girlkun.utils.Logger;
 import com.girlkun.utils.Util;
-import com.zaxxer.hikari.util.ConcurrentBag;
 
 import java.util.ArrayList;
 
 public class Player {
-
+    public int ViolationCount;
     public int goldChallenge;
     public boolean receivedWoodChest;
     public List<String> textRuongGo = new ArrayList<>();
+    public SkillSpecial skillSpecial;
     private MySession session;
 
     public boolean beforeDispose;
@@ -134,6 +126,7 @@ public class Player {
     public List<Card> Cards = new ArrayList<>();
     public short idAura = -1;
     public int levelWoodChest;
+    public long lastTimeVisible;
 
     public Player() {
         lastTimeUseOption = System.currentTimeMillis();
@@ -158,6 +151,7 @@ public class Player {
         charms = new Charms();
         gift = new Gift(this);
         effectSkin = new EffectSkin(this);
+        skillSpecial = new SkillSpecial(this);
     }
 
     //--------------------------------------------------------------------------
@@ -184,14 +178,17 @@ public class Player {
     }
 
     public boolean isPl() {
-        return !isPet && !isBoss && !isNewPet && !isNewPet1;
+        return !isPet && !isBoss && !isNewPet && !isNewPet1 && this.getClass() != Referee.class && this.getClass() != Referee1.class;
     }
 
     public void update() {
         if (!this.beforeDispose) {
             try {
                 if (!iDMark.isBan()) {
-
+                    if (ViolationCount >= 5) {
+                        PlayerService.gI().banPlayer(this);
+                        return;
+                    }
                     if (nPoint != null) {
                         nPoint.update();
                     }
@@ -213,7 +210,6 @@ public class Player {
                     if (newpet != null) {
                         newpet.update();
                     }
-
                     if (newpet1 != null) {
                         newpet1.update();
                     }
@@ -225,15 +221,15 @@ public class Player {
                     }
                     BlackBallWar.gI().update(this);
                     MapMaBu.gI().update(this);
-                    if (!isBoss && this.iDMark.isGotoFuture() && Util.canDoWithTime(this.iDMark.getLastTimeGoToFuture(), 6000)) {
+                    if (!isBoss && this.iDMark.isGotoFuture() && this.maxTime != -1 && Util.canDoWithTime(this.iDMark.getLastTimeGoToFuture(), this.maxTime * 1000)) {
                         ChangeMapService.gI().changeMapBySpaceShip(this, 102, -1, Util.nextInt(60, 200));
                         this.iDMark.setGotoFuture(false);
                     }
-                    if (this.iDMark.isGoToBDKB() && Util.canDoWithTime(this.iDMark.getLastTimeGoToBDKB(), 6000)) {
+                    if (this.iDMark.isGoToBDKB() && Util.canDoWithTime(this.iDMark.getLastTimeGoToBDKB(), this.maxTime * 1000)) {
                         ChangeMapService.gI().changeMapBySpaceShip(this, 135, -1, 35);
                         this.iDMark.setGoToBDKB(false);
                     }
-                    if (this.iDMark.isGoToKG() && Util.canDoWithTime(this.iDMark.getLastTimeGoToKG(), 6000)) {
+                    if (this.iDMark.isGoToKG() && Util.canDoWithTime(this.iDMark.getLastTimeGoToKG(), this.maxTime * 1000)) {
                         ChangeMapService.gI().changeMapBySpaceShip(this, 149, -1, 35);
                         this.iDMark.setGoToKG(false);
                     }
@@ -243,6 +239,30 @@ public class Player {
                             trap.doPlayer(this);
                         }
                     }
+//                    if(this.isPl()){ //Cộng sđ nếu xung quanh có SĐ Đẹp
+//                        boolean plusDame = false;
+//                        long tileDame = 0;
+//                        if(!this.isDameDep){
+//                            for(Player nearPlayer : this.zone.getNotBosses()){
+//                                if(nearPlayer != null && nearPlayer != this && nearPlayer.nPoint.tlSDDep.size() > 0){
+//                                    if(Util.getDistance(this,nearPlayer) < 300){
+//                                        plusDame = true;
+//                                        for(Integer tl : nearPlayer.nPoint.tlSDDep){
+//                                            tileDame += tl;
+//                                        }
+//                                    }
+//                                }
+//                            }
+//                        }
+//                        if(plusDame){
+//                            long dameDep = ((long) this.nPoint.dame * tileDame / 100);
+//                            this.nPoint.dame += dameDep;
+//                            this.isDameDep = true;
+//                        }
+//                        else{
+//                            this.isDameDep = false;
+//                        }
+//                    }
                     if (this.isPl() && this.inventory.itemsBody.get(7) != null) {
                         Item it = this.inventory.itemsBody.get(7);
                         if (it != null && it.isNotNullItem() && this.newpet == null && this.newpet1 == null) {
@@ -276,7 +296,7 @@ public class Player {
                         newpet1 = null;
                     }
                     if (this.isPl() && isWin && this.zone.map.mapId == 51 && Util.canDoWithTime(lastTimeWin, 2000)) {
-                        ChangeMapService.gI().changeMapBySpaceShip(this, 52, 0, -1);
+                        ChangeMapService.gI().changeMapInYard(this, 52, 0, -1);
                         isWin = false;
                     }
                     if (location.lastTimeplayerMove < System.currentTimeMillis() - 30 * 60 * 1000) {
@@ -306,9 +326,10 @@ public class Player {
     private static final short[][] idOutfitFusion = {
             {380, 381, 382}, {383, 384, 385}, {391, 392, 393},//bt1
             {870, 871, 872}, {873, 874, 875}, {867, 868, 869},//bt2
-            {2036,2037,2038},{2039,2040,2041},{2042,2043,2044}, //bt3
-            {2087,2088,2089},{2081,2082,2083},{2078,2079,2080},//bt4
+            {2084, 2085, 2086}, {2039, 2040, 2041}, {2042, 2043, 2044}, //bt3
+            {2036, 2037, 2038}, {2081, 2082, 2083}, {2078, 2079, 2080},//bt4
     };
+
     // Sua id vat pham muon co aura lai
     public byte getAura() {
         if (this.inventory.itemsBody.isEmpty() || this.inventory.itemsBody.size() < 10) {
@@ -331,6 +352,7 @@ public class Player {
         }
 
     }
+
     // hieu ung theo set
     public byte getEffFront() {
         if (this.inventory.itemsBody.isEmpty() || this.inventory.itemsBody.size() < 10) {
@@ -424,14 +446,14 @@ public class Player {
 //                    return idOutfitFusion[3 + this.gender][0];
 //                }
                 return idOutfitFusion[3 + this.gender][0];
-            }  else if (fusion.typeFusion == ConstPlayer.HOP_THE_PORATA3) {
+            } else if (fusion.typeFusion == ConstPlayer.HOP_THE_PORATA3) {
 //                if (this.pet.typePet == 1) {
 //                    return idOutfitFusion[3 + this.gender][0];
 //                }
 
                 return idOutfitFusion[6 + this.gender][0];
-            
-            }  else if (fusion.typeFusion == ConstPlayer.HOP_THE_PORATA4) {
+
+            } else if (fusion.typeFusion == ConstPlayer.HOP_THE_PORATA4) {
 //                if (this.pet.typePet == 1) {
 //                    return idOutfitFusion[3 + this.gender][0];
 //                }
@@ -463,18 +485,18 @@ public class Player {
             } else if (fusion.typeFusion == ConstPlayer.HOP_THE_PORATA2) {
 //                if (this.pet.typePet == 1) {
 //                    return idOutfitFusion[3 + this.gender][1];
-    
-                return idOutfitFusion[3 + this.gender][1];             
-            }  else if (fusion.typeFusion == ConstPlayer.HOP_THE_PORATA3) {
+
+                return idOutfitFusion[3 + this.gender][1];
+            } else if (fusion.typeFusion == ConstPlayer.HOP_THE_PORATA3) {
 //                if (this.pet.typePet == 1) {
 //                    return idOutfitFusion[3 + this.gender][1];
 //                }
-                return idOutfitFusion[6 + this.gender][1]; 
-               } else if (fusion.typeFusion == ConstPlayer.HOP_THE_PORATA4) {
+                return idOutfitFusion[6 + this.gender][1];
+            } else if (fusion.typeFusion == ConstPlayer.HOP_THE_PORATA4) {
 //                if (this.pet.typePet == 1) {
 //                    return idOutfitFusion[3 + this.gender][1];
-    
-                return idOutfitFusion[9 + this.gender][1]; 
+
+                return idOutfitFusion[9 + this.gender][1];
             }
         } else if (inventory != null && inventory.itemsBody.get(5).isNotNullItem()) {
             int body = inventory.itemsBody.get(5).template.body;
@@ -506,12 +528,12 @@ public class Player {
 //                    return idOutfitFusion[3 + this.gender][2];
 //                }
                 return idOutfitFusion[3 + this.gender][2];
-            }  else if (fusion.typeFusion == ConstPlayer.HOP_THE_PORATA3) {
+            } else if (fusion.typeFusion == ConstPlayer.HOP_THE_PORATA3) {
 //                if (this.pet.typePet == 1) {
 //                    return idOutfitFusion[3 + this.gender][2];
 //                }
                 return idOutfitFusion[6 + this.gender][2];
-            }  else if (fusion.typeFusion == ConstPlayer.HOP_THE_PORATA4) {
+            } else if (fusion.typeFusion == ConstPlayer.HOP_THE_PORATA4) {
 //                if (this.pet.typePet == 1) {
 //                    return idOutfitFusion[3 + this.gender][2];
 //                }
@@ -528,6 +550,7 @@ public class Player {
         }
         return (short) (gender == 1 ? 60 : 58);
     }
+
     public short getFlagBag() {
         if (this.iDMark.isHoldBlackBall()) {
             return 31;
@@ -571,8 +594,13 @@ public class Player {
         }
 
     }
+
     //--------------------------------------------------------------------------
     public int injured(Player plAtt, int damage, boolean piercing, boolean isMobAttack) {
+        return injured(plAtt, damage, piercing, isMobAttack, false);
+    }
+
+    public int injured(Player plAtt, int damage, boolean piercing, boolean isMobAttack, boolean isSuperMob) {
         if (!this.isDie()) {
             if (plAtt != null) {
                 switch (plAtt.playerSkill.skillSelect.template.id) {
@@ -588,9 +616,10 @@ public class Player {
             if (!piercing && Util.isTrue(this.nPoint.tlNeDon, 100)) {
                 return 0;
             }
-            damage = this.nPoint.subDameInjureWithDeff(damage);
+            if (!isSuperMob)
+                damage = this.nPoint.subDameInjureWithDeff(damage);
             if (!piercing && effectSkill.isShielding) {
-                if (damage > nPoint.hpMax) {
+                if (damage > nPoint.hpMax && !isMobAttack) {
                     EffectSkillService.gI().breakShield(this);
                 }
                 damage = 1;
@@ -630,6 +659,7 @@ public class Player {
         //xóa trứng
         if (this.mobMe != null) {
             this.mobMe.mobMeDie();
+            this.mobMe.dispose();
         }
         Service.gI().charDie(this);
         //add kẻ thù
@@ -719,6 +749,10 @@ public class Player {
             mabuEgg.dispose();
             mabuEgg = null;
         }
+        if (skillSpecial != null) {
+            skillSpecial.dispose();
+            skillSpecial = null;
+        }
         if (playerTask != null) {
             playerTask.dispose();
             playerTask = null;
@@ -790,6 +824,10 @@ public class Player {
         enemies = null;
         session = null;
         name = null;
+    }
+
+    public boolean canBeAttack() {
+        return !this.isDie() && !this.isNewPet && !this.isNewPet1 && !this.effectSkin.isVoHinh;
     }
 
     public String percentGold(int type) {

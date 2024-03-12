@@ -60,7 +60,6 @@ public class SetClothes {
                 case 627:
                     this.ctHaiTac = ct.template.id;
                     break;
-
             }
         }
     }
@@ -123,7 +122,6 @@ public class SetClothes {
                             }
                             break;
                     }
-
                     if (isActSet) {
                         break;
                     }
@@ -133,49 +131,48 @@ public class SetClothes {
             }
         }
     }
-    
-    
+
+
     //checksetthanlinh
-       public boolean setGod(){
+    public boolean setGod() {
+        int count = 0;
         for (int i = 0; i < 6; i++) {
             Item item = this.player.inventory.itemsBody.get(i);
             if (item.isNotNullItem()) {
                 if (item.template.id >= 650 && item.template.id <= 663) {
-                    i++;
-                } else if(i == 5) {
-                    this.godClothes = true;
-                    break;
+                    count++;
+                } else if (count == 5) {
+                    return godClothes = true;
                 }
             } else {
                 this.godClothes = false;
                 break;
             }
         }
-        return this.godClothes ? true : false;
-       }
-    
-    
+        return this.godClothes;
+    }
+
+
     // check set huy diet
-             public boolean setGod14(){
+    public boolean setDHD() {
+        int count = 0;
         for (int i = 0; i < 6; i++) {
             Item item = this.player.inventory.itemsBody.get(i);
             if (item.isNotNullItem()) {
                 if (item.template.id >= 650 && item.template.id <= 663) {
-                    i++;
-                } else if(i == 5) {
-                    this.huydietClothers = true;
-                    break;
+                    count++;
+                } else if (count == 5) {
+                    return huydietClothers = true;
                 }
             } else {
                 this.huydietClothers = false;
                 break;
             }
         }
-        return this.huydietClothers ? true : false;
-       }
-    
-    
-    
+        return this.huydietClothers;
+    }
+
+
     private void setDefault() {
         this.songoku = 0;
         this.thienXinHang = 0;

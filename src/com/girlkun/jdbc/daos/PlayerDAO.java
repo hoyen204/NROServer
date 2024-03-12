@@ -9,10 +9,13 @@ import com.girlkun.models.player.Fusion;
 import com.girlkun.models.player.Inventory;
 import com.girlkun.models.player.Player;
 import com.girlkun.models.skill.Skill;
+import com.girlkun.result.GirlkunResultSet;
 import com.girlkun.server.Manager;
+import com.girlkun.server.io.MySession;
 import com.girlkun.services.InventoryServiceNew;
 import com.girlkun.services.ItemTimeService;
 import com.girlkun.services.MapService;
+import com.girlkun.services.Service;
 import com.girlkun.utils.Logger;
 
 import java.sql.Connection;
@@ -22,18 +25,19 @@ import java.sql.SQLException;
 import java.util.Date;
 import java.util.logging.Level;
 
+import com.girlkun.utils.Util;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
 
 public class PlayerDAO {
 
-    public static boolean createNewPlayer(int userId, String name, byte gender, int hair) {
+    public static boolean createNewPlayer(MySession session, String name, byte gender, int hair) {
         try {
             JSONArray dataArray = new JSONArray();
 
             dataArray.add(2000000000); //vàng
-            dataArray.add(1000000); //ngọc xanh
+            dataArray.add(100000); //ngọc xanh
             dataArray.add(0); //hồng ngọc
             dataArray.add(0); //point
             dataArray.add(0); //event
@@ -64,7 +68,7 @@ public class PlayerDAO {
             dataArray.clear();
 
             dataArray.add(10); //level
-            dataArray.add(25); //curent pea
+            dataArray.add(23); //curent pea
             dataArray.add(0); //is upgrade
             dataArray.add(new Date().getTime()); //last time harvest
             dataArray.add(new Date().getTime()); //last time upgrade
@@ -114,7 +118,7 @@ public class PlayerDAO {
             String itemsBody = dataArray.toJSONString();
             dataArray.clear();
 
-            for (int i = 0; i < 20; i++) { // item tạo player 
+            for (int i = 0; i < 50; i++) { // item tạo player
                 if (i == 0) { //thỏi vàng
                     opt.add(30); //id option cấm giao dịch
                     opt.add(1); //param option
@@ -156,16 +160,17 @@ public class PlayerDAO {
             String itemsBox = dataArray.toJSONString();
             dataArray.clear();
 
-            for (int i = 0; i < 110; i++) {
-                item.add(457); //id item
-                item.add(20); //số lượng
-                item.add(options.toJSONString()); //full option item
-                item.add(System.currentTimeMillis()); //thời gian item được tạo
-                dataArray.add(item.toJSONString());
-                options.clear();
-                item.clear();
-            }
-             
+            if (Manager.isTestServer)
+                for (int i = 0; i < 110; i++) {
+                    item.add(457); //id item
+                    item.add(20); //số lượng
+                    item.add(options.toJSONString()); //full option item
+                    item.add(System.currentTimeMillis()); //thời gian item được tạo
+                    dataArray.add(item.toJSONString());
+                    options.clear();
+                    item.clear();
+                }
+
             String itemsBoxLuckyRound = dataArray.toJSONString();
             dataArray.clear();
 
@@ -214,9 +219,9 @@ public class PlayerDAO {
             String charms = dataArray.toJSONString();
             dataArray.clear();
 
-            int[] skillsArr = gender == 0 ? new int[]{0, 1, 6, 9, 10, 20, 22, 19}
-                    : gender == 1 ? new int[]{2, 3, 7, 11, 12, 17, 18, 19}
-                    : new int[]{4, 5, 8, 13, 14, 21, 23, 19};
+            int[] skillsArr = gender == 0 ? new int[]{0, 1, 6, 9, 10, 20, 22, 24, 19}
+                    : gender == 1 ? new int[]{2, 3, 7, 11, 12, 17, 18, 26, 19}
+                    : new int[]{4, 5, 8, 13, 14, 21, 23, 25, 19};
             //[{"temp_id":"4","point":0,"last_time_use":0},]
 
             JSONArray skill = new JSONArray();
@@ -263,30 +268,49 @@ public class PlayerDAO {
             dataArray.add(0); //mức độ nhiệm vụ
             String dataSideTask = dataArray.toJSONString();
             dataArray.clear();
-            
-            
+
+
             String data_card = dataArray.toJSONString();
             String bill_data = dataArray.toJSONString();
-                
-             dataArray.add(0); //bổ huyết
+
+            dataArray.add(0); //bổ huyết
             dataArray.add(0); //bổ khí
             dataArray.add(0); //giáp xên
             dataArray.add(0); //cuồng nộ
             dataArray.add(0); //ẩn danh
             String itemTimeSC = dataArray.toJSONString();
             dataArray.clear();
-            
-            GirlkunDB.executeUpdate("insert into player"
-                    + "(account_id, name, head, gender, have_tennis_space_ship, clan_id_sv" + Manager.SERVER + ", "
-                    + "data_inventory, data_location, data_point, data_magic_tree, items_body, "
-                    + "items_bag, items_box, items_box_lucky_round, friends, enemies, data_intrinsic, data_item_time,"
-                    + "data_task, data_mabu_egg, data_charm, skills, skills_shortcut, pet,"
-                    + "data_black_ball, data_side_task, data_card, bill_data, data_item_time_sieu_cap) "
-                    + "values ()", userId, name, hair, gender, 0, -1, inventory, location, point, magicTree,
-                    itemsBody, itemsBag, itemsBox, itemsBoxLuckyRound, friends, enemies, intrinsic,
-                    itemTime, task, mabuEgg, charms, skills, skillsShortcut, petData, dataBlackBall, dataSideTask, data_card, bill_data,itemTimeSC);
-            Logger.success("Tạo player mới thành công!");
-            return true;
+
+            if (session.userId <= 0) {
+                Long currentMillis = System.currentTimeMillis();
+                GirlkunDB.executeUpdate("insert into account (username, password) values()", currentMillis.toString(), Util.md5("temp"));
+                GirlkunResultSet rs = GirlkunDB.executeQuery("select * from account where username = ?", currentMillis);
+                if (rs.first()) {
+                    session.userId = rs.getInt("id");
+                    session.uu = rs.getString("username");
+                    session.pp = rs.getString("password");
+                    session.isTempAccount = true;
+                }
+                rs.dispose();
+            }
+
+
+            if (session.userId != 0) {
+                GirlkunDB.executeUpdate("insert into player"
+                                + "(account_id, name, head, gender, have_tennis_space_ship, clan_id_sv" + Manager.SERVER + ", "
+                                + "data_inventory, data_location, data_point, data_magic_tree, items_body, "
+                                + "items_bag, items_box, items_box_lucky_round, friends, enemies, data_intrinsic, data_item_time,"
+                                + "data_task, data_mabu_egg, data_charm, skills, skills_shortcut, pet,"
+                                + "data_black_ball, data_side_task, data_card, bill_data, data_item_time_sieu_cap) "
+                                + "values ()", session.userId, name, hair, gender, 0, -1, inventory, location, point, magicTree,
+                        itemsBody, itemsBag, itemsBox, itemsBoxLuckyRound, friends, enemies, intrinsic,
+                        itemTime, task, mabuEgg, charms, skills, skillsShortcut, petData, dataBlackBall, dataSideTask, data_card, bill_data, itemTimeSC);
+                Logger.success("Tạo player mới thành công!");
+                return true;
+            } else {
+                Logger.log("Lỗi tạo player mới");
+                return false;
+            }
         } catch (Exception e) {
             Logger.logException(PlayerDAO.class, e, "Lỗi tạo player mới");
             return false;
@@ -300,8 +324,7 @@ public class PlayerDAO {
                 JSONArray dataArray = new JSONArray();
 
                 //data kim lượng
-                dataArray.add(player.inventory.gold > Inventory.LIMIT_GOLD
-                        ? Inventory.LIMIT_GOLD : player.inventory.gold);
+                dataArray.add(Math.min(player.inventory.gold, Inventory.LIMIT_GOLD));
                 dataArray.add(player.inventory.gem);
                 dataArray.add(player.inventory.ruby);
                 dataArray.add(player.inventory.coupon);
@@ -339,7 +362,7 @@ public class PlayerDAO {
 
                 //data chỉ số
                 dataArray.add(player.nPoint.limitPower);
-                dataArray.add(player.nPoint.power);
+                dataArray.add(Math.min(player.nPoint.power, player.nPoint.getPowerLimit()));
                 dataArray.add(player.nPoint.tiemNang);
                 dataArray.add(player.nPoint.stamina);
                 dataArray.add(player.nPoint.maxStamina);
@@ -520,7 +543,7 @@ public class PlayerDAO {
                 dataArray.add((player.itemTime.isEatMeal ? (ItemTime.TIME_EAT_MEAL - (System.currentTimeMillis() - player.itemTime.lastTimeEatMeal)) : 0));
                 dataArray.add(player.itemTime.iconMeal);
                 dataArray.add((player.itemTime.isUseTDLT ? ((player.itemTime.timeTDLT - (System.currentTimeMillis() - player.itemTime.lastTimeUseTDLT)) / 60 / 1000) : 0));
-              
+
                 String itemTime = dataArray.toJSONString();
                 dataArray.clear();
 
@@ -582,7 +605,6 @@ public class PlayerDAO {
                 }
                 String skills = dataArray.toJSONString();
                 dataArray.clear();
-                dataArray.clear();
 
                 //data skill shortcut
                 for (int skillId : player.playerSkill.skillShortCut) {
@@ -606,7 +628,7 @@ public class PlayerDAO {
                     int timeLeftFusion = (int) (Fusion.TIME_FUSION - (System.currentTimeMillis() - player.fusion.lastTimeFusion));
                     dataArray.add(timeLeftFusion < 0 ? 0 : timeLeftFusion);
                     dataArray.add(player.pet.status);
-            
+
                     petInfo = dataArray.toJSONString();
                     dataArray.clear();
 
@@ -686,16 +708,16 @@ public class PlayerDAO {
                 }
                 String dataBlackBall = dataArray.toJSONString();
                 dataArray.clear();
-                
+
                 dataArray.add((player.itemTime.isUseBoHuyetSC ? (ItemTime.TIME_ITEM - (System.currentTimeMillis() - player.itemTime.lastTimeBoHuyetSC)) : 0));
                 dataArray.add((player.itemTime.isUseBoKhiSC ? (ItemTime.TIME_ITEM - (System.currentTimeMillis() - player.itemTime.lastTimeBoKhiSC)) : 0));
                 dataArray.add((player.itemTime.isUseGiapXenSC ? (ItemTime.TIME_ITEM - (System.currentTimeMillis() - player.itemTime.lastTimeGiapXenSC)) : 0));
                 dataArray.add((player.itemTime.isUseCuongNoSC ? (ItemTime.TIME_ITEM - (System.currentTimeMillis() - player.itemTime.lastTimeCuongNoSC)) : 0));
                 dataArray.add((player.itemTime.isUseAnDanhSC ? (ItemTime.TIME_ITEM - (System.currentTimeMillis() - player.itemTime.lastTimeAnDanhSC)) : 0));
-                
+
                 String itemTimeSC = dataArray.toJSONString();
                 dataArray.clear();
-                
+
                 String query = " update player set data_item_time_sieu_cap =?, head = ?, have_tennis_space_ship = ?,"
                         + "clan_id_sv" + Manager.SERVER + " = ?, data_inventory = ?, data_location = ?, data_point = ?, data_magic_tree = ?,"
                         + "items_body = ?, items_bag = ?, items_box = ?, items_box_lucky_round = ?, friends = ?,"
@@ -732,9 +754,21 @@ public class PlayerDAO {
                         JSONValue.toJSONString(player.Cards),
                         billEgg,
                         player.id);
-               // Logger.success("Total time save player " + player.name + " thành công! " + (System.currentTimeMillis() - st) + "\n");
+                // Logger.success("Total time save player " + player.name + " thành công! " + (System.currentTimeMillis() - st) + "\n");
             } catch (Exception e) {
                 Logger.logException(PlayerDAO.class, e, "Lỗi save player " + player.name);
+            }
+        }
+    }
+
+    public static void removePlayer(int userId) {
+        if (userId != 0) {
+            long st = System.currentTimeMillis();
+            try {
+                GirlkunDB.executeUpdate("delete from player where account_id = ?", userId);
+                GirlkunDB.executeUpdate("delete from account where id = ?", userId);
+            } catch (Exception e) {
+                Logger.logException(PlayerDAO.class, e, "Lỗi remove player " + userId);
             }
         }
     }
@@ -793,7 +827,7 @@ public class PlayerDAO {
     }
 
     public static void addHistoryReceiveGoldBar(Player player, int goldBefore, int goldAfter,
-            int goldBagBefore, int goldBagAfter, int goldBoxBefore, int goldBoxAfter) {
+                                                int goldBagBefore, int goldBagAfter, int goldBoxBefore, int goldBoxAfter) {
         PreparedStatement ps = null;
         try (Connection con = GirlkunDB.getConnection();) {
             ps = con.prepareStatement("insert into history_receive_goldbar(player_id,player_name,gold_before_receive,"

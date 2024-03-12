@@ -1,6 +1,6 @@
 package com.girlkun.server;
 
-import com.arriety.MaQuaTang.MaQuaTangManager;
+import com.arriety.MaQuaTang.GiftCodeManager;
 import com.girlkun.database.GirlkunDB;
 
 import java.net.ServerSocket;
@@ -71,23 +71,32 @@ public class ServerManager {
     }
 
     public void run() {
+        String banner = " ██████   █████ ███████████      ███████       █████ ██████████    █████████ \n" +
+                        "░░██████ ░░███ ░░███░░░░░███   ███░░░░░███    ░░███ ░░███░░░░███  ███░░░░░███\n" +
+                        " ░███░███ ░███  ░███    ░███  ███     ░░███    ░███  ░███   ░░███░███    ░░░ \n" +
+                        " ░███░░███░███  ░██████████  ░███      ░███    ░███  ░███    ░███░░█████████ \n" +
+                        " ░███ ░░██████  ░███░░░░░███ ░███      ░███    ░███  ░███    ░███ ░░░░░░░░███\n" +
+                        " ░███  ░░█████  ░███    ░███ ░░███     ███     ░███  ░███    ███  ███    ░███\n" +
+                        " █████  ░░█████ █████   █████ ░░░███████░      █████ ██████████  ░░█████████ \n" +
+                        "░░░░░    ░░░░░ ░░░░░   ░░░░░    ░░░░░░░       ░░░░░ ░░░░░░░░░░    ░░░░░░░░░  \n" +
+                        "                                                                             \n";
         long delay = 500;
         isRunning = true;
         activeCommandLine();
         activeGame();
         activeServerSocket();
-        Logger.log(Logger.PURPLE_BOLD_BRIGHT,"░░░░░░░░░░░░▄▄\n░░░░░░░░░░░█░░█\n░░░░░░░░░░░█░░█\n░░░░░░░░░░█░░░█\n░░░░░░░░░█░░░░█\n███████▄▄█░░░░░██████▄\n▓▓▓▓▓▓█░░░░░░░░░░░░░░█\n▓▓▓▓▓▓█░░░░░░░░░░░░░░█\n▓▓▓▓▓▓█░░░░░░░░░░░░░░█\n▓▓▓▓▓▓█░░░░░░░░░░░░░░█\n▓▓▓▓▓▓█░░░░░░░░░░░░░░█\n▓▓▓▓▓▓█████░░░░░░░░░█\n██████▀░░░░▀▀██████▀");
-        MaQuaTangManager.gI().init();
-        new Thread(DaiHoiVoThuat.gI() , "Thread DHVT").start();
-        
+        Logger.log(Logger.GREEN, banner);
+        GiftCodeManager.gI().init();
+        new Thread(DaiHoiVoThuat.gI(), "Thread DHVT").start();
+
         ChonAiDay.gI().lastTimeEnd = System.currentTimeMillis() + 300000;
-        new Thread(ChonAiDay.gI() , "Thread CAD").start();
-        
-        NgocRongNamecService.gI().initNgocRongNamec((byte)0);
-        
-        new Thread(NgocRongNamecService.gI() , "Thread NRNM").start();
-        
-        new Thread(TopService.gI() , "Thread TOP").start();
+        new Thread(ChonAiDay.gI(), "Thread CAD").start();
+
+        NgocRongNamecService.gI().initNgocRongNamec((byte) 0);
+
+        new Thread(NgocRongNamecService.gI(), "Thread NRNM").start();
+
+        new Thread(TopService.gI(), "Thread TOP").start();
 
         new Thread(() -> {
             while (isRunning) {
@@ -115,25 +124,25 @@ public class ServerManager {
 
     private void act() throws Exception {
         GirlkunServer.gI().init().setAcceptHandler(new ISessionAcceptHandler() {
-            @Override
-            public void sessionInit(ISession is) {
+                    @Override
+                    public void sessionInit(ISession is) {
 //                antiddos girlkun
-                if (!canConnectWithIp(is.getIP())) {
-                    is.disconnect();
-                    return;
-                }
+                        if (!canConnectWithIp(is.getIP())) {
+                            is.disconnect();
+                            return;
+                        }
 
-                is = is.setMessageHandler(Controller.getInstance())
-                        .setSendCollect(new MessageSendCollect())
-                        .setKeyHandler(new MyKeyHandler())
-                        .startCollect();
-            }
+                        is = is.setMessageHandler(Controller.getInstance())
+                                .setSendCollect(new MessageSendCollect())
+                                .setKeyHandler(new MyKeyHandler())
+                                .startCollect();
+                    }
 
-            @Override
-            public void sessionDisconnect(ISession session) {
-                Client.gI().kickSession((MySession) session);
-            }
-        }).setTypeSessioClone(MySession.class)
+                    @Override
+                    public void sessionDisconnect(ISession session) {
+                        Client.gI().kickSession((MySession) session);
+                    }
+                }).setTypeSessioClone(MySession.class)
                 .setDoSomeThingWhenClose(new IServerClose() {
                     @Override
                     public void serverClose() {
@@ -212,9 +221,9 @@ public class ServerManager {
             while (true) {
                 String line = sc.nextLine();
                 if (line.equals("baotri")) {
-                    Maintenance.gI().start(60 * 2);
+                    Maintenance.gI().start(5);
                 } else if (line.equals("athread")) {
-                    ServerNotify.gI().notify("Nro Arriety debug server: " + Thread.activeCount());
+                    ServerNotify.gI().notify("Nro Ids debug server: " + Thread.activeCount());
                 } else if (line.equals("nplayer")) {
                     Logger.error("Player in game: " + Client.gI().getPlayers().size() + "\n");
                 } else if (line.equals("admin")) {
@@ -278,6 +287,7 @@ public class ServerManager {
         }
         Client.gI().close();
         ShopKyGuiManager.gI().save();
+        GiftCodeManager.gI().saveAllGiftCode();
         Logger.success("SUCCESSFULLY MAINTENANCE!...................................\n");
         System.exit(0);
     }

@@ -25,7 +25,7 @@ public class BuiBui2 extends Boss {
 
         if (Util.isTrue(1, 130)) {
             if (Util.isTrue(1, 50)) {
-                Service.gI().dropItemMap(this.zone, Util.ratiItem(zone, 1142, 1, this.location.x, this.location.y, plKill.id));
+                Service.gI().dropItemMap(this.zone, Util.ratiItem(zone, 2044, 1, this.location.x, this.location.y, plKill.id));
                 return;
             }
             Service.gI().dropItemMap(this.zone, Util.ratiItem(zone, Manager.itemIds_TL[randomDo], 1, this.location.x, this.location.y, plKill.id));
@@ -38,6 +38,10 @@ public class BuiBui2 extends Boss {
             Service.gI().dropItemMap(this.zone, new ItemMap(zone, Manager.itemIds_NR_SB[randomNR], 1, this.location.x, this.location.y, plKill.id));
         }
         plKill.fightMabu.changePoint((byte) 40);
+    }
+
+    @Override
+    public void wakeupAnotherBossWhenDisappear() {
     }
 //    @Override
 //    public void active() {

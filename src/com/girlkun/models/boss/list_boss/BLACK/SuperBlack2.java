@@ -21,7 +21,7 @@ public class SuperBlack2 extends Boss {
     public void reward(Player plKill) {
         byte randomDo = (byte) new Random().nextInt(Manager.itemIds_TL.length - 1);
         byte randomNR = (byte) new Random().nextInt(Manager.itemIds_NR_SB.length);
-        int[] itemDos = new int[]{233, 237, 241, 245, 249, 253, 257, 261, 265, 269, 273, 277, 281};
+        Short[] itemDos = Manager.itemIds_TL;
         int randomc12 = new Random().nextInt(itemDos.length);
         if (Util.isTrue(BossManager.ratioReward, 100)) {
             if (Util.isTrue(1, 5)) {
@@ -41,9 +41,9 @@ public class SuperBlack2 extends Boss {
    @Override
     public void active() {
         super.active(); //To change body of generated methods, choose Tools | Templates.
-        if (Util.canDoWithTime(st, 900000)) {
-            this.changeStatus(BossStatus.LEAVE_MAP);
-        }
+//        if (Util.canDoWithTime(st, 900000)) {
+//            this.changeStatus(BossStatus.LEAVE_MAP);
+//        }
     }
 
     @Override

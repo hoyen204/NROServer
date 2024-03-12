@@ -2,6 +2,7 @@ package com.girlkun.services.func;
 
 import com.girlkun.database.GirlkunDB;
 import com.girlkun.jdbc.daos.PlayerDAO;
+import com.girlkun.models.item.Item;
 import com.girlkun.models.player.Player;
 import com.girlkun.network.io.Message;
 import com.girlkun.server.Client;
@@ -54,6 +55,12 @@ public class TransactionService implements Runnable {
                     playerId = msg.reader().readInt();
                     plMap = pl.zone.getPlayerInMap(playerId);
                     if (plMap != null) {
+                        if(!pl.getSession().isActived()){
+                            Service.gI().sendThongBao(pl, "Chức năng này chỉ dành cho hội viên.");
+                        }
+                        else if (!plMap.getSession().isActived()){
+                            Service.gI().sendThongBao(pl, "Đối phương chưa tham gia hội viên.");
+                        }
                         trade = PLAYER_TRADE.get(pl);
                         if (trade == null) {
                             trade = PLAYER_TRADE.get(plMap);
@@ -99,13 +106,19 @@ public class TransactionService implements Runnable {
                 case ADD_ITEM_TRADE:
                     if (trade != null) {
                         byte index = msg.reader().readByte();
+                        Item item = pl.inventory.itemsBag.get(index);
+                        if (item.itemOptions.stream().anyMatch(x -> x.optionTemplate.id == 30) || Util.isItemCanTrade(item)) {
+                            trade.removeItemTrade(pl, index);
+                            break;
+                        }
                         int quantity = msg.reader().readInt();
                         if (quantity == 0) {//do
                             quantity = 1;
                         }
-                        if (index != -1 && quantity > Trade.QUANLITY_MAX) {
+                        if (quantity > Trade.QUANLITY_MAX) {
+                            trade.removeItemTrade(pl, index);
                             Service.gI().sendThongBao(pl, "Đã quá giới hạn giao dịch...");
-                            trade.cancelTrade();
+//                            trade.cancelTrade();
                             break;
                         }
                         trade.addItemTrade(pl, index, quantity);

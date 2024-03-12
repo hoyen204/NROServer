@@ -1,4 +1,5 @@
 package com.girlkun.models.map.bando;
+
 import com.girlkun.models.boss.bdkb.TrungUyXanhLo;
 import com.girlkun.models.clan.Clan;
 import com.girlkun.models.map.TrapMap;
@@ -16,12 +17,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- *
-  @author BTH     public static final int MAX_AVAILABLE = 50;
-
- *
+ * @author BTH     public static final int MAX_AVAILABLE = 50;
  */
-public class BanDoKhoBau { 
+public class BanDoKhoBau {
 
     public static final long POWER_CAN_GO_TO_DBKB = 2000000000;
 
@@ -89,13 +87,10 @@ public class BanDoKhoBau {
 
     //kết thúc bản đồ kho báu
     public void finish() {
-        List<Player> plOutDT = new ArrayList();
+        List<Player> plOutDT = new ArrayList<>();
         for (Zone zone : zones) {
             List<Player> players = zone.getPlayers();
-            for (Player pl : players) {
-                plOutDT.add(pl);
-            }
-
+            plOutDT.addAll(players);
         }
         for (Player pl : plOutDT) {
             ChangeMapService.gI().changeMapBySpaceShip(pl, 5, -1, 64);
@@ -115,7 +110,8 @@ public class BanDoKhoBau {
         return null;
     }
 
-    public static void addZone(int idBanDo, Zone zone) {
+    public static void addZone(int idBanDo, Zone zone)
+    {
         BAN_DO_KHO_BAUS.get(idBanDo).zones.add(zone);
     }
 

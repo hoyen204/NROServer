@@ -17,7 +17,6 @@ import com.girlkun.models.reward.MobReward;
 import com.girlkun.network.io.Message;
 import com.girlkun.server.Maintenance;
 import com.girlkun.server.Manager;
-import com.girlkun.server.ServerManager;
 import com.girlkun.services.*;
 import com.girlkun.utils.Util;
 
@@ -34,6 +33,7 @@ public class Mob {
     public MobPoint point;
     public MobEffectSkill effectSkill;
     public Location location;
+    public long lastDamePlayerId = -1;
 
     public byte pDame;
     public int pTiemNang;
@@ -70,6 +70,11 @@ public class Mob {
         mob.point.maxHp = level * 12472 * mob.level * 2 + level * 7263 * mob.tempId;
     }
 
+    public static void initMobKG(Mob mob, byte level) {
+        mob.point.dame = level * 3250 * mob.level * 6;
+        mob.point.maxHp = level * 12472 * mob.level * 3 + level * 7263 * mob.tempId;
+    }
+
     public static void hoiSinhMob(Mob mob) {
         mob.point.hp = mob.point.maxHp;
         mob.setTiemNang();
@@ -87,7 +92,7 @@ public class Mob {
     }
 
     public void setTiemNang() {
-        this.maxTiemNang = (long) this.point.getHpFull() * (this.pTiemNang + Util.nextInt(-2, 2)) / 100;
+        this.maxTiemNang = (long) this.point.getHpFull() * ((long) this.pTiemNang + (long) Util.nextInt(-2, 2)) / 100L;
     }
 
     private long lastTimeAttackPlayer;
@@ -96,17 +101,23 @@ public class Mob {
         return this.point.gethp() <= 0;
     }
 
-    public synchronized void injured(Player plAtt, int damage, boolean dieWhenHpFull) {
+    public synchronized int injured(Player plAtt, int damage, boolean dieWhenHpFull) {
+        attackPlayer();
         if (!this.isDie()) {
             if (damage >= this.point.hp) {
                 damage = this.point.hp;
             }
             if (!dieWhenHpFull) {
-                if (this.point.hp == this.point.maxHp && damage >= this.point.hp) {
+                if ((this.point.hp == this.point.maxHp && damage >= this.point.hp) && this.lvMob == 0) {
                     damage = this.point.hp - 1;
                 }
                 if (this.tempId == 0 && damage > 10) {
                     damage = 10;
+                }
+            }
+            if (this.lvMob != 0) {
+                if (damage > this.point.maxHp) {
+                    damage = this.point.maxHp;
                 }
             }
             this.point.hp -= damage;
@@ -120,16 +131,19 @@ public class Mob {
                 this.sendMobStillAliveAffterAttacked(damage, plAtt != null ? plAtt.nPoint.isCrit : false);
             }
             if (plAtt != null) {
+                this.lastDamePlayerId = plAtt.id;
                 Service.gI().addSMTN(plAtt, (byte) 2, getTiemNangForPlayer(plAtt, damage), true);
             }
+            return damage;
         }
+        return 0;
     }
 
     public long getTiemNangForPlayer(Player pl, long dame) {
         int levelPlayer = Service.gI().getCurrLevel(pl);
         int n = levelPlayer - this.level;
-        long pDameHit = dame * 100 / point.getHpFull();
-        long tiemNang = pDameHit * maxTiemNang / 100;
+        long pDameHit = dame * 100L / point.getHpFull();
+        long tiemNang = pDameHit * maxTiemNang / 100L;
         if (tiemNang <= 0) {
             tiemNang = 1;
         }
@@ -153,14 +167,15 @@ public class Mob {
         if (tiemNang <= 0) {
             tiemNang = 1;
         }
-        tiemNang = (int) pl.nPoint.calSucManhTiemNang(tiemNang);
-        if (pl.zone.map.mapId == 122 || pl.zone.map.mapId == 123 || pl.zone.map.mapId == 124){
-            tiemNang *= 20;
-        }
+        tiemNang = pl.nPoint.calSucManhTiemNang(tiemNang);
+
         return tiemNang;
     }
 
+    int tick = 0;
+
     public void update() {
+
         if (this.tempId == 71) {
             try {
                 Message msg = new Message(102);
@@ -172,10 +187,11 @@ public class Mob {
             }
         }
 
-        if (this.isDie()&& !Maintenance.isRuning) {
+        if (this.isDie() && !Maintenance.isRuning) {
             switch (zone.map.type) {
                 case ConstMap.MAP_DOANH_TRAI:
-                    break;case ConstMap.MAP_BAN_DO_KHO_BAU:
+                    break;
+                case ConstMap.MAP_BAN_DO_KHO_BAU:
                     break;
                 default:
                     if (Util.canDoWithTime(lastTimeDie, 5000)) {
@@ -185,14 +201,14 @@ public class Mob {
             }
         }
         effectSkill.update();
-        attackPlayer();
+        if (lvMob == 0)
+            attackPlayer();
     }
 
     private void attackPlayer() {
-        if (!isDie() && !effectSkill.isHaveEffectSkill() && !(tempId == 0) && Util.canDoWithTime(lastTimeAttackPlayer, 2000)) {
+        if (!isDie() && !effectSkill.isHaveEffectSkill() && !(tempId == 0) && (Util.canDoWithTime(lastTimeAttackPlayer, Util.nextInt(1500, 3000))) || lvMob != 0) {
             Player pl = getPlayerCanAttack();
             if (pl != null) {
-//                MobService.gI().mobAttackPlayer(this, pl);
                 this.mobAttackPlayer(pl);
             }
             this.lastTimeAttackPlayer = System.currentTimeMillis();
@@ -201,11 +217,26 @@ public class Mob {
 
     private Player getPlayerCanAttack() {
         int distance = 100;
+        if (lastDamePlayerId > 0) {
+            Player p = this.zone.getPlayerInMap(lastDamePlayerId);
+            if (p == null) {
+                lastDamePlayerId = -1;
+                return null;
+            }
+            if (p.canBeAttack()) {
+                int dis = Util.getDistance(p, this);
+                if (dis <= distance * 3) {
+                    return p;
+                }
+            }
+        }
+
+
         Player plAttack = null;
         try {
             List<Player> players = this.zone.getNotBosses();
             for (Player pl : players) {
-                if (!pl.isDie() && !pl.isBoss && !pl.effectSkin.isVoHinh) {
+                if (!pl.isDie() && pl.canBeAttack()) {
                     int dis = Util.getDistance(pl, this);
                     if (dis <= distance) {
                         plAttack = pl;
@@ -214,7 +245,7 @@ public class Mob {
                 }
             }
         } catch (Exception e) {
-
+e.printStackTrace();
         }
         return plAttack;
     }
@@ -225,13 +256,13 @@ public class Mob {
         if (player.charms.tdDaTrau > System.currentTimeMillis()) {
             dameMob /= 2;
         }
-        int dame = player.injured(null, dameMob, false, true);
+        int dame = player.injured(null, lvMob != 0 ? player.nPoint.hpMax / 10 : dameMob, false, true, lvMob != 0);
         this.sendMobAttackMe(player, dame);
         this.sendMobAttackPlayer(player);
     }
 
     private void sendMobAttackMe(Player player, int dame) {
-        if (!player.isPet &&!player.isNewPet) {
+        if (!player.isPet && !player.isNewPet) {
             Message msg;
             try {
                 msg = new Message(-11);
@@ -259,7 +290,12 @@ public class Mob {
 
     public void hoiSinh() {
         this.status = 5;
+        this.lvMob = 0;
         this.point.hp = this.point.maxHp;
+        if (this.lastDamePlayerId > 0)
+            this.lastDamePlayerId = -1;
+        if (!this.zone.isSuperMobInZone() && Util.isTrue(30, 100) && this.point.maxHp >= 3000)
+            this.lvMob = 1;
         this.setTiemNang();
     }
 
@@ -269,8 +305,8 @@ public class Mob {
             msg = new Message(-13);
             msg.writer().writeByte(this.id);
             msg.writer().writeByte(this.tempId);
-            msg.writer().writeByte(lvMob);
-            msg.writer().writeInt(this.point.hp);
+            msg.writer().writeByte(this.lvMob);
+            msg.writer().writeInt(this.point.hp += (this.point.hp * (9 * lvMob)));
             Service.gI().sendMessAllPlayerInMap(this.zone, msg);
             msg.cleanup();
         } catch (Exception e) {
@@ -294,7 +330,7 @@ public class Mob {
     }
 
     private void hutItem(Player player, List<ItemMap> items) {
-        if (!player.isPet&&!player.isNewPet) {
+        if (!player.isPet && !player.isNewPet) {
             if (player.charms.tdThuHut > System.currentTimeMillis()) {
                 for (ItemMap item : items) {
                     if (item.itemTemplate.id != 590) {
@@ -313,36 +349,35 @@ public class Mob {
         }
     }
 
-       private List<ItemMap> mobReward(Player player, ItemMap itemTask, Message msg) {
+    private List<ItemMap> mobReward(Player player, ItemMap itemTask, Message msg) {
 //        nplayer
         List<ItemMap> itemReward = new ArrayList<>();
         try {
-            if ((!player.isPet && player.getSession().actived && player.setClothes.setDHD == 5) || (player.isPet && ((Pet) player).master.getSession().actived && ((Pet) player).setClothes.setDHD == 5)) {
-                byte random = 1;
-                if (Util.isTrue(5, 100)) {
-                    random = 2;
+//            if ((!player.isPet && player.getSession().isActived() && player.setClothes.setDHD()) || (player.isPet && ((Pet) player).master.getSession().isActived() && player.setClothes.setDHD())) {
+//                if (Util.isTrue(25, 100)) {
+//                    byte random = 1;
+//                    if (Util.isTrue(5, 100)) {
+//                        random = 2;
+//                    }
+//                    Item i = Manager.RUBY_REWARDS.get(Util.nextInt(0, Manager.RUBY_REWARDS.size() - 1));
+//                    i.quantity = random;
+//                    InventoryServiceNew.gI().addItemBag(player, i);
+//                    InventoryServiceNew.gI().sendItemBags(player);
+//                    Service.gI().sendThongBao(player, "Bạn vừa nhận được " + random + " hồng ngọc");
+//                }
+//
+//            }
+            if ((!player.isPet && player.getSession().isActived() && player.setClothes.setGod() && (this.zone.map.mapId > 104 && this.zone.map.mapId < 111 || this.zone.map.mapId == 159))) {
+                if (Util.isTrue(10, 100)) {
+                    itemReward.add(new ItemMap(zone, Manager.thucan[(Util.nextInt(0, 4))], 1, this.location.x + Util.nextInt(-10, 10), this.location.y, player.id));
                 }
-                Item i = Manager.RUBY_REWARDS.get(Util.nextInt(0, Manager.RUBY_REWARDS.size() - 1));
-                i.quantity = random;
-                InventoryServiceNew.gI().addItemBag(player, i);
-                InventoryServiceNew.gI().sendItemBags(player);
-                Service.gI().sendThongBao(player, "Bạn vừa nhận được " + random + " hồng ngọc");
-            }  if ((!player.isPet && player.getSession().actived && player.setClothes.setGod()== true && (this.zone.map.mapId > 104 && this.zone.map.mapId < 111 || this.zone.map.mapId == 159))) {
-                if (Util.isTrue(100, 100)) {
-                    Item linhThu = ItemService.gI().createNewItem(Manager.thucan[(Util.nextInt(0,4))]);
-                     Service.getInstance().sendThongBao(player, "You received item " + linhThu.template.name);
-                                        InventoryServiceNew.gI().addItemBag(player, linhThu);
-                InventoryServiceNew.gI().sendItemBags(player);
-              }
-                 }   if ((!player.isPet && player.getSession().actived && player.setClothes.setGod14()== true && (this.zone.map.mapId > 159 && this.zone.map.mapId < 164 || this.zone.map.mapId == 155))) {
-                if (Util.isTrue(100, 100)) {
-                    Item linhThu = ItemService.gI().createNewItem(Manager.manhts[(Util.nextInt(0,4))]);
-                     Service.getInstance().sendThongBao(player, "You received item " + linhThu.template.name);
-                                        InventoryServiceNew.gI().addItemBag(player, linhThu);
-                InventoryServiceNew.gI().sendItemBags(player);
-              }
-                 }
-            
+            }
+            if ((!player.isPet && player.getSession().isActived() && player.setClothes.setDHD() && (this.zone.map.mapId > 159 && this.zone.map.mapId < 164 || this.zone.map.mapId == 155))) {
+                if (Util.isTrue(15, 100)) {
+                    itemReward.add(new ItemMap(zone, Manager.manhts[(Util.nextInt(Manager.manhts.length))], 1, this.location.x + Util.nextInt(-10, 10), this.location.y, player.id));
+                }
+            }
+
             itemReward = this.getItemMobReward(player, this.location.x + Util.nextInt(-10, 10),
                     this.zone.map.yPhysicInTop(this.location.x, this.location.y));
             if (itemTask != null) {
@@ -377,20 +412,20 @@ public class Mob {
                 list.add(itemMap);
             }
         }
-        if (!golds.isEmpty()) {
+        if (!golds.isEmpty() && Util.isTrue(10, 100)) {
             ItemMobReward gold = golds.get(Util.nextInt(0, golds.size() - 1));
             ItemMap itemMap = gold.getItemMap(zone, player, x, yEnd);
             if (itemMap != null) {
                 list.add(itemMap);
             }
         }
-        if (player.itemTime.isUseMayDo && Util.isTrue(21, 100) && this.tempId > 57 && this.tempId < 66) {
+        if (player.itemTime.isUseMayDo && Util.isTrue(10, 100) && this.tempId > 57 && this.tempId < 66) {
             list.add(new ItemMap(zone, 380, 1, x, player.location.y, player.id));
-        }// vat phẩm rơi khi user maaáy dò adu hoa r o day ti code choa
-                if (player.itemTime.isUseMayDo2 && Util.isTrue(7, 100) && this.tempId > 1 && this.tempId < 81) {
+        }// vat phẩm rơi khi user maaáy dò
+        if (player.itemTime.isUseMayDo2 && Util.isTrue(7, 100) && this.tempId > 1 && this.tempId < 81) {
             list.add(new ItemMap(zone, 2036, 1, x, player.location.y, player.id));// cai nay sua sau nha
         }
-        
+
 //        if (player.isPet && player.getSession().actived && Util.isTrue(15, 100)) {
 //            list.add(new ItemMap(zone, 610, 1, x, player.location.y, player.id));
 //        }
@@ -403,7 +438,7 @@ public class Mob {
             case ConstMob.KHUNG_LONG:
             case ConstMob.LON_LOI:
             case ConstMob.QUY_DAT:
-                if (TaskService.gI().getIdTask(player) == ConstTask.TASK_2_0) {
+                if (TaskService.gI().getIdTask(player) == ConstTask.TASK_2_0 && Util.isTrue(60,100)) {
                     itemMap = new ItemMap(this.zone, 73, 1, this.location.x, this.location.y, player.id);
                 }
                 break;

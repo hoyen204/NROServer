@@ -20,8 +20,8 @@ public class Poc extends Boss {
 
     @Override
     public void reward(Player plKill) {
-        int[] itemRan = new int[]{1142, 382, 383, 384, 1142};
-        int itemId = itemRan[2];
+        int[] itemRan = new int[]{2044, 382, 383, 384, 2044};
+        int itemId = itemRan[Util.nextInt(itemRan.length)];
         if (Util.isTrue(15, 100)) {
             ItemMap it = new ItemMap(this.zone, itemId, 17, this.location.x, this.zone.map.yPhysicInTop(this.location.x,
                     this.location.y - 24), plKill.id);

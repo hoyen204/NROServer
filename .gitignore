@@ -5,3 +5,6 @@
 *.sql
 *.rar
 /data/
+/lib/
+/mysql-data/
+/girlkun_log/

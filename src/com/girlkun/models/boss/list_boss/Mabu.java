@@ -29,8 +29,8 @@ public class Mabu extends Boss {
     public void reward(Player plKill) {
         int[] itemCt = new int[]{568};
         int randomDo = new Random().nextInt(itemCt.length);
-        if (Util.isTrue(99, 100)) {
-            if (Util.isTrue(1, 100)) {
+        if (Util.isTrue(60, 100)) {
+            if (Util.isTrue(3, 100)) {
                 Service.gI().dropItemMap(this.zone, Util.ratiItem(zone, 568, 1, this.location.x, this.location.y, plKill.id));
                 return;
             }

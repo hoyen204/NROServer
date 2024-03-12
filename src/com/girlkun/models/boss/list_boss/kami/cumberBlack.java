@@ -29,7 +29,7 @@ public class cumberBlack extends Boss {
 
     @Override
     public void reward(Player plKill) {
-        ItemMap it = new ItemMap(this.zone, 1142, 1, this.location.x, this.zone.map.yPhysicInTop(this.location.x,
+        ItemMap it = new ItemMap(this.zone, 2044, Util.nextInt(1, 5), this.location.x, this.zone.map.yPhysicInTop(this.location.x,
                 this.location.y - 24), plKill.id);
         Service.gI().dropItemMap(this.zone, it);
     }
@@ -37,7 +37,7 @@ public class cumberBlack extends Boss {
     @Override
     public void active() {
         super.active(); //To change body of generated methods, choose Tools | Templates.
-        if(Util.canDoWithTime(st,900000)){
+        if (Util.canDoWithTime(st, 900000)) {
             this.changeStatus(BossStatus.LEAVE_MAP);
         }
     }
@@ -45,16 +45,19 @@ public class cumberBlack extends Boss {
     @Override
     public void joinMap() {
         super.joinMap(); //To change body of generated methods, choose Tools | Templates.
-        st= System.currentTimeMillis();
+        st = System.currentTimeMillis();
     }
+
     private long st;
-     @Override
+
+    @Override
     public void leaveMap() {
         super.leaveMap();
         BossManager.gI().removeBoss(this);
         this.dispose();
     }
-   @Override
+
+    @Override
     public int injured(Player plAtt, int damage, boolean piercing, boolean isMobAttack) {
         if (Util.isTrue(70, 100) && plAtt != null) {//tỉ lệ hụt của thiên sứ
             Util.isTrue(this.nPoint.tlNeDon, 100000);
@@ -82,14 +85,14 @@ public class cumberBlack extends Boss {
                     EffectSkillService.gI().breakShield(this);
                 }
                 damage = damage;
-                 if (damage > nPoint.mpMax) {
+                if (damage > nPoint.mpMax) {
                     EffectSkillService.gI().breakShield(this);
                 }
-                damage = damage; 
-                 if (damage > nPoint.tlNeDon) {
+                damage = damage;
+                if (damage > nPoint.tlNeDon) {
                     EffectSkillService.gI().breakShield(this);
                 }
-                damage = damage; 
+                damage = damage;
             }
             this.nPoint.subHP(damage);
             if (isDie()) {

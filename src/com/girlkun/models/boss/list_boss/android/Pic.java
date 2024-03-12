@@ -20,14 +20,15 @@ public class Pic extends Boss {
     @Override
     public void reward(Player plKill) {
         int[] itemRan = new int[]{381, 382, 383, 384, 385};
-        int itemId = itemRan[2];
+        int itemId = itemRan[Util.nextInt(itemRan.length)];
         if (Util.isTrue(15, 100)) {
             ItemMap it = new ItemMap(this.zone, itemId, 17, this.location.x, this.zone.map.yPhysicInTop(this.location.x,
                     this.location.y - 24), plKill.id);
             Service.gI().dropItemMap(this.zone, it);
         }
-         TaskService.gI().checkDoneTaskKillBoss(plKill, this);
+        TaskService.gI().checkDoneTaskKillBoss(plKill, this);
     }
+
     @Override
     public void doneChatE() {
         if (this.parentBoss == null || this.parentBoss.bossAppearTogether == null
@@ -40,10 +41,12 @@ public class Pic extends Boss {
                 break;
             }
         }
-    }  @Override
+    }
+
+    @Override
     public void active() {
         super.active(); //To change body of generated methods, choose Tools | Templates.
-        if(Util.canDoWithTime(st,900000)){
+        if (Util.canDoWithTime(st, 900000)) {
             this.changeStatus(BossStatus.LEAVE_MAP);
         }
     }
@@ -51,8 +54,9 @@ public class Pic extends Boss {
     @Override
     public void joinMap() {
         super.joinMap(); //To change body of generated methods, choose Tools | Templates.
-        st= System.currentTimeMillis();
+        st = System.currentTimeMillis();
     }
+
     private long st;
 
 }

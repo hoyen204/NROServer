@@ -45,6 +45,7 @@ public class MySession extends Session {
     public String uu;
     public String pp;
 
+    public boolean isTempAccount = false;
     public int typeClient;
     public byte zoomLevel;
 
@@ -70,6 +71,10 @@ public class MySession extends Session {
     public MySession(Socket socket) {
         super(socket);
         ipAddress = socket.getInetAddress().getHostAddress();
+    }
+
+    public boolean isActived(){
+        return actived || Manager.isTestServer;
     }
 
     public void initItemsReward() {
@@ -145,7 +150,7 @@ public class MySession extends Session {
         }
         if (!this.isAdmin && Client.gI().getPlayers().size() >= Manager.MAX_PLAYER) {
             Service.gI().sendThongBaoOK(this, "Máy chủ hiện đang quá tải, "
-                    + "cư dân vui lòng di chuyển sang máy chủ khác.");
+                    + "Xin thử lại sau.");
             return;
         }
         if (this.player != null) {
@@ -155,7 +160,7 @@ public class MySession extends Session {
             try {
                 long st = System.currentTimeMillis();
                 this.uu = username;
-                this.pp = password;
+                this.pp = Util.md5(password);
                 player = GodGK.login(this, al);
                 if (player != null) {
                     // -77 max small

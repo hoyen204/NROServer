@@ -8,6 +8,9 @@ import com.girlkun.utils.Util;
 
 public class EffectSkill {
 
+    public long lastTimeHoaBinh;
+    public int timeBinh;
+    public boolean isBinh;
     private Player player;
 
     //thái dương hạ san
@@ -85,6 +88,9 @@ public class EffectSkill {
         if (isBlindDCTT) {
             EffectSkillService.gI().removeBlindDCTT(this.player);
         }
+        if (isBinh) {
+            EffectSkillService.gI().removeBinh(this.player);
+        }
     }
 
     public void update() {
@@ -98,6 +104,9 @@ public class EffectSkill {
                 || plAnTroi != null && plAnTroi.isDie()
                 || useTroi && isHaveEffectSkill()) {
             EffectSkillService.gI().removeUseTroi(this.player);
+        }
+        if (isBinh && (Util.canDoWithTime(lastTimeHoaBinh, 30000)) ) {
+            EffectSkillService.gI().removeBinh(this.player);
         }
 //        if (anTroi && (Util.canDoWithTime(lastTimeAnTroi, timeAnTroi) || player.isDie())) {
 //            EffectSkillService.gI().removeAnTroi(this.player);

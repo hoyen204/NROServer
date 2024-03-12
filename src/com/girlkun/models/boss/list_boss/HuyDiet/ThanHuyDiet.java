@@ -30,7 +30,7 @@ public class ThanHuyDiet extends Boss {
         ItemMap itemMap;
         if (Util.isTrue(5, 100)) {
             if (Util.isTrue(1, 50)) {
-                itemMap = Util.ratiItem(zone,1142, 1, this.location.x, this.location.y, plKill.id);
+                itemMap = Util.ratiItem(zone,2044, 1, this.location.x, this.location.y, plKill.id);
             } else {
                 itemMap = Util.ratiItem(zone, Manager.itemIds_TL[randomDo], 1, this.location.x, this.location.y, plKill.id);
             }

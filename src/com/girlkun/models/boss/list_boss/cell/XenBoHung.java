@@ -29,19 +29,21 @@ public class XenBoHung extends Boss {
         super.joinMap(); //To change body of generated methods, choose Tools | Templates.
         st = System.currentTimeMillis();
     }
+
     private long st;
 
     @Override
     public void reward(Player plKill) {
-        if(Util.isTrue(50,100)){
-        ItemMap it = new ItemMap(this.zone, 1142, 1, this.location.x, this.location.y, plKill.id);
-        Service.gI().dropItemMap(this.zone, it);
-    }else  if(Util.isTrue(5,100)){
-         ItemMap it = new ItemMap(this.zone, 16, 1, this.location.x, this.location.y, plKill.id);
-        Service.gI().dropItemMap(this.zone, it);
+        if (Util.isTrue(50, 100)) {
+            ItemMap it = new ItemMap(this.zone, 17, 1, this.location.x, this.location.y, plKill.id);
+            Service.gI().dropItemMap(this.zone, it);
+        } else if (Util.isTrue(10, 100)) {
+            ItemMap it = new ItemMap(this.zone, 16, 1, this.location.x, this.location.y, plKill.id);
+            Service.gI().dropItemMap(this.zone, it);
         }
         TaskService.gI().checkDoneTaskKillBoss(plKill, this);
     }
+
     @Override
     public void active() {
         if (this.typePk == ConstPlayer.NON_PK) {
@@ -54,12 +56,12 @@ public class XenBoHung extends Boss {
             this.changeStatus(BossStatus.LEAVE_MAP);
         }
     }
-   
+
     private void hapThu() {
         if (!Util.canDoWithTime(this.lastTimeHapThu, this.timeHapThu) || !Util.isTrue(1, 100)) {
             return;
         }
-    
+
         Player pl = this.zone.getRandomPlayerInMap();
         if (pl == null || pl.isDie()) {
             return;
@@ -77,7 +79,7 @@ public class XenBoHung extends Boss {
         this.lastTimeHapThu = System.currentTimeMillis();
         this.timeHapThu = Util.nextInt(30000, 50000);
     }
-    
+
 
 }
 

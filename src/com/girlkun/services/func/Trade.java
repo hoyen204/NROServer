@@ -19,7 +19,7 @@ import java.util.List;
 public class Trade {
 
     public static final int TIME_TRADE = 180000;
-    public static final int QUANLITY_MAX = 20000;
+    public static final int QUANLITY_MAX = 500;
 
     private Player player1;
     private Player player2;
@@ -80,54 +80,28 @@ public class Trade {
     }
 
     public void addItemTrade(Player pl, byte index, int quantity) {
-//        System.out.println("quantity: " + quantity);
- //       if (pl.getSession().actived) {
-        if (true) {
-            if (index == -1) {
-                if (pl.equals(this.player1)) {
-                    goldTrade1 = quantity;
-                } else {
-                    goldTrade2 = quantity;
-                }
+        if (index == -1) {
+            if (pl.equals(this.player1)) {
+                goldTrade1 = quantity;
             } else {
-                Item item = null;
-                if (pl.equals(this.player1)) {
-                    item = itemsBag1.get(index);
-                } else {
-                    item = itemsBag2.get(index);
-                }
-                if (quantity > item.quantity || quantity < 0) {
-                    return;
-                }
-                 else {
-                    if (quantity > 99) {
-                        int n = quantity / 99;
-                        int left = quantity % 99;
-                        for (int i = 0; i < n; i++) {
-                            Item itemTrade = ItemService.gI().copyItem(item);
-                            itemTrade.quantity = 99;
-                            if (pl.equals(this.player1)) {
-                                InventoryServiceNew.gI().subQuantityItem(itemsBag1, item, itemTrade.quantity);
-                                itemsTrade1.add(itemTrade);
-                            } else {
-                                InventoryServiceNew.gI().subQuantityItem(itemsBag2, item, itemTrade.quantity);
-                                itemsTrade2.add(itemTrade);
-                            }
-                        }
-                        if (left > 0) {
-                            Item itemTrade = ItemService.gI().copyItem(item);
-                            itemTrade.quantity = left;
-                            if (pl.equals(this.player1)) {
-                                InventoryServiceNew.gI().subQuantityItem(itemsBag1, item, itemTrade.quantity);
-                                itemsTrade1.add(itemTrade);
-                            } else {
-                                InventoryServiceNew.gI().subQuantityItem(itemsBag2, item, itemTrade.quantity);
-                                itemsTrade2.add(itemTrade);
-                            }
-                        }
-                    } else {
+                goldTrade2 = quantity;
+            }
+        } else {
+            Item item = null;
+            if (pl.equals(this.player1)) {
+                item = itemsBag1.get(index);
+            } else {
+                item = itemsBag2.get(index);
+            }
+            if (quantity > item.quantity || quantity < 0) {
+                return;
+            } else {
+                if (quantity > Inventory.LIMIT_QUANTITY) {
+                    int n = quantity / Inventory.LIMIT_QUANTITY;
+                    int left = quantity % Inventory.LIMIT_QUANTITY;
+                    for (int i = 0; i < n; i++) {
                         Item itemTrade = ItemService.gI().copyItem(item);
-                        itemTrade.quantity = quantity != 0 ? quantity : 1;
+                        itemTrade.quantity = Inventory.LIMIT_QUANTITY;
                         if (pl.equals(this.player1)) {
                             InventoryServiceNew.gI().subQuantityItem(itemsBag1, item, itemTrade.quantity);
                             itemsTrade1.add(itemTrade);
@@ -136,16 +110,33 @@ public class Trade {
                             itemsTrade2.add(itemTrade);
                         }
                     }
+                    if (left > 0) {
+                        Item itemTrade = ItemService.gI().copyItem(item);
+                        itemTrade.quantity = left;
+                        if (pl.equals(this.player1)) {
+                            InventoryServiceNew.gI().subQuantityItem(itemsBag1, item, itemTrade.quantity);
+                            itemsTrade1.add(itemTrade);
+                        } else {
+                            InventoryServiceNew.gI().subQuantityItem(itemsBag2, item, itemTrade.quantity);
+                            itemsTrade2.add(itemTrade);
+                        }
+                    }
+                } else {
+                    Item itemTrade = ItemService.gI().copyItem(item);
+                    itemTrade.quantity = quantity != 0 ? quantity : 1;
+                    if (pl.equals(this.player1)) {
+                        InventoryServiceNew.gI().subQuantityItem(itemsBag1, item, itemTrade.quantity);
+                        itemsTrade1.add(itemTrade);
+                    } else {
+                        InventoryServiceNew.gI().subQuantityItem(itemsBag2, item, itemTrade.quantity);
+                        itemsTrade2.add(itemTrade);
+                    }
                 }
             }
-        } 
-  else {
-            Service.getInstance().sendThongBaoFromAdmin(pl,
-                    "|5|VUI LÒNG KÍCH HOẠT TÀI KHOẢN TẠI\n|7|Liên Hệ Admin Arriety\n|5|ĐỂ MỞ KHÓA TÍNH NĂNG GIAO DỊCH");
-            removeItemTrade(pl, index);
         }
     }
-    private void removeItemTrade(Player pl, byte index) {
+
+    public void  removeItemTrade(Player pl, byte index) {
         Message msg;
         try {
             msg = new Message(-86);
@@ -159,9 +150,9 @@ public class Trade {
     }
 
     private void removeItemTrade2(Player pl, byte index) {
-        Message msg;
+        Message  msg;
         try {
-           msg = new Message(-86);
+            msg = new Message(-86);
             msg.writer().writeByte(2);
             msg.writer().write(index);
             pl.sendMessage(msg);
@@ -177,7 +168,7 @@ public class Trade {
             }
         }
         switch (item.template.type) {
-            case 27: 
+            case 27:
                 if (item.template.id != 457 && item.template.id == 590) {
                     return true;
                 } else {
@@ -195,7 +186,7 @@ public class Trade {
             case 28: //cờ
             case 31: //bánh trung thu, bánh tết
             case 32: //giáp tập luyện
-           
+
                 return true;
             default:
                 return false;

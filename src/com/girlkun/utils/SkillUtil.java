@@ -164,6 +164,9 @@ public class SkillUtil {
         if(index == 1){
             skill.coolDown = 1000;
         }
+        else if (index == 4){
+
+        }
         skills.set(index, skill);
         return true;
     }
@@ -277,7 +280,7 @@ public class SkillUtil {
         }
     }
 
-    public static byte getTyleSkillAttack(Skill skill) {
+    public static byte getTypeSkillAttack(Skill skill) {
         switch (skill.template.id) {
             case Skill.TRI_THUONG:
                 return 2;

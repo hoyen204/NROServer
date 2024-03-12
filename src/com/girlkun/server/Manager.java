@@ -77,7 +77,7 @@ public class Manager {
     public static final List<com.girlkun.models.map.Map> MAPS = new ArrayList<>();
     public static final List<ItemOptionTemplate> ITEM_OPTION_TEMPLATES = new ArrayList<>();
     public static final Map<Integer, MobReward> MOB_REWARDS = new HashMap<>();
-    public static final List<ItemLuckyRound> LUCKY_ROUND_REWARDS = new ArrayList();
+    public static final List<ItemLuckyRound> LUCKY_ROUND_REWARDS = new ArrayList<>();
     public static final Map<String, Byte> IMAGES_BY_NAME = new HashMap<String, Byte>();
     public static final List<ItemTemplate> ITEM_TEMPLATES = new ArrayList<>();
     public static final List<MobTemplate> MOB_TEMPLATES = new ArrayList<>();
@@ -106,8 +106,8 @@ public class Manager {
     public static final String queryTopSK = "SELECT player.id, CAST( split_str( data_inventory,',',5)  AS UNSIGNED) AS event FROM player LEFT JOIN account on player.account_id = account.id WHERE account.is_admin = 0 ORDER BY CAST( split_str( data_inventory,',',5)  AS UNSIGNED) DESC LIMIT 20;";
     public static final String queryTopPVP = "SELECT player.id, CAST( split_str( data_inventory,',',3)  AS UNSIGNED) AS HONGNGOC FROM player LEFT JOIN account on player.account_id = account.id WHERE account.is_admin = 0 ORDER BY CAST( split_str( data_inventory,',',3)  AS UNSIGNED) DESC LIMIT 10;";
     public static final String queryTopNHS = "SELECT player.id, CAST( NguHanhSonPoint AS UNSIGNED) AS nhs FROM player LEFT JOIN account on player.account_id = account.id WHERE account.is_admin = 0 ORDER BY CAST( NguHanhSonPoint AS UNSIGNED) DESC LIMIT 20;";
-    
 
+    public static boolean isTestServer = false;
     public static List<TOP> topSM;
     public static List<TOP> topSD;
     public static List<TOP> topHP;
@@ -117,9 +117,9 @@ public class Manager {
     public static List<TOP> topPVP;
     public static List<TOP> topNHS;
     public static long timeRealTop = 0;
-    public static final short[] itemIds_TL = {555, 557, 559, 556, 558, 560, 562, 564, 566, 563, 565, 567, 561};
-    public static final byte[] itemIds_NR_SB = {16,17,18};
-    public static final short[] itemDC12 = {233, 237, 241,245, 249, 253,257, 261, 265,269, 273, 277};
+    public static final Short[] itemIds_TL = {555, 557, 559, 556, 558, 560, 562, 564, 566, 563, 565, 567, 561};
+    public static final byte[] itemIds_NR_SB = {15, 16, 17};
+    public static final short[] itemDC12 = {233, 237, 241, 245, 249, 253, 257, 261, 265, 269, 273, 277};
 
     public static final short[] aotd = {138, 139, 230, 231, 232, 233, 555};
     public static final short[] quantd = {142, 143, 242, 243, 244, 245, 556};
@@ -135,11 +135,13 @@ public class Manager {
     public static final short[] giaynm = {166, 167, 270, 271, 272, 273, 565};
     public static final short[] radaSKHVip = {186, 187, 278, 279, 280, 281, 561};
     //ist mts
-      public static final short[] manhts = {1067, 1068, 1069, 1070, 1066};
+    public static final short[] manhts = {1067, 1068, 1069, 1070, 1066};
     //isst t.a
-      public static final short[] thucan = {663, 664, 665, 666, 667};
+    public static final short[] thucan = {663, 664, 665, 666, 667};
     public static final short[][][] doSKHVip = {{aotd, quantd, gangtd, giaytd}, {aonm, quannm, gangnm, giaynm}, {aoxd, quanxd, gangxd, giayxd}};
     //doSKHVip[gender][typeDo][randomLVDo]
+
+    public List<String> listIPBanned = new ArrayList<>();
 
     public static Manager gI() {
         if (i == null) {
@@ -200,8 +202,8 @@ public class Manager {
                 part.id = rs.getShort("id");
                 part.type = rs.getByte("type");
                 dataArray = (JSONArray) jv.parse(rs.getString("data").replaceAll("\\\"", ""));
-                for (int j = 0; j < dataArray.size(); j++) {
-                    JSONArray pd = (JSONArray) jv.parse(String.valueOf(dataArray.get(j)));
+                for (Object o : dataArray) {
+                    JSONArray pd = (JSONArray) jv.parse(String.valueOf(o));
                     part.partDetails.add(new PartDetail(Short.parseShort(String.valueOf(pd.get(0))),
                             Byte.parseByte(String.valueOf(pd.get(1))),
                             Byte.parseByte(String.valueOf(pd.get(2)))));
@@ -236,6 +238,14 @@ public class Manager {
         PreparedStatement ps = null;
         ResultSet rs = null;
         try (Connection con = GirlkunDB.getConnection();) {
+            ps = con.prepareStatement("select * from black_ip");
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                if (!rs.getString("ip").isEmpty())
+                    listIPBanned.add(rs.getString("ip"));
+            }
+            Logger.success("Load Black IP thành công (" + listIPBanned.size() + ")\n");
+
             //load part
             ps = con.prepareStatement("select * from part");
             rs = ps.executeQuery();
@@ -245,8 +255,8 @@ public class Manager {
                 part.id = rs.getShort("id");
                 part.type = rs.getByte("type");
                 dataArray = (JSONArray) jv.parse(rs.getString("data").replaceAll("\\\"", ""));
-                for (int j = 0; j < dataArray.size(); j++) {
-                    JSONArray pd = (JSONArray) jv.parse(String.valueOf(dataArray.get(j)));
+                for (Object o : dataArray) {
+                    JSONArray pd = (JSONArray) jv.parse(String.valueOf(o));
                     part.partDetails.add(new PartDetail(Short.parseShort(String.valueOf(pd.get(0))),
                             Byte.parseByte(String.valueOf(pd.get(1))),
                             Byte.parseByte(String.valueOf(pd.get(2)))));
@@ -298,8 +308,8 @@ public class Manager {
                 dos.flush();
                 dos.close();
             }
-            
-           
+
+
             //load clan
             ps = con.prepareStatement("select * from clan_sv" + SERVER);
             rs = ps.executeQuery();
@@ -313,10 +323,11 @@ public class Manager {
                 clan.maxMember = rs.getByte("max_member");
                 clan.capsuleClan = rs.getInt("clan_point");
                 clan.level = rs.getByte("level");
+
                 clan.createTime = (int) (rs.getTimestamp("create_time").getTime() / 1000);
                 dataArray = (JSONArray) jv.parse(rs.getString("members"));
-                for (int i = 0; i < dataArray.size(); i++) {
-                    dataObject = (JSONObject) jv.parse(String.valueOf(dataArray.get(i)));
+                for (Object o : dataArray) {
+                    dataObject = (JSONObject) jv.parse(String.valueOf(o));
                     ClanMember cm = new ClanMember();
                     cm.clan = clan;
                     cm.id = Integer.parseInt(String.valueOf(dataObject.get("id")));
@@ -364,8 +375,8 @@ public class Manager {
                 LIST_DHVT.add(dhvt);
             }
 
-            Logger.success("Load DHVT thành công (" + LIST_DHVT.size() + "), clan next id: " + Clan.NEXT_ID + "\n");
-            
+            Logger.success("Load DHVT thành công (" + LIST_DHVT.size() + ")\n");
+
             //load skill
             ps = con.prepareStatement("select * from skill_template order by nclass_id, slot");
             rs = ps.executeQuery();
@@ -399,8 +410,8 @@ public class Manager {
                                 .replaceAll("\\]\"", "]")
                                 .replaceAll("\\}\",\"\\{", "},{")
                 );
-                for (int j = 0; j < dataArray.size(); j++) {
-                    JSONObject dts = (JSONObject) jv.parse(String.valueOf(dataArray.get(j)));
+                for (Object o : dataArray) {
+                    JSONObject dts = (JSONObject) jv.parse(String.valueOf(o));
                     Skill skill = new Skill();
                     skill.template = skillTemplate;
                     skill.skillId = Short.parseShort(String.valueOf(dts.get("id")));
@@ -578,8 +589,8 @@ public class Manager {
                     BufferedReader br = new BufferedReader(new FileReader(fileEntry));
                     String line = null;
                     while ((line = br.readLine()) != null) {
-                        line = line.replaceAll("[{}\\[\\]]", "");
-                        String[] arrSub = line.split("\\|");
+                        line = line.replaceAll("[{}\\[\\]]", ""); // remove '[' ']'
+                        String[] arrSub = line.split("\\|"); //0 va 1
                         String[] data1 = arrSub[0].split(":");
                         ItemLuckyRound item = new ItemLuckyRound();
                         item.temp = ItemService.gI().getTemplate(Integer.parseInt(data1[0]));
@@ -608,7 +619,7 @@ public class Manager {
             //load reward mob
             folder = new File("data/girlkun/mob_reward");
             for (File fileEntry : folder.listFiles()) {
-                if (!fileEntry.isDirectory()) {
+                if (!fileEntry.isDirectory() && !fileEntry.getName().contains(".bak")) {
                     DataInputStream dis = new DataInputStream(new FileInputStream(fileEntry));
                     int size = dis.readInt();
                     for (int i = 0; i < size; i++) {
@@ -631,15 +642,15 @@ public class Manager {
                         ItemMobReward item = new ItemMobReward(itemId, mapDrop,
                                 new int[]{Integer.parseInt(quantity[0]), Integer.parseInt(quantity[1])},
                                 new int[]{Integer.parseInt(ratio[0]), Integer.parseInt(ratio[1])}, gender);
-                        if (item.getTemp().type == 30) { // sao pha lê
-                            item.setRatio(new int[]{20, Integer.parseInt(ratio[1])});
-                        }
-                        if (item.getTemp().type == 14) { //14 đá nâng cấp
-                            item.setRatio(new int[]{20, Integer.parseInt(ratio[1])});
-                        }
-                        if (item.getTemp().type < 5) {
-                            item.setRatio(new int[]{Integer.parseInt(ratio[0]), Integer.parseInt(ratio[1]) / 4 * 3});
-                        }
+//                        if (item.getTemp().type == 30) { // sao pha lê
+//                            item.setRatio(new int[]{20, Integer.parseInt(ratio[1])});
+//                        }
+//                        if (item.getTemp().type == 14) { //14 đá nâng cấp
+//                            item.setRatio(new int[]{20, Integer.parseInt(ratio[1])});
+//                        }
+//                        if (item.getTemp().type < 5) {
+//                            item.setRatio(new int[]{Integer.parseInt(ratio[0]), Integer.parseInt(ratio[1]) / 4 * 3});
+//                        }
                         if (item.getTemp().type == 9) { //vàng
                             mobReward.getGoldReward().add(item);
                         } else {
@@ -762,9 +773,9 @@ public class Manager {
                             .replaceAll("\\]\"\\]", "]]")
                             .replaceAll("\",\"", ",")
                     );
-                    for (int j = 0; j < dataArray.size(); j++) {
+                    for (Object o : dataArray) {
                         WayPoint wp = new WayPoint();
-                        JSONArray dtwp = (JSONArray) jv.parse(String.valueOf(dataArray.get(j)));
+                        JSONArray dtwp = (JSONArray) jv.parse(String.valueOf(o));
                         wp.name = String.valueOf(dtwp.get(0));
                         wp.minX = Short.parseShort(String.valueOf(dtwp.get(1)));
                         wp.minY = Short.parseShort(String.valueOf(dtwp.get(2)));
@@ -814,8 +825,8 @@ public class Manager {
                 Logger.success("Load map template thành công (" + MAP_TEMPLATES.length + ")\n");
                 RUBY_REWARDS.add(Util.sendDo(861, 0, new ArrayList<>()));
             }
-            
-              ps = con.prepareStatement("SELECT * FROM shop_ky_gui");
+
+            ps = con.prepareStatement("SELECT * FROM shop_ky_gui");
             rs = ps.executeQuery();
             while (rs.next()) {
                 int i = rs.getInt("id");
@@ -829,17 +840,17 @@ public class Manager {
                 boolean isBuy = rs.getByte("isBuy") == 1;
                 List<Item.ItemOption> op = new ArrayList<>();
                 JSONArray jsa2 = (JSONArray) JSONValue.parse(rs.getString("itemOption"));
-                for (int j = 0; j < jsa2.size(); ++j) {
-                    JSONObject jso2 = (JSONObject) jsa2.get(j);
+                for (Object o : jsa2) {
+                    JSONObject jso2 = (JSONObject) o;
                     int idOptions = Integer.parseInt(jso2.get("id").toString());
                     int param = Integer.parseInt(jso2.get("param").toString());
                     op.add(new Item.ItemOption(idOptions, param));
                 }
-                ShopKyGuiManager.gI().listItem.add(new ItemKyGui(i,itemId,idPl,tab,gold,gem,quantity,isUp,op,isBuy));
-          }
-            Logger.log(Logger.YELLOW_BOLD_BRIGHT,"Finish load item ky gui [" +ShopKyGuiManager.gI().listItem.size()+"]!" );
+                ShopKyGuiManager.gI().listItem.add(new ItemKyGui(i, itemId, idPl, tab, gold, gem, quantity, isUp, op, isBuy));
+            }
+            Logger.log(Logger.YELLOW_BOLD_BRIGHT, "Finish load item ky gui [" + ShopKyGuiManager.gI().listItem.size() + "]!\n");
 
-                      
+
             ps = con.prepareStatement("select * from radar");
             rs = ps.executeQuery();
             while (rs.next()) {
@@ -852,9 +863,9 @@ public class Manager {
                 rd.Template = rs.getShort("template");
                 rd.Name = rs.getString("name");
                 rd.Info = rs.getString("info");
-                JSONArray arr = (JSONArray)JSONValue.parse(rs.getString("body"));
-                for (int i = 0; i < arr.size(); i++) {
-                    JSONObject ob = (JSONObject)arr.get(i);
+                JSONArray arr = (JSONArray) JSONValue.parse(rs.getString("body"));
+                for (Object value : arr) {
+                    JSONObject ob = (JSONObject) value;
                     if (ob != null) {
                         rd.Head = Short.parseShort(ob.get("head").toString());
                         rd.Body = Short.parseShort(ob.get("body").toString());
@@ -863,9 +874,9 @@ public class Manager {
                     }
                 }
                 rd.Options.clear();
-                arr = (JSONArray)JSONValue.parse(rs.getString("options"));
-                for (int i = 0; i < arr.size(); i++) {
-                    JSONObject ob = (JSONObject)arr.get(i);
+                arr = (JSONArray) JSONValue.parse(rs.getString("options"));
+                for (Object o : arr) {
+                    JSONObject ob = (JSONObject) o;
                     if (ob != null) {
                         rd.Options.add(new OptionCard(Integer.parseInt(ob.get("id").toString()), Short.parseShort(ob.get("param").toString()), Byte.parseByte(ob.get("activeCard").toString())));
                     }
@@ -876,7 +887,7 @@ public class Manager {
                 RadarService.gI().RADAR_TEMPLATE.add(rd);
             }
             Logger.success("Load radar template thành công (" + RadarService.gI().RADAR_TEMPLATE.size() + ")\n");
-            
+
             topSM = realTop(queryTopSM, con);
             Logger.success("Load top sm thành công (" + topSM.size() + ")\n");
             topNV = realTop(queryTopNV, con);
@@ -889,12 +900,8 @@ public class Manager {
             Logger.success("Load top Sức Đánh thành công (" + topSD.size() + ")\n");
             Manager.timeRealTop = System.currentTimeMillis();
             try {
-                if (rs != null) {
-                    rs.close();
-                }
-                if (ps != null) {
-                    ps.close();
-                }
+                rs.close();
+                ps.close();
             } catch (SQLException ex) {
             }
         } catch (Exception e) {
@@ -960,6 +967,9 @@ public class Manager {
         if ((value = properties.get("server.girlkun.port")) != null) {
             ServerManager.PORT = Integer.parseInt(String.valueOf(value));
         }
+        if ((value = properties.get("server.girlkun.test")) != null) {
+            isTestServer = Boolean.parseBoolean(String.valueOf(value));
+        }
         if ((value = properties.get("server.girlkun.name")) != null) {
             ServerManager.NAME = String.valueOf(value);
         }
@@ -970,7 +980,7 @@ public class Manager {
         for (int i = 1; i <= 10; i++) {
             value = properties.get("server.girlkun.sv" + i);
             if (value != null) {
-                linkServer += String.valueOf(value) + ":0,";
+                linkServer += (value + ":0,");
             }
         }
         DataGame.LINK_IP_PORT = linkServer.substring(0, linkServer.length() - 1);

@@ -154,18 +154,6 @@ public class MartialCongress {
 
     }
 
-    public void setBoss(Boss boss) {
-        this.boss = boss;
-    }
-
-    public void setTime(int time) {
-        this.time = time;
-    }
-
-    public void setTimeWait(int timeWait) {
-        this.timeWait = timeWait;
-    }
-
     private void die() {
         Service.getInstance().sendThongBao(player, "Bạn bị xử thua vì chết queo");
         if (player.zone != null) {

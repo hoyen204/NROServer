@@ -14,7 +14,7 @@ import com.girlkun.utils.SkillUtil;
 import com.girlkun.utils.Util;
 
 /**
- * @author BTH sieu cap vippr0 
+ * @author BTH sieu cap vippr0
  */
 public class ThienXinHangClone extends BossDHVT {
     private int timeLive;
@@ -24,6 +24,7 @@ public class ThienXinHangClone extends BossDHVT {
     public ThienXinHangClone(byte id, Player player) throws Exception {
         super(id, BossesData.THIEN_XIN_HANG_CLONE);
         this.playerAtt = player;
+        this.nPoint.dame /= 5;
         timeLive = 10;
 //        this.bossStatus = BossStatus.JOIN_MAP;
 //        this.bossStatus = BossStatus.ACTIVE;

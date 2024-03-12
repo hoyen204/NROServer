@@ -271,8 +271,7 @@ public class BlackBallWar {
             PlayerService.gI().sendInfoHpMp(player);
             Service.gI().point(player);
         } else {
-            Service.gI().sendThongBao(player, "Không đủ vàng để thực hiện, còn thiếu "
-                    + Util.numberToMoney(cost - player.inventory.gold) + " vàng");
+            Service.gI().sendThongBao(player, "Không đủ vàng để thực hiện, còn thiếu " + Util.numberToMoney(cost - player.inventory.gold) + " vàng");
         }
     }
 }

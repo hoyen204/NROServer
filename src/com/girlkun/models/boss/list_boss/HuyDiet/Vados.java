@@ -1,6 +1,7 @@
 package com.girlkun.models.boss.list_boss.HuyDiet;
 
 import com.girlkun.models.boss.Boss;
+import com.girlkun.models.boss.BossID;
 import com.girlkun.models.boss.BossStatus;
 import com.girlkun.models.boss.BossesData;
 import com.girlkun.models.player.Player;
@@ -17,8 +18,8 @@ public class Vados extends Boss {
 
     @Override
     public void reward(Player plKill) {
-        int[] manhthuong = new int[]{1142, 1142};
-        int[] manhhiem = new int[]{1142, 1067, 1142};
+        int[] manhthuong = new int[]{2044, 2044};
+        int[] manhhiem = new int[]{2044, 1067, 2044};
 
         int randomAWJ = new Random().nextInt(manhthuong.length);
         int randomGR = new Random().nextInt(manhhiem.length);
@@ -31,7 +32,16 @@ public class Vados extends Boss {
 
     @Override
     public int injured(Player plAtt, int damage, boolean piercing, boolean isMobAttack) {
-        if (Util.isTrue(95, 100) && plAtt != null) {//tỉ lệ hụt của thiên sứ
+        boolean isHakaiShinAlive = false;
+        if (this.zone.getBosses().size() > 1) {
+            for (Player b : this.zone.getBosses()) {
+                if (b != this && b != plAtt && b.isBoss && (b.getClass() == Champa.class|| b.getClass() == ThanHuyDiet.class) && !b.isDie()) {
+                    isHakaiShinAlive = true;
+                    break;
+                }
+            }
+        }
+        if (Util.isTrue(99, 100) && plAtt != null && isHakaiShinAlive) {//tỉ lệ hụt của thiên sứ
             Util.isTrue(this.nPoint.tlNeDon, 100000);
             if (Util.isTrue(1, 100)) {
                 this.chat("Hãy để bản năng tự vận động");
@@ -44,10 +54,9 @@ public class Vados extends Boss {
                 this.chat("Đây chính là bản năng vô cực");
             }
             damage = 0;
-
         }
         if (!this.isDie()) {
-            if (!piercing && Util.isTrue(this.nPoint.tlNeDon, 1)) {
+            if (!piercing && Util.isTrue(this.nPoint.tlNeDon, 100)) {
                 this.chat("Xí hụt");
                 return 0;
             }
@@ -56,9 +65,6 @@ public class Vados extends Boss {
                 if (damage > nPoint.hpMax) {
                     EffectSkillService.gI().breakShield(this);
                 }
-                damage = 1;
-            }
-            if (damage >= 1) {
                 damage = 1;
             }
             this.nPoint.subHP(damage);

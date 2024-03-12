@@ -1,11 +1,9 @@
 package com.girlkun.services;
 
-import com.arriety.MaQuaTang.MaQuaTang;
-import com.arriety.MaQuaTang.MaQuaTangManager;
-import com.girlkun.data.ItemData;
+import com.arriety.MaQuaTang.GiftCode;
+import com.arriety.MaQuaTang.GiftCodeManager;
 import com.girlkun.models.item.Item;
 import com.girlkun.models.player.Player;
-import com.girlkun.server.Maintenance;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -39,7 +37,7 @@ public class GiftService {
     }
    
     public void giftCode(Player player, String code){
-         MaQuaTang giftcode = MaQuaTangManager.gI().checkUseGiftCode((int)player.id, code);
+         GiftCode giftcode = GiftCodeManager.gI().checkUseGiftCode((int)player.id, code);
                // if(!Maintenance.gI().canUseCode){Service.gI().sendThongBao(player, "Không thể thực hiện lúc này ");return;}
                        if(giftcode == null){
                       

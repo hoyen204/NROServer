@@ -8,6 +8,9 @@ import com.girlkun.utils.Util;
 public class MobEffectSkill {
 
     private final Mob mob;
+    private long lastTimeBinh;
+    private int timeBinh;
+    private boolean isBinh;
 
     public MobEffectSkill(Mob mob) {
         this.mob = mob;
@@ -30,8 +33,25 @@ public class MobEffectSkill {
         if (isSocola && (Util.canDoWithTime(lastTimeSocola, timeSocola) || mob.isDie())) {
             removeSocola();
         }
+        if (isBinh && (Util.canDoWithTime(lastTimeBinh, timeBinh) || mob.isDie())) {
+            removeBinh();
+        }
         if (isAnTroi && (Util.canDoWithTime(lastTimeAnTroi, timeAnTroi) || mob.isDie())) {
             removeAnTroi();
+        }
+    }
+
+    public void removeBinh() {
+        Message msg;
+        this.isBinh = false;
+        try {
+            msg = new Message(-112);
+            msg.writer().writeByte(0);
+            msg.writer().writeByte(mob.id);
+            Service.gI().sendMessAllPlayerInMap(mob.zone, msg);
+            msg.cleanup();
+        } catch (Exception e) {
+
         }
     }
 
@@ -157,5 +177,11 @@ public class MobEffectSkill {
         this.lastTimeSocola = lastTimeSocola;
         this.timeSocola = timeSocola;
         this.isSocola = true;
+    }
+
+    public void setBinh(long lastTimeBinh, int timeBinh) {
+        this.lastTimeBinh = lastTimeBinh;
+        this.timeBinh = timeBinh;
+        this.isBinh = true;
     }
 }

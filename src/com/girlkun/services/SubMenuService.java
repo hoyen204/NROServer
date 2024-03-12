@@ -4,6 +4,7 @@ import com.girlkun.consts.ConstNpc;
 import com.girlkun.models.player.Player;
 import com.girlkun.server.Client;
 import com.girlkun.network.io.Message;
+
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -36,10 +37,12 @@ public class SubMenuService {
                 }
                 break;
             case BUFF_PET:
-                if (plTarget != null) {
+                if (plTarget != null && plTarget.pet == null) {
                     String[] selects = new String[]{"Đồng ý", "Hủy"};
                     NpcService.gI().createMenuConMeo(player, ConstNpc.BUFF_PET, -1,
                             "Bạn có chắc chắn muốn phát đệ tử cho " + plTarget.name, selects, plTarget);
+                } else {
+                    Service.gI().sendThongBao(player, "Thằng này nó có đệ rồi.");
                 }
                 break;
         }

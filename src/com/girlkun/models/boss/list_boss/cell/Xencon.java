@@ -29,8 +29,8 @@ public class Xencon extends Boss {
 
    @Override
     public void reward(Player plKill) {
-        int[] itemDos = new int[]{1142,1116,1117,1118,1142};
-        int[] NRs = new int[]{17};
+        Short[] itemDos = Manager.itemIds_TL;
+        int[] NRs = new int[]{16,17,17};
         int randomDo = new Random().nextInt(itemDos.length);
         int randomNR = new Random().nextInt(NRs.length);
         if (Util.isTrue(15, 100)) {
@@ -40,7 +40,10 @@ public class Xencon extends Boss {
             }
             Service.gI().dropItemMap(this.zone, Util.ratiItem(zone, itemDos[randomDo], 1, this.location.x, this.location.y, plKill.id));
         } else {
-            Service.gI().dropItemMap(this.zone, new ItemMap(zone, NRs[randomNR], 1, this.location.x, zone.map.yPhysicInTop(this.location.x, this.location.y - 24), plKill.id));
+            int rand = NRs[randomNR];
+            Service.gI().dropItemMap(this.zone, new ItemMap(zone, rand, 1, this.location.x, zone.map.yPhysicInTop(this.location.x, this.location.y - 24), plKill.id));
+            if(rand == 16)
+                TaskService.gI().checkDoneTaskKillBoss(plKill, this);
         }
         TaskService.gI().checkDoneTaskKillBoss(plKill, this);
     }

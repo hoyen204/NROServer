@@ -5,6 +5,8 @@ import com.girlkun.models.skill.Skill;
 import com.girlkun.utils.Util;
 import com.girlkun.models.boss.BossID;
 
+import java.lang.reflect.Type;
+
 /**
  * @Stole By quý❤
  */
@@ -21,21 +23,23 @@ public class BossesData {
     private static final int[][] FULL_MASENKO = new int[][]{{Skill.MASENKO, 1}, {Skill.MASENKO, 2}, {Skill.MASENKO, 3}, {Skill.MASENKO, 4}, {Skill.MASENKO, 5}, {Skill.MASENKO, 6}, {Skill.MASENKO, 7}};
     private static final int[][] FULL_ANTOMIC = new int[][]{{Skill.ANTOMIC, 1}, {Skill.ANTOMIC, 2}, {Skill.ANTOMIC, 3}, {Skill.ANTOMIC, 4}, {Skill.ANTOMIC, 5}, {Skill.ANTOMIC, 6}, {Skill.ANTOMIC, 7}};
     private static final int[][] FULL_LIENHOAN = new int[][]{{Skill.LIEN_HOAN, 1}, {Skill.LIEN_HOAN, 2}, {Skill.LIEN_HOAN, 3}, {Skill.LIEN_HOAN, 4}, {Skill.LIEN_HOAN, 5}, {Skill.LIEN_HOAN, 6}, {Skill.LIEN_HOAN, 7}};
-    private static final int[][] FULL_TDHS = new int[][]{{Skill.THAI_DUONG_HA_SAN, 1}, {Skill.THAI_DUONG_HA_SAN, 2}, {Skill.THAI_DUONG_HA_SAN, 3}, {Skill.THAI_DUONG_HA_SAN, 4}, {Skill.THAI_DUONG_HA_SAN, 5}, {Skill.THAI_DUONG_HA_SAN, 6}, {Skill.THAI_DUONG_HA_SAN, 7}};
+    private static final int[][] FULL_TDHS = new int[][]{{Skill.THAI_DUONG_HA_SAN, 1}, {Skill.THAI_DUONG_HA_SAN, 2}, {Skill.THAI_DUONG_HA_SAN, 3}, {Skill.THAI_DUONG_HA_SAN, 4}, {Skill.THAI_DUONG_HA_SAN, 5}, {Skill.THAI_DUONG_HA_SAN, 6}, {Skill.THAI_DUONG_HA_SAN, 1}};
 
-    private static final int REST_1_S = 1;
-    private static final int REST_2_S = 2;
-    private static final int REST_5_S = 5;
-    private static final int REST_10_S = 10;
-    private static final int REST_20_S = 20;
-    private static final int REST_30_S = 30;
-    private static final int REST_1_M = 60;
-    private static final int REST_2_M = 120;
-    private static final int REST_5_M = 300;
-    private static final int REST_10_M = 600;
-    private static final int REST_15_M = 900;
-    private static final int REST_30_M = 1800;
-    private static final int REST_24_H = 86400000;
+    public static final int REST_1_S = 1;
+    public static final int REST_2_S = 2;
+    public static final int REST_5_S = 5;
+    public static final int REST_10_S = 10;
+    public static final int REST_20_S = 20;
+    public static final int REST_30_S = 30;
+    public static final int REST_1_M = 60;
+    public static final int REST_2_M = 120;
+    public static final int REST_5_M = 300;
+    public static final int REST_10_M = 600;
+    public static final int REST_15_M = 900;
+    public static final int REST_20_M = 1200;
+    public static final int REST_25_M = 1500;
+    public static final int REST_30_M = 1800;
+    public static final int REST_24_H = 86400000;
 
     //************************************************************************** Boss nappa
     public static final BossData KUKU = new BossData(
@@ -44,7 +48,7 @@ public class BossesData {
             new short[]{159, 160, 161, -1, -1, -1}, //outfit {head, body, leg, bag, aura, eff}
             1000, //dame
             new int[]{10000000}, //hp
-            new int[]{68, 69, 70, 71, 72, 31, 32, 33, 34}, //map join
+            new int[]{68, 69, 70, 71, 72}, //map join
             new int[][]{
                     {Skill.MASENKO, 3, 500},
                     {Skill.LIEN_HOAN, 7, 500}},
@@ -70,7 +74,7 @@ public class BossesData {
             new short[]{165, 166, 167, -1, -1, -1}, //outfit {head, body, leg, bag, aura, eff}
             2000, //dame
             new int[]{13000000}, //hp
-            new int[]{63, 64, 65, 66, 67, 9, 10, 11, 12}, //map join
+            new int[]{63, 64, 65, 66, 67}, //map join
             new int[][]{
                     {Skill.GALICK, 7, 700},
                     {Skill.ANTOMIC, 7, 900},},//skill //skill
@@ -90,13 +94,13 @@ public class BossesData {
             REST_10_M //second rest
     );
 
-   public static final BossData RAMBO = new BossData(
+    public static final BossData RAMBO = new BossData(
             "Rambo", //name
             ConstPlayer.XAYDA, //gender
             new short[]{162, 163, 164, 87, -1, -1}, //outfit {head, body, leg, bag, aura, eff}
             3000, //dame
             new int[]{15000000}, //hp
-            new int[]{7, 8, 25, 43, 74, 75, 76, 77}, //map join
+            new int[]{74, 75, 76, 77}, //map join
             new int[][]{
                     {Skill.KAMEJOKO, 7, 700},
                     {Skill.KAMEJOKO, 1, 1000},},//skill //skill
@@ -123,12 +127,10 @@ public class BossesData {
             new short[]{168, 169, 170, -1, -1, -1}, //outfit {head, body, leg, bag, aura, eff}
             4000, //dame
             new int[]{50000000}, //hp
-            new int[]{79, 81, 82, 83, 25, 34, 33}, //map join
-//           new int[]{86}, //map join
+            new int[]{79, 81, 82, 83}, //map join
             new int[][]{
                     {Skill.LIEN_HOAN, 7, 800},
                     {Skill.MASENKO, 7, 1000},
-                    {Skill.THOI_MIEN, 7, 300},
             },//skill
             new String[]{}, //text chat 1
             new String[]{"|-1|Oải rồi hả?", "|-1|Ê cố lên nhóc",
@@ -141,7 +143,6 @@ public class BossesData {
                     "|-1|Hãy trả thù cho ta!"
             }, //text chat 3
             REST_10_M
-
     );
 
     public static final BossData SO_3 = new BossData(
@@ -150,7 +151,7 @@ public class BossesData {
             new short[]{174, 175, 176, -1, -1, -1}, //outfit {head, body, leg, bag, aura, eff}
             5000, //dame
             new int[]{60000000}, //hp
-            new int[]{79, 81, 82, 83, 25, 34, 33}, //map join
+            new int[]{79, 81, 82, 83}, //map join
             new int[][]{
                     {Skill.LIEN_HOAN, 7, 900},
                     {Skill.ANTOMIC, 4, 1000},
@@ -174,10 +175,10 @@ public class BossesData {
             new short[]{171, 172, 173, -1, -1, -1}, //outfit {head, body, leg, bag, aura, eff}
             7000, //dame
             new int[]{75000000}, //hp
-            new int[]{79, 81, 82, 83, 25, 34, 33}, //map join
+            new int[]{79, 81, 82, 83}, //map join
             new int[][]{
                     {Skill.LIEN_HOAN, 7, 1000},
-                    {Skill.ANTOMIC, 3, 3000},
+                    {Skill.ANTOMIC, 3, 2000},
             },//skill//skill
             new String[]{}, //text chat 1
             new String[]{"|-1|Oải rồi hả?", "|-1|Ê cố lên nhóc",
@@ -198,10 +199,10 @@ public class BossesData {
             new short[]{177, 178, 179, -1, -1, -1}, //outfit {head, body, leg, bag, aura, eff}
             8000, //dame
             new int[]{100000000}, //hp
-            new int[]{79, 81, 82, 83, 25, 34, 33}, //map join
+            new int[]{79, 81, 82, 83}, //map join
             new int[][]{
                     {Skill.LIEN_HOAN, 7, 1000},
-                    {Skill.KAMEJOKO, 4, 1000},
+                    {Skill.KAMEJOKO, 5, 1000},
             },//skill//skill
             new String[]{}, //text chat 1
             new String[]{"|-1|Oải rồi hả?", "|-1|Ê cố lên nhóc",
@@ -224,9 +225,9 @@ public class BossesData {
             new int[]{125000000}, //hp
             new int[]{79, 81, 82, 83, 25, 34, 33}, //map join
             new int[][]{
-                    {Skill.SOCOLA, 7, 1000},
-                    {Skill.MASENKO, 7, 1000},
-                    {Skill.GALICK, 7, 1000},
+                    {Skill.KAMEJOKO, 7, 1200},
+                    {Skill.MASENKO, 7, 800},
+                    {Skill.GALICK, 7, 500},
             },//skill
             new String[]{}, //text chat 1
             new String[]{"|-1|Oải rồi hả?", "|-1|Ê cố lên nhóc",
@@ -263,7 +264,7 @@ public class BossesData {
                     "|-1|Được thôi, nếu muốn chết đến vậy, ta rất vui lòng!!"
             }, //text chat 2
             new String[]{"|-1|Biến hình, hây aaaa..."}, //text chat 3
-            REST_15_M //second rest
+            REST_10_M
     );
 
     public static final BossData FIDE_DAI_CA_2 = new BossData(
@@ -273,7 +274,7 @@ public class BossesData {
             12000, //dame
             new int[]{175000000}, //hp
             new int[]{80}, //map join
-            (int[][]) Util.addArray(FULL_ANTOMIC,FULL_LIENHOAN), //skill
+            (int[][]) Util.addArray(FULL_ANTOMIC, FULL_LIENHOAN), //skill
             new String[]{"|-1|Hê hê, cẩn thận đi",
                     "|-1|Nếu đã biến thành thế này thì ta sẽ không nhùn nhặn như trước đâu"
             }, //text chat 1
@@ -299,7 +300,7 @@ public class BossesData {
             13000, //dame
             new int[]{200000000}, //hp
             new int[]{80}, //map join
-            (int[][]) Util.addArray(FULL_MASENKO,FULL_LIENHOAN), //skill
+            (int[][]) Util.addArray(FULL_MASENKO, FULL_LIENHOAN), //skill
             new String[]{"|-1|Ta sẽ cho các ngươi thấy đâu mới là sức mạnh của ta!!"}, //text chat 1
             new String[]{"|-1|Ta nói các ngươi rồi! Sức mạnh này của ta còn đáng sợ hơn địa ngục!!",
                     "|-1|Ta chơi thêm chút nữa chắc ngươi chóng mặt buồn nôn mất!!",
@@ -323,10 +324,8 @@ public class BossesData {
             new int[]{100000000}, //hp
             new int[]{96, 94, 93}, //map join
             new int[][]{
-                    {Skill.THOI_MIEN, 3, 200},
-                    {Skill.KAMEJOKO, 7, 5000},
-                    {Skill.LIEN_HOAN, 7, 1000},},//skill
-//skill
+                    {Skill.KAMEJOKO, 7, 1500},
+                    {Skill.LIEN_HOAN, 7, 700},},//skill
             new String[]{"|-2|Chào anh! em đứng đây từ chiều",
                     "|-1|Quái lạ! Sao chúng biết rõ tung tích của bọn ta thế nhỉ?",
                     "|-1|Chúng còn biết chính xác ta sẽ xuất hiện ở đây để đón đánh nữa!",
@@ -345,7 +344,7 @@ public class BossesData {
                     "|-2|Lão già khôn thật!!",
                     "|-2|Hừ! Lão già khốn kiếp!",}, //text chat 2
             new String[]{}, //text chat 3
-            REST_15_M, //second rest
+            REST_10_M, //second rest
             new int[]{BossID.ANDROID_19}
     );
 
@@ -358,7 +357,7 @@ public class BossesData {
             new int[]{96, 94, 93}, //map join
             new int[][]{
                     {Skill.KAMEJOKO, 7, 1000},
-                    {Skill.LIEN_HOAN, 7, 7000},},//skill//skill
+                    {Skill.LIEN_HOAN, 7, 500},},//skill//skill
             new String[]{}, //text chat 1
             new String[]{"|-1|Oải rồi hả?",
                     "|-1|Ê cố lên nhóc",
@@ -366,6 +365,7 @@ public class BossesData {
                     "|-1|Ngươi sẽ không bao giờ thắng được đâu!!",
                     "|-2|Ngươi vừa hút được nhiều rồi đấy, nhưng giờ thì đừng hòng!!",}, //text chat 2
             new String[]{}, //text chat 3
+            REST_10_M,
             TypeAppear.APPEAR_WITH_ANOTHER
     );
 
@@ -378,8 +378,8 @@ public class BossesData {
             new int[]{175000000}, //hp
             new int[]{84, 104}, //map join
             new int[][]{
-                    {Skill.KAMEJOKO, 7, 5000},
-                    {Skill.LIEN_HOAN, 7, 5000},},//skill
+                    {Skill.KAMEJOKO, 7, 1000},
+                    {Skill.LIEN_HOAN, 7, 600},},//skill
             new String[]{"|-1|Sôn..gôku",
                     "|-2|Lại là tiến sĩ Kôrê à.. rốt cuộc ông ta đã tạo ra bao nhiêu rôbốt nhân tạo thế nhỉ?",
                     "|-1|Bọn ta là rôbốt sát thủ, sinh ra từ máy tính ngài Kôrê,..",
@@ -396,6 +396,7 @@ public class BossesData {
                     "|-2|Đúng là mạnh mồm thật đấy!",
                     "|-2|Đỡ này",}, //text chat 2
             new String[]{"|-1|Sô..Sông...gôku....."}, //text chat 3
+            REST_10_M,
             TypeAppear.CALL_BY_ANOTHER
     );
 
@@ -407,8 +408,8 @@ public class BossesData {
             new int[]{100000000}, //hp
             new int[]{84, 104}, //map join
             new int[][]{
-                    {Skill.KAMEJOKO, 7, 7000},
-                    {Skill.LIEN_HOAN, 7, 7000},},//skill
+                    {Skill.KAMEJOKO, 7, 1100},
+                    {Skill.LIEN_HOAN, 7, 700},},//skill
             new String[]{"|-2|Các ngươi là ai?",
                     "|-2|Ta không thể cảm nhận được khí của các ngươi, các ngươi không phải là con người đúng chứ?",
                     "|-2|Ta hiểu rồi, các ngươi là rôbốt sát thủ do tiến sĩ Kôrê tạo ra chứ gì?"
@@ -427,23 +428,24 @@ public class BossesData {
             new int[]{150000000}, //hp
             new int[]{84, 104}, //map join
             new int[][]{
-                    {Skill.KAMEJOKO, 7, 7000},
-                    {Skill.LIEN_HOAN, 7, 7000},},//skill//skill
+                    {Skill.KAMEJOKO, 7, 1200},
+                    {Skill.LIEN_HOAN, 7, 800},},//skill//skill
             new String[]{}, //text chat 1
             new String[]{}, //text chat 2
             new String[]{"|-2|Thì ra vẫn chỉ là một đống sắt vụn!"}, //text chat 3
+            REST_15_M,
             TypeAppear.APPEAR_WITH_ANOTHER
     );
 //**************************************************************************
 
     public static final BossData PIC = new BossData(
-            "Số 17 Pic", //name
+            "Pic", //name
             ConstPlayer.TRAI_DAT, //gender
             new short[]{237, 238, 239, -1, -1, -1}, //outfit {head, body, leg, bag, aura, eff}
             17220, //dame
-            new int[]{155000000}, //hp
+            new int[]{105000000}, //hp
             new int[]{97, 98, 99}, //map join
-            (int[][]) Util.addArray(FULL_GALICK,FULL_KAMEJOKO), //skill
+            (int[][]) Util.addArray(FULL_GALICK, FULL_KAMEJOKO), //skill
             new String[]{"|-1|Chào! Có Gôku ở đây không?",
                     "|-3|Tôi không nghĩ Gôku ở đây đâu!",
                     "|-2|Biến khỏi đây đi, Gôku không có ở đây đâu!",
@@ -469,7 +471,7 @@ public class BossesData {
     );
 
     public static final BossData POC = new BossData(
-            "Số 18 Poc", //name
+            "Poc", //name
             ConstPlayer.TRAI_DAT, //gender
             new short[]{240, 241, 242, -1, -1, -1}, //outfit {head, body, leg, bag, aura, eff}
             17000, //dame
@@ -488,13 +490,13 @@ public class BossesData {
     );
 
     public static final BossData KING_KONG = new BossData(
-            "Số 16 King Kong", //name
+            "King Kong", //name
             ConstPlayer.TRAI_DAT, //gender
             new short[]{243, 244, 245, -1, -1, -1}, //outfit {head, body, leg, bag, aura, eff}
             18000, //dame
             new int[]{130000000}, //hp
             new int[]{97, 98, 99}, //map join
-            (int[][]) Util.addArray(FULL_LIENHOAN,FULL_MASENKO), //skill
+            (int[][]) Util.addArray(FULL_LIENHOAN, FULL_MASENKO), //skill
             new String[]{}, //text chat 1
             new String[]{"|-1|Mau đền mạng cho những người bạn của ta",
                     "|-1|Sức mạnh của ta chênh nhau với các ngươi một trời một vực đấy!",
@@ -511,13 +513,13 @@ public class BossesData {
             ConstPlayer.XAYDA,
             new short[]{228, 229, 230, -1, -1, -1},
             15000,
-            new int[]{300000000},
+            new int[]{150_000_000},
             new int[]{100},
             new int[][]{
                     {Skill.KAMEJOKO, 7, 1000},
-                     {Skill.KAMEJOKO, 7, 1000},
-                    {Skill.LIEN_HOAN, 7, 5000},
-                    {Skill.DICH_CHUYEN_TUC_THOI, 7, 10000}},//skill
+                    {Skill.KAMEJOKO, 7, 1200},
+                    {Skill.LIEN_HOAN, 7, 500},
+                    {Skill.DICH_CHUYEN_TUC_THOI, 7, 15000}},//skill
             new String[]{"|-2|Cái gì kia vậy!? Đó là loài gì thế!!?",
                     "|-1|Hôm nay sẽ là ngày đáng nhớ đây!",
                     "|-1|Ta sẽ hấp thụ số 17 và 18 để đạt được dạng hoàn hảo!",
@@ -550,13 +552,13 @@ public class BossesData {
             ConstPlayer.XAYDA,
             new short[]{231, 232, 233, -1, -1, -1},
             19000,
-            new int[]{500000000},
+            new int[]{200_000_000},
             new int[]{100},
             new int[][]{
                     {Skill.KAMEJOKO, 7, 1000},
-                     {Skill.KAMEJOKO, 7, 1000},
-                    {Skill.TAI_TAO_NANG_LUONG, 7, 1000},
-                    {Skill.LIEN_HOAN, 7, 7000}}, //skill
+                    {Skill.KAMEJOKO, 7, 1100},
+                    {Skill.LIEN_HOAN, 7, 700},
+                    {Skill.GALICK, 7, 500}}, //skill
             new String[]{}, //text chat 1
             new String[]{"|-2|Nguy rồi... thực sự nguy to rồi!",
                     "|-1|Các ngươi nghĩ có thể chạy được sao!?",
@@ -578,16 +580,14 @@ public class BossesData {
             ConstPlayer.XAYDA,
             new short[]{234, 235, 236, -1, -1, -1},
             19000,
-            new int[]{1000000000},
+            new int[]{500_000_000},
             new int[]{100},
             new int[][]{
                     {Skill.KAMEJOKO, 7, 1000},
-                     {Skill.KAMEJOKO, 7, 1000},
-                    {Skill.DICH_CHUYEN_TUC_THOI, 7, 5000},
-                    {Skill.KHIEN_NANG_LUONG, 7, 5000},
-                    {Skill.TAI_TAO_NANG_LUONG, 5, 10000},
+                    {Skill.KAMEJOKO, 7, 1100},
+                    {Skill.DICH_CHUYEN_TUC_THOI, 7, 15000},
                     {Skill.LIEN_HOAN, 7, 200},
-                    {Skill.THOI_MIEN, 7, 5000}},
+                    {Skill.THAI_DUONG_HA_SAN, 1, 20000},},
             //skill
 
             new String[]{"|-2|Cuối cùng hắn cũng đã biến đổi",
@@ -616,16 +616,17 @@ public class BossesData {
             ConstPlayer.XAYDA,
             new short[]{234, 235, 236, -1, -1, -1},
             20000,
-            new int[]{1500000000},
+            new int[]{750_000_000},
             new int[]{103},
             new int[][]{
-                   {Skill.LIEN_HOAN, 7, 10000},
-                    {Skill.THOI_MIEN, 7, 500},
-                    {Skill.KAMEJOKO, 7, 10000},
-                    {Skill.DICH_CHUYEN_TUC_THOI, 7, 1000},
-                    {Skill.TAI_TAO_NANG_LUONG, 7, 1000},
-                    {Skill.LIEN_HOAN, 7, 1000},
-                    {Skill.THAI_DUONG_HA_SAN, 7, 500}},
+                    {Skill.LIEN_HOAN, 7, 200},
+                    {Skill.KAMEJOKO, 7, 1000},
+                    {Skill.KAMEJOKO, 7, 1100},
+                    {Skill.DICH_CHUYEN_TUC_THOI, 7, 15000},
+                    {Skill.LIEN_HOAN, 7, 400},
+                    {Skill.MASENKO, 7, 800},
+                    {Skill.MASENKO, 2, 1000},
+                    {Skill.THAI_DUONG_HA_SAN, 1, 20000}},
             //skill
             new String[]{"|-1|Cuối cùng thì ngươi cũng đến Goku,... ta đang đợi ngươi đây...",
                     "|-1|Chào mừng đến với giải đấu!!!",
@@ -644,7 +645,7 @@ public class BossesData {
                     "|-1|Nếu không còn ai tham dự trò chơi của Cell,.. thì toàn bộ cư dân trái đất sẽ bị tiêu diệt!"
             }, //text chat 2
             new String[]{"|-1|Hô hô hô, đây sẽ là kết thúc của lũ ngu ngốc các ngươi!! Ta sẽ chết nhưng sẽ kéo theo cái hành tinh này luôn"}, //text chat 3
-            REST_15_M
+            TypeAppear.ANOTHER_LEVEL
     );
 
     public static final BossData SIEU_BO_HUNG_2 = new BossData(
@@ -652,17 +653,16 @@ public class BossesData {
             ConstPlayer.XAYDA,
             new short[]{234, 235, 236, -1, -1, -1},
             20000,
-            new int[]{2000000000},
+            new int[]{850_000_000},
             new int[]{103},
             new int[][]{
-               
-                {Skill.KAMEJOKO, 7, 6}, {Skill.KAMEJOKO, 6, 7}, {Skill.KAMEJOKO, 5, 8}, {Skill.KAMEJOKO, 4, 9}, {Skill.KAMEJOKO, 3, 10}, {Skill.KAMEJOKO, 2, 11},{Skill.KAMEJOKO, 1, 12},
-                {Skill.ANTOMIC, 1, 13},  {Skill.ANTOMIC, 2, 14},  {Skill.ANTOMIC, 3, 15},{Skill.ANTOMIC, 4, 16},  {Skill.ANTOMIC, 5, 17},{Skill.ANTOMIC, 6, 19},  {Skill.ANTOMIC, 7, 20},
-                {Skill.MASENKO, 1, 21}, {Skill.MASENKO, 5, 22}, {Skill.MASENKO, 6, 23},
-                    {Skill.DICH_CHUYEN_TUC_THOI, 7, 100},
-                    {Skill.TAI_TAO_NANG_LUONG, 7, 100},
-                    {Skill.THAI_DUONG_HA_SAN, 7, 600},
-                    {Skill.LIEN_HOAN, 7, 10000}},//skill
+
+                    {Skill.KAMEJOKO, 7, 6}, {Skill.KAMEJOKO, 6, 7}, {Skill.KAMEJOKO, 5, 8}, {Skill.KAMEJOKO, 4, 9}, {Skill.KAMEJOKO, 3, 10}, {Skill.KAMEJOKO, 2, 11}, {Skill.KAMEJOKO, 1, 12},
+                    {Skill.ANTOMIC, 1, 13}, {Skill.ANTOMIC, 2, 14}, {Skill.ANTOMIC, 3, 15}, {Skill.ANTOMIC, 4, 16}, {Skill.ANTOMIC, 5, 17}, {Skill.ANTOMIC, 6, 19}, {Skill.ANTOMIC, 7, 20},
+                    {Skill.MASENKO, 1, 21}, {Skill.MASENKO, 5, 22}, {Skill.MASENKO, 6, 23},
+                    {Skill.DICH_CHUYEN_TUC_THOI, 7, 15000},
+                    {Skill.THAI_DUONG_HA_SAN, 2, 18000},
+                    {Skill.LIEN_HOAN, 7, 300}},//skill
             new String[]{"|-1|Cuối cùng thì ngươi cũng đến Goku,... ta đang đợi ngươi đây...",
                     "|-1|Chào mừng đến với giải đấu!!!",
                     "|-2|Vậy thì... Chúng ta bắt đầu cuộc chiến thôi chứ! Tớ lên trước nhé!",
@@ -686,19 +686,15 @@ public class BossesData {
             ConstPlayer.XAYDA,
             new short[]{234, 235, 236, -1, -1, -1},
             25000,
-            new int[]{2000000000},
+            new int[]{1_000_000_000},
             new int[]{103},
             new int[][]{
-                {Skill.DEMON, 3, 1}, {Skill.DEMON, 6, 2}, {Skill.DRAGON, 7, 3}, {Skill.DRAGON, 1, 4}, {Skill.GALICK, 5, 5},
-                {Skill.KAMEJOKO, 7, 6}, {Skill.KAMEJOKO, 6, 7}, {Skill.KAMEJOKO, 5, 8}, {Skill.KAMEJOKO, 4, 9}, {Skill.KAMEJOKO, 3, 10}, {Skill.KAMEJOKO, 2, 11},{Skill.KAMEJOKO, 1, 12},
-              {Skill.ANTOMIC, 1, 13},  {Skill.ANTOMIC, 2, 14},  {Skill.ANTOMIC, 3, 15},{Skill.ANTOMIC, 4, 16},  {Skill.ANTOMIC, 5, 17},{Skill.ANTOMIC, 6, 19},  {Skill.ANTOMIC, 7, 20},
-                {Skill.MASENKO, 1, 21}, {Skill.MASENKO, 5, 22}, {Skill.MASENKO, 6, 23},
+                    {Skill.DEMON, 3, 1}, {Skill.DEMON, 6, 2}, {Skill.DRAGON, 7, 3}, {Skill.DRAGON, 1, 4}, {Skill.GALICK, 5, 5},
+                    {Skill.KAMEJOKO, 7, 6}, {Skill.KAMEJOKO, 6, 7}, {Skill.KAMEJOKO, 5, 8}, {Skill.KAMEJOKO, 4, 9}, {Skill.KAMEJOKO, 3, 10}, {Skill.KAMEJOKO, 2, 11}, {Skill.KAMEJOKO, 1, 12},
+                    {Skill.ANTOMIC, 1, 13}, {Skill.ANTOMIC, 2, 14}, {Skill.ANTOMIC, 3, 15}, {Skill.ANTOMIC, 4, 16}, {Skill.ANTOMIC, 5, 17}, {Skill.ANTOMIC, 6, 19}, {Skill.ANTOMIC, 7, 20},
+                    {Skill.MASENKO, 1, 21}, {Skill.MASENKO, 5, 22}, {Skill.MASENKO, 6, 23},
                     {Skill.KAMEJOKO, 7, 1000},
-                    {Skill.QUA_CAU_KENH_KHI, 7, 100000},
-                    {Skill.DICH_CHUYEN_TUC_THOI, 7, 10000},
-                    {Skill.KHIEN_NANG_LUONG, 7, 1000},
-                    {Skill.TAI_TAO_NANG_LUONG, 7, 1000},
-                    {Skill.THOI_MIEN, 7, 7000}},
+                    {Skill.DICH_CHUYEN_TUC_THOI, 7, 15000},},
             //skill
             new String[]{"|-2|Tại sao!? Sao ngươi vẫn còn sống vậy!?",
                     "|-1|... Xem ra bọn bây rất ngạc nhiên",
@@ -730,9 +726,9 @@ public class BossesData {
             ConstPlayer.TRAI_DAT, //gender
             new short[]{141, 142, 143, -1, -1, -1}, //outfit {head, body, leg, bag, aura, eff}
             1200, //dame
-            new int[]{150000}, //hp
+            new int[]{150_000}, //hp
             new int[]{62}, //map join
-            (int[][]) Util.addArray(FULL_DEMON), //skill
+            (int[][]) Util.addArray(FULL_DEMON, FULL_MASENKO), //skill
             new String[]{}, //text chat 1
             new String[]{"|-1|Nhóc con"}, //text chat 2
             new String[]{}, //text chat 3
@@ -744,15 +740,13 @@ public class BossesData {
             ConstPlayer.XAYDA, //gender
             new short[]{709, 710, 711, -1, -1, -1}, //outfit {head, body, leg, bag, aura, eff}
             200000, //dame
-            new int[]{100000000}, //hp
+            new int[]{100_000_000}, //hp
             new int[]{155}, //map join
             new int[][]{
-                    {Skill.THOI_MIEN, 7, 800},
-                    {Skill.DICH_CHUYEN_TUC_THOI, 7, 3000},
-                    {Skill.KAMEJOKO, 7, 10000},
-                    {Skill.LIEN_HOAN, 4, 1000},
-                    {Skill.TAI_TAO_NANG_LUONG, 7, 2000},
-                    {Skill.MASENKO, 7, 10000}}, //skill
+                    {Skill.DICH_CHUYEN_TUC_THOI, 7, 15000},
+                    {Skill.KAMEJOKO, 7, 2000},
+                    {Skill.LIEN_HOAN, 4, 700},
+                    {Skill.MASENKO, 7, 100}}, //skill
             new String[]{"|-1|Hello cục cưng",
                     "|-1|Mày có biết tao là ai không?",
                     "|-2|Tao không cần biết mày là ai, mày nghĩ mày dọa được tao à?",
@@ -778,10 +772,9 @@ public class BossesData {
             new int[]{100000000}, //hp
             new int[]{155}, //map join
             new int[][]{
-                    {Skill.LIEN_HOAN, 7, 1000},
-                    {Skill.ANTOMIC, 7, 1000},
-                    {Skill.TAI_TAO_NANG_LUONG, 7, 1000},
-                    {Skill.BIEN_KHI, 5, 10000}}, //skill
+                    {Skill.LIEN_HOAN, 7, 200},
+                    {Skill.ANTOMIC, 7, 800},
+                    {Skill.BIEN_KHI, 6, 60000}}, //skill
             new String[]{"|-1|Gaaaaaa !!!!!!!!",
                     "|-2|Tên Sayan kia là ai vậy",
                     "|-1|Sức mạnh tà ác !"
@@ -802,7 +795,7 @@ public class BossesData {
             20000, //dame
             new int[]{200000000}, //hp
             new int[]{103}, //map join
-            (int[][]) Util.addArray(FULL_DEMON,FULL_MASENKO), //skill
+            (int[][]) Util.addArray(FULL_DEMON, FULL_MASENKO), //skill
             new String[]{"|-1|Hello cục cưng",
                     "|-1|Mày có biết tao là ai không?",
                     "|-2|Tao không cần biết mày là ai, mày nghĩ mày dọa được tao à?",
@@ -871,7 +864,8 @@ public class BossesData {
             new int[]{100000000}, //hp
             new int[]{19}, //map join
             new int[][]{
-                    {Skill.MASENKO, 7, 1000},
+                    {Skill.LIEN_HOAN, 7, 400},
+                    {Skill.MASENKO, 7, 200},
                     {Skill.DE_TRUNG, 7, 1000},
             },//skill
             new String[]{}, //text chat 1
@@ -892,8 +886,9 @@ public class BossesData {
             new int[]{300000000}, //hp
             new int[]{19}, //map join
             new int[][]{
-                    {Skill.DICH_CHUYEN_TUC_THOI, 7, 10000},
+                    {Skill.DICH_CHUYEN_TUC_THOI, 7, 15000},
                     {Skill.KAMEJOKO, 7, 1000},
+                    {Skill.GALICK, 7, 500},
             },//skill
             new String[]{}, //text chat 1
             new String[]{"|-1|Oải rồi hả?", "|-1|Ê cố lên nhóc",
@@ -913,8 +908,8 @@ public class BossesData {
             new int[]{400000000}, //hp
             new int[]{19}, //map join
             new int[][]{
-                    {Skill.GALICK, 7, 10000},
-                    {Skill.KAMEJOKO, 7, 10000},
+                    {Skill.GALICK, 7, 500},
+                    {Skill.ANTOMIC, 7, 1000},
                     {Skill.BIEN_KHI, 1, 600000},
             },//skill//skill
             new String[]{}, //text chat 1
@@ -935,9 +930,9 @@ public class BossesData {
             new int[]{500000000}, //hp
             new int[]{19}, //map join
             new int[][]{
-                     
-                    {Skill.MASENKO, 7, 1000},
-                    {Skill.ANTOMIC, 7, 10000},
+                    {Skill.MASENKO, 7, 600},
+                    {Skill.ANTOMIC, 7, 1000},
+                    {Skill.LIEN_HOAN, 7, 200},
             },//skill//skill
             new String[]{}, //text chat 1
             new String[]{"|-1|Oải rồi hả?", "|-1|Ê cố lên nhóc",
@@ -958,8 +953,9 @@ public class BossesData {
             new int[]{19},
 //            new int[]{14},
             new int[][]{
-                   
-                    {Skill.DRAGON, 7, 1000},
+                    {Skill.DRAGON, 7, 500},
+                    {Skill.MASENKO, 7, 400},
+                    {Skill.ANTOMIC, 7, 1000},
                     {Skill.DICH_CHUYEN_TUC_THOI, 7, 30000},
             }, //skill//skill
             new String[]{"|-2|Á đù, Doraemon !!!!!"}, //text chat 1
@@ -975,13 +971,13 @@ public class BossesData {
 
     //**************************************************************************
     public static final BossData BLACK_GOKU_BASE = new BossData(
-            "Black Goku", //name
+            "Black Goku Rose", //name
             ConstPlayer.TRAI_DAT, //gender
             new short[]{550, 880, 881, -1, -1, -1}, //outfit {head, body, leg, bag, aura, eff}
             20000, //dame
-            new int[]{700000000}, //hp
+            new int[]{700_000_000}, //hp
             new int[]{0, 1, 2, 3, 4, 5, 6, 27, 28, 29}, //map join
-            (int[][]) Util.addArray(FULL_GALICK, FULL_KAMEJOKO,FULL_LIENHOAN), //skill
+            (int[][]) Util.addArray(FULL_GALICK, FULL_KAMEJOKO, FULL_LIENHOAN), //skill
             new String[]{"|-1|Ta là Sôn Gô Ku",
                     "|-1|Cơ thể này,sức mạnh này",
                     "|-1|Ta khá thích việc loại bỏ các ngươi",
@@ -1005,7 +1001,7 @@ public class BossesData {
             new short[]{550, 880, 881, -1, -1, -1}, //outfit {head, body, leg, bag, aura, eff}
             20000, //dame
             new int[]{977000000}, //hp
-            new int[]{102, 92, 93, 94, 96, 97, 98, 99, 100}, //map join
+            new int[]{92, 93, 94, 96, 97, 98, 99}, //map join
             (int[][]) Util.addArray(FULL_GALICK, FULL_KAMEJOKO), //skill
             new String[]{"|-1|Ta là Sôn Gô Ku",
                     "|-1|Cơ thể này,sức mạnh này",
@@ -1021,7 +1017,7 @@ public class BossesData {
                     "|-1|Được thôi, nếu muốn chết đến vậy, ta rất vui lòng!!"
             }, //text chat 2
             new String[]{"|-1|Biến hình! Super Sayan Rose"}, //text chat 3
-            REST_15_M //second rest
+            REST_10_M //second rest
     );
 
     public static final BossData SUPER_BLACK_GOKU = new BossData(
@@ -1030,12 +1026,13 @@ public class BossesData {
             new short[]{553, 880, 881, -1, -1, -1}, //outfit {head, body, leg, bag, aura, eff}
             20000, //dame
             new int[]{1000000000}, //hp
-            new int[]{102, 92, 93, 94, 96, 97, 98, 99, 100}, //map join
+            new int[]{ 92, 93, 94, 96, 97, 98, 99}, //map join
             new int[][]{
-                 {Skill.THAI_DUONG_HA_SAN, 7, 700},
-                    {Skill.DICH_CHUYEN_TUC_THOI, 7, 7000},
+                    {Skill.TAI_TAO_NANG_LUONG, 7, 38000},
+                    {Skill.THAI_DUONG_HA_SAN, 1, 25000},
+                    {Skill.DICH_CHUYEN_TUC_THOI, 7, 15000},
                     {Skill.KAMEJOKO, 7, 1000},
-                    {Skill.LIEN_HOAN, 7, 7000}},
+                    {Skill.LIEN_HOAN, 7, 700}},
             //skill
             new String[]{}, //text chat 1
             new String[]{"|-1|Ta chính là người mang thân thể của Songoku",
@@ -1047,6 +1044,7 @@ public class BossesData {
 
             new String[]{"|-1|Chúng ta sẽ gặp lại nhau sớm thôi",
                     "|-2|Ngươi nói gì chứ?"}, //text chat 3
+            REST_10_M,
             TypeAppear.ANOTHER_LEVEL //type appear
     );
 
@@ -1056,14 +1054,15 @@ public class BossesData {
             ConstPlayer.TRAI_DAT, //gender
             new short[]{553, 880, 881, -1, -1, -1}, //outfit {head, body, leg, bag, aura, eff}
             20000, //dame
-            new int[]{2000000000}, //hp
-            new int[]{102, 92, 93, 94, 96, 97, 98, 99, 100}, //map join
+            new int[]{2_000_000_000}, //hp
+            new int[]{92, 93, 94, 96, 97, 98, 99}, //map join
 //            new int[]{14}, //map join
             new int[][]{
-                    {Skill.KHIEN_NANG_LUONG, 7, 500},
-                    {Skill.DICH_CHUYEN_TUC_THOI, 7, 7000},
+                    {Skill.DICH_CHUYEN_TUC_THOI, 7, 15000},
+                    {Skill.DEMON, 7, 300},
+                    {Skill.LIEN_HOAN, 7, 350},
                     {Skill.KAMEJOKO, 7, 1000},
-                    {Skill.ANTOMIC, 7, 7000}},
+                    {Skill.ANTOMIC, 7, 900}},
             //skill
             new String[]{}, //text chat 1
             new String[]{"|-1|Ta chính là người mang thân thể của Songoku",
@@ -1084,15 +1083,14 @@ public class BossesData {
             ConstPlayer.TRAI_DAT, //gender
             new short[]{433, 904, 905, -1, -1, -1}, //outfit {head, body, leg, bag, aura, eff}
             20000, //dame
-            new int[]{400000000}, //hp
+            new int[]{400_000_000}, //hp
             new int[]{102, 92, 93, 94, 96, 97, 98, 99, 100}, //map join
 //            new int[]{14}, //map join
 
             new int[][]{
-                    {Skill.GALICK, 7, 1000},
-                    {Skill.DICH_CHUYEN_TUC_THOI, 7, 7000},
-                    {Skill.TAI_TAO_NANG_LUONG, 4, 500},
-                    {Skill.KAMEJOKO, 7, 3000}}, //skill
+                    {Skill.GALICK, 7, 500},
+                    {Skill.DICH_CHUYEN_TUC_THOI, 7, 20000},
+                    {Skill.KAMEJOKO, 7, 1000}}, //skill
             new String[]{"|-1|Kia là một con người sao?",
                     "|-3|Ủa tên kia là ai vậy?",
                     "|-2|Lẽ nào đúng như chúng ta đã nghĩ",
@@ -1116,19 +1114,20 @@ public class BossesData {
                     "|-1|Bông tai Porata!"}, //text chat 3
             TypeAppear.APPEAR_WITH_ANOTHER
     );
+
     //-------------------------------------------------------------------
     public static final BossData THANZM2 = new BossData(
             "Thần Zamas Tối Thượng", //name
             ConstPlayer.TRAI_DAT, //gender
             new short[]{903, 904, 905, -1, -1, -1}, //outfit {head, body, leg, bag, aura, eff}
             25000, //dame
-            new int[]{1200000000}, //hp
+            new int[]{1_200_000_000}, //hp
             new int[]{102, 92, 93, 94, 96, 97, 98, 99, 100}, //map join
             new int[][]{
-                    {Skill.DICH_CHUYEN_TUC_THOI, 7, 5000},
-                    {Skill.KAMEJOKO, 5, 3000},
-                    {Skill.TAI_TAO_NANG_LUONG, 1, 3000},
-                    {Skill.QUA_CAU_KENH_KHI, 7, 12000}},
+                    {Skill.DICH_CHUYEN_TUC_THOI, 7, 20000},
+                    {Skill.KAMEJOKO, 5, 1000},
+                    {Skill.TAI_TAO_NANG_LUONG, 1, 53000},
+                    },
             //skill
             new String[]{}, //text chat 1
             new String[]{"|-1|Ta chính là thế giới",
@@ -1138,7 +1137,7 @@ public class BossesData {
                     "|-1|Ta sẽ đem công lí tới toàn bộ vũ trụ này", "|-2|Ngươi cứ lải nhải hoài 2 chữ công lí vậy?", "|-1|Lũ các ngươi làm ta thấy đau rồi ấy haha"
             }, //text chat 2
             new String[]{}, //text chat 3
-            REST_15_M
+            REST_20_M
     );
 
     //**************************************************************************
@@ -1149,13 +1148,12 @@ public class BossesData {
             ConstPlayer.XAYDA,
             new short[]{297, 298, 299, -1, -1, -1},
             10000,
-            new int[]{200000000},
+            new int[]{200_000_000},
             new int[]{128},
             new int[][]{
-                    {Skill.KAMEJOKO, 3, 5000},
+                    {Skill.KAMEJOKO, 3, 2000},
                     {Skill.LIEN_HOAN, 7, 100},
-                    {Skill.KHIEN_NANG_LUONG, 7, 1000},
-                    {Skill.SOCOLA, 7, 1000}},
+                    {Skill.SOCOLA, 7, 4000}},
             new String[]{"|-2|Tôi Năm nay 70 tuổi rồi chưa gặp trường hợp nào..."}, //text chat 1
             new String[]{"|-1|Địt mẹ thằng ranh con này!"}, //text chat 2
             new String[]{"|-1|Nhớ mặt tao đấy",
@@ -1168,12 +1166,13 @@ public class BossesData {
             "Broly Base", //name
             ConstPlayer.XAYDA, //gender
             new short[]{1080, 1084, 1085, -1, -1, -1}, //outfit {head, body, leg, bag, aura, eff}
-            12000, //dame
-            new int[]{500000000}, //hp
+            25000, //dame
+            new int[]{200_000_000}, //hp
             new int[]{5}, //map join
             new int[][]{
-                    {Skill.KHIEN_NANG_LUONG, 7, 1000},
-                    {Skill.ANTOMIC, 7, 500}}, //skill
+                    {Skill.GALICK, 7, 500},
+                    {Skill.TAI_TAO_NANG_LUONG, 1, 23000},
+                    {Skill.ANTOMIC, 7, 800}}, //skill
             new String[]{
                     "|-1|Tuy không biết các ngươi là ai, nhưng ta rất ấn tượng đấy!",
                     "|-2|Tới đây đi!"
@@ -1191,12 +1190,13 @@ public class BossesData {
             "Super Broly", //name
             ConstPlayer.XAYDA, //gender
             new short[]{1083, 1084, 1085, -1, -1, -1}, //outfit {head, body, leg, bag, aura, eff}
-            15000, //dame
-            new int[]{150000000}, //hp
+            30000, //dame
+            new int[]{350_000_000}, //hp
             new int[]{5}, //map join
             new int[][]{
-                    {Skill.THAI_DUONG_HA_SAN, 5, 500},
-                    {Skill.ANTOMIC, 3, 1000}}, //skill
+                    {Skill.GALICK, 7, 500},
+                    {Skill.TAI_TAO_NANG_LUONG, 1, 23000},
+                    {Skill.ANTOMIC, 7, 800}}, //skill
             new String[]{
                     "|-1|Gaaaaaa",
                     "|-2|Tới đây đi!"
@@ -1214,11 +1214,14 @@ public class BossesData {
             "Super Sayan Huyền Thoại", //name
             ConstPlayer.XAYDA, //gender
             new short[]{294, 295, 1085, -1, -1, -1}, //outfit {head, body, leg, bag, aura, eff}
-            20000, //dame
-            new int[]{150000000}, //hp
+            35000, //dame
+            new int[]{500_000_000}, //hp
             new int[]{5}, //map join
             new int[][]{
-                    {Skill.DICH_CHUYEN_TUC_THOI, 7, 1000},
+                    {Skill.GALICK, 7, 500},
+                    {Skill.DICH_CHUYEN_TUC_THOI, 7, 12000},
+                    {Skill.TAI_TAO_NANG_LUONG, 1, 23000},
+                    {Skill.ANTOMIC, 7, 800},
                     {Skill.KAMEJOKO, 7, 1000}}, //skill
             new String[]{
                     "|-1|Tuy không biết các ngươi là ai, nhưng ta rất ấn tượng đấy!",
@@ -1238,14 +1241,13 @@ public class BossesData {
             ConstPlayer.XAYDA, //gender
             new short[]{390, 295, 296, -1, -1, -1}, //outfit {head, body, leg, bag, aura, eff}
             30000, //dame
-            new int[]{500000000}, //hp
+            new int[]{700_000_000}, //hp
             new int[]{5}, //map join
             new int[][]{
-                 {Skill.SOCOLA, 7, 6000},
-                  {Skill.DE_TRUNG, 7, 3000},
-                     {Skill.TROI, 7, 1000},
-                    {Skill.DICH_CHUYEN_TUC_THOI, 7, 3000},
-                    {Skill.LIEN_HOAN, 7, 100},
+                    {Skill.SOCOLA, 7, 6000},
+                    {Skill.DE_TRUNG, 7, 30000},
+                    {Skill.DICH_CHUYEN_TUC_THOI, 7, 20000},
+                    {Skill.LIEN_HOAN, 7, 300},
                     {Skill.KAMEJOKO, 7, 1000}}, //skill
             new String[]{
                     "|-1|Tuy không biết các ngươi là ai, nhưng ta rất ấn tượng đấy!",
@@ -1267,11 +1269,12 @@ public class BossesData {
             ConstPlayer.NAMEC, //gender
             new short[]{838, 839, 840, -1, -1, -1}, //outfit {head, body, leg, bag, aura, eff}
             5000, //dame
-            new int[]{50000000}, //hp
+            new int[]{500_000_000}, //hp
             new int[]{111, 174, 176}, //map join
             new int[][]{
-                    {Skill.KHIEN_NANG_LUONG, 7, 300},
-                    {Skill.DICH_CHUYEN_TUC_THOI, 7, 2000},},//skill
+                    {Skill.LIEN_HOAN, 7, 500},
+                    {Skill.DICH_CHUYEN_TUC_THOI, 7, 20000},
+                    {Skill.KAMEJOKO, 7, 1500}},//skill
             new String[]{"|-2|Kia là ai thế",
                     "|-1|Xin chào! Chúng tôi tới đây để tìm người!",
                     "|-1|Ngài Berrus! Có vẻ hắn ta không có ở đây",
@@ -1304,7 +1307,8 @@ public class BossesData {
             new int[]{111, 174, 176}, //map join
             new int[][]{
                     {Skill.MASENKO, 7, 200},
-                    {Skill.LIEN_HOAN, 7, 300},},//skill//skill
+                    {Skill.LIEN_HOAN, 7, 300},
+                    {Skill.KAMEJOKO, 7, 800}},//skill//skill
             new String[]{}, //text chat 1
             new String[]{"|-1|Các ngươi thật là yếu ớt",
                     "|-1|Ta sẽ phá hủy hành tinh này",
@@ -1319,11 +1323,12 @@ public class BossesData {
             ConstPlayer.NAMEC, //gender
             new short[]{530, 531, 532, -1, -1, -1}, //outfit {head, body, leg, bag, aura, eff}
             5000, //dame
-            new int[]{500000000}, //hp
+            new int[]{500_000_000}, //hp
             new int[]{111, 174, 176}, //map join
             new int[][]{
-                    {Skill.KHIEN_NANG_LUONG, 7, 500},
-                    {Skill.DICH_CHUYEN_TUC_THOI, 7, 1000},},//skill
+                    {Skill.LIEN_HOAN, 7, 500},
+                    {Skill.DICH_CHUYEN_TUC_THOI, 7, 20000},
+                    {Skill.KAMEJOKO, 7, 1500}},//skill
             new String[]{"|-2|Kia là ai thế",
                     "|-1|Ta là Vados",
                     "|-1|Ta tới đây để kiếm một thứ",
@@ -1350,8 +1355,9 @@ public class BossesData {
             new int[]{1000000000}, //hp
             new int[]{111, 174, 176}, //map join
             new int[][]{
-                    {Skill.MASENKO, 3, 1000},
-                    {Skill.LIEN_HOAN, 7, 3000},},//skill//skill
+                    {Skill.MASENKO, 7, 200},
+                    {Skill.LIEN_HOAN, 7, 300},
+                    {Skill.KAMEJOKO, 7, 800}},//skill//skill
             new String[]{"|-1|Các ngươi có biết",
                     "|-1|Ngọc Rồng Siêu Cấp đang ở đâu hay không?",
                     "|-2|Ai mà biết được",}, //text chat 1
@@ -1370,13 +1376,14 @@ public class BossesData {
             ConstPlayer.XAYDA, //gender
             new short[]{543, 57, 999, -1, -1, -1}, //outfit {head, body, leg, bag, aura, eff}
             20000, //dame
-            new int[]{1000000000}, //hp
+            new int[]{1_000_000_000}, //hp
             new int[]{155}, //map join
             new int[][]{
-                    {Skill.THAI_DUONG_HA_SAN, 7, 900},
-                    {Skill.DICH_CHUYEN_TUC_THOI, 7, 1000},
-                    {Skill.KAMEJOKO, 7, 10000},
-                    {Skill.LIEN_HOAN, 7, 1000}},
+                    {Skill.THAI_DUONG_HA_SAN, 3, 29000},
+                    {Skill.DICH_CHUYEN_TUC_THOI, 7, 20000},
+                    {Skill.KAMEJOKO, 7, 1000},
+                    {Skill.GALICK, 7, 500},
+                    {Skill.BIEN_KHI, 7, 50000}},
             new String[]{"|-1|Ta bị sao thế này !",
                     "|-2|Chú Goku",
                     "|-2|Đó không còn là chú Goku nữa rồi",
@@ -1449,7 +1456,7 @@ public class BossesData {
             new int[]{200000000}, //hp
             new int[]{87}, //map join
             new int[][]{
-                    {Skill.THOI_MIEN, 4, 1000},
+                    {Skill.THOI_MIEN, 4, 10000},
                     {Skill.THAI_DUONG_HA_SAN, 3, 500},
                     {Skill.DICH_CHUYEN_TUC_THOI, 7, 10000}}, //skill
             new String[]{"|-1|Gaaaaaa !!!!!!!!",
@@ -1474,7 +1481,6 @@ public class BossesData {
             new int[]{88}, //map join
             new int[][]{
                     {Skill.LIEN_HOAN, 7, 1000},
-                    {Skill.TROI, 7, 1000},
                     {Skill.KAMEJOKO, 5, 10000}}, //skill
             new String[]{"|-1|Gaaaaaa !!!!!!!!",
                     "|-2|Tên kia là ai vậy",
@@ -1558,12 +1564,10 @@ public class BossesData {
             ConstPlayer.XAYDA,
             new short[]{297, 298, 299, -1, -1, -1},
             20000,
-            new int[]{50000000},
+            new int[]{500_000_000},
             new int[]{120},
             new int[][]{
-
-                    {Skill.KHIEN_NANG_LUONG, 7, 700},
-                    {Skill.THAI_DUONG_HA_SAN, 7, 500},
+                    {Skill.THAI_DUONG_HA_SAN, 1, 500},
                     {Skill.DICH_CHUYEN_TUC_THOI, 7, 10000},
                     {Skill.DE_TRUNG, 7, 1000},
                     {Skill.KAMEJOKO, 7, 100}},
@@ -1578,10 +1582,10 @@ public class BossesData {
             ConstPlayer.XAYDA,
             new short[]{418, 419, 420, -1, -1, -1},
             10000,
-            new int[]{50000000},
+            new int[]{50_000_000},
             new int[]{114},
             new int[][]{
-                {Skill.LIEN_HOAN, 7, 1000},
+                    {Skill.LIEN_HOAN, 7, 1000},
                     {Skill.DEMON, 7, 1000}},
             new String[]{"|-2|Ma nhân Bư đã xuất hiện rồi"}, //text chat 1
             new String[]{"|-1|Thấy ảo chưa nè!"}, //text chat 2
@@ -1590,14 +1594,14 @@ public class BossesData {
             REST_5_M
     );
     public static final BossData DRABURA_2 = new BossData(
-            "Ma Vương Dabura",
+            "Ma Vương Dabura 2",
             ConstPlayer.XAYDA,
             new short[]{418, 419, 420, -1, -1, -1},
             5000,
             new int[]{50000000},
             new int[]{115},
             new int[][]{
-                {Skill.LIEN_HOAN, 7, 1000},
+                    {Skill.LIEN_HOAN, 7, 1000},
                     {Skill.DEMON, 7, 5000}},
             new String[]{"|-2|Ma nhân Bư đã xuất hiện rồi"}, //text chat 1
             new String[]{"|-1|Thấy ảo chưa nè!"}, //text chat 2
@@ -1613,7 +1617,7 @@ public class BossesData {
             new int[]{50000000},
             new int[]{117},
             new int[][]{
-                {Skill.LIEN_HOAN, 7, 1000},
+                    {Skill.LIEN_HOAN, 7, 1000},
                     {Skill.DEMON, 7, 5000}},
             new String[]{"|-2|Ma nhân Bư đã xuất hiện rồi"}, //text chat 1
             new String[]{"|-1|Thấy ảo chưa nè!"}, //text chat 2
@@ -1623,14 +1627,14 @@ public class BossesData {
     );
 
     public static final BossData BUI_BUI_2 = new BossData(
-            "Bui Bui",
+            "Bui Bui 2",
             ConstPlayer.XAYDA,
             new short[]{451, 452, 453, -1, -1, -1},
             15000,
             new int[]{50000000},
             new int[]{118},
             new int[][]{
-                  {Skill.LIEN_HOAN, 7, 1000},
+                    {Skill.LIEN_HOAN, 7, 1000},
                     {Skill.DEMON, 7, 10000}},
             new String[]{"|-2|Ma nhân Bư đã xuất hiện rồi"}, //text chat 1
             new String[]{"|-1|Thấy ảo chưa nè!"}, //text chat 2
@@ -1659,12 +1663,12 @@ public class BossesData {
             "Cooler", //name
             ConstPlayer.TRAI_DAT, //gender
             new short[]{508, 509, 510, -1, -1, -1}, //outfit {head, body, leg, bag, aura, eff}
-            10000, //dame
-            new int[]{10000000}, //hp
+            15000, //dame
+            new int[]{10_000_000}, //hp
             new int[]{14}, //map join
             new int[][]{
-                {Skill.DICH_CHUYEN_TUC_THOI, 7, 10000},
-                   {Skill.DE_TRUNG, 7, 1000},
+                    {Skill.DICH_CHUYEN_TUC_THOI, 7, 10000},
+                    {Skill.DE_TRUNG, 7, 1000},
                     {Skill.LIEN_HOAN, 1, 400},
                     {Skill.MASENKO, 2, 300},},//skill//skill
             new String[]{}, //text chat 1
@@ -1681,11 +1685,10 @@ public class BossesData {
             ConstPlayer.TRAI_DAT, //gender
             new short[]{508, 509, 510, -1, -1, -1}, //outfit {head, body, leg, bag, aura, eff}
             10000, //dame
-            new int[]{15000000}, //hp
+            new int[]{150_000_000}, //hp
             new int[]{14}, //map join
             new int[][]{
-                {Skill.DE_TRUNG, 7, 1000},
-                {Skill.KHIEN_NANG_LUONG, 7, 100000},
+                    {Skill.DE_TRUNG, 7, 1000},
                     {Skill.KAMEJOKO, 1, 400},
                     {Skill.LIEN_HOAN, 2, 300},},//skill//skill
             new String[]{}, //text chat 1
@@ -1697,54 +1700,52 @@ public class BossesData {
             new String[]{"|-1|Đen lắm em trai !"}, //text chat 3
             TypeAppear.APPEAR_WITH_ANOTHER
     );
- public static final BossData SUPER_ANDROID_17 = new BossData(
-            "Super Ids", //name
+    public static final BossData SUPER_ANDROID_17 = new BossData(
+            "Super Pic", //name
             ConstPlayer.TRAI_DAT, //gender
             new short[]{636, 637, 638, -1, -1, -1}, //outfit {head, body, leg, bag, aura, eff}
             20000, //dame
-            new int[]{500000000}, //hp
-            new int[]{98,99,100,96,92,93}, //map join
+            new int[]{500_000_000}, //hp
+            new int[]{98, 99, 100, 96, 92, 93}, //map join
             new int[][]{
-                {Skill.LIEN_HOAN, 1, 300},{Skill.LIEN_HOAN, 2, 400},{Skill.LIEN_HOAN, 3, 500},{Skill.LIEN_HOAN, 4, 600},{Skill.LIEN_HOAN, 5, 700},{Skill.LIEN_HOAN, 6, 800},{Skill.LIEN_HOAN, 7, 900},
-                {Skill.KAMEJOKO, 7, 600}, {Skill.KAMEJOKO, 6, 700}, {Skill.KAMEJOKO, 5, 800}, {Skill.KAMEJOKO, 4, 900}, {Skill.KAMEJOKO, 3, 1000}, {Skill.KAMEJOKO, 2, 1100},{Skill.KAMEJOKO, 1, 1002},
-              {Skill.ANTOMIC, 1, 130},  {Skill.ANTOMIC, 2, 140},  {Skill.ANTOMIC, 3, 150},{Skill.ANTOMIC, 4, 160},  {Skill.ANTOMIC, 5, 170},{Skill.ANTOMIC, 6, 190},  {Skill.ANTOMIC, 7, 200},
-                {Skill.MASENKO, 1, 210}, {Skill.MASENKO, 5, 220}, {Skill.MASENKO, 6, 230},
-                {Skill.TAI_TAO_NANG_LUONG, 1, 200}, {Skill.TAI_TAO_NANG_LUONG, 3, 500}, {Skill.TAI_TAO_NANG_LUONG, 7, 700},
-            {Skill.KHIEN_NANG_LUONG, 7, 500},},//skill//skill
+                    {Skill.LIEN_HOAN, 1, 300}, {Skill.LIEN_HOAN, 2, 400}, {Skill.LIEN_HOAN, 3, 500}, {Skill.LIEN_HOAN, 4, 600}, {Skill.LIEN_HOAN, 5, 700}, {Skill.LIEN_HOAN, 6, 800}, {Skill.LIEN_HOAN, 7, 900},
+                    {Skill.KAMEJOKO, 7, 600}, {Skill.KAMEJOKO, 6, 700}, {Skill.KAMEJOKO, 5, 800}, {Skill.KAMEJOKO, 4, 900}, {Skill.KAMEJOKO, 3, 1000}, {Skill.KAMEJOKO, 2, 1100}, {Skill.KAMEJOKO, 1, 1002},
+                    {Skill.ANTOMIC, 1, 130}, {Skill.ANTOMIC, 2, 140}, {Skill.ANTOMIC, 3, 150}, {Skill.ANTOMIC, 4, 160}, {Skill.ANTOMIC, 5, 170}, {Skill.ANTOMIC, 6, 190}, {Skill.ANTOMIC, 7, 200},
+                    {Skill.MASENKO, 1, 210}, {Skill.MASENKO, 5, 220}, {Skill.MASENKO, 6, 230},
+                    },//skill//skill
             new String[]{}, //text chat 1
             new String[]{}, //text chat 2
             new String[]{}, //text chat 3
-            REST_10_M
+            REST_20_M
     );
-     public static final BossData SUPER_XEN = new BossData(
-            "Super Xên Ids", //name
+    public static final BossData SUPER_XEN = new BossData(
+            "Super Xên", //name
             ConstPlayer.TRAI_DAT, //gender
             new short[]{2000, 2001, 2002, -1, -1, -1}, //outfit {head, body, leg, bag, aura, eff}
             0000, //dame
-            new int[]{1000000000}, //hp
+            new int[]{1_000_000_000}, //hp
             new int[]{103}, //map join
             new int[][]{
-                {Skill.LIEN_HOAN, 1, 300},{Skill.LIEN_HOAN, 2, 400},{Skill.LIEN_HOAN, 3, 500},{Skill.LIEN_HOAN, 4, 600},{Skill.LIEN_HOAN, 5, 700},{Skill.LIEN_HOAN, 6, 800},{Skill.LIEN_HOAN, 7, 900},
-                {Skill.KAMEJOKO, 7, 600}, {Skill.KAMEJOKO, 6, 700}, {Skill.KAMEJOKO, 5, 800}, {Skill.KAMEJOKO, 4, 900}, {Skill.KAMEJOKO, 3, 1000}, {Skill.KAMEJOKO, 2, 1100},{Skill.KAMEJOKO, 1, 1002},
-              {Skill.ANTOMIC, 1, 130},  {Skill.ANTOMIC, 2, 140},  {Skill.ANTOMIC, 3, 150},{Skill.ANTOMIC, 4, 160},  {Skill.ANTOMIC, 5, 170},{Skill.ANTOMIC, 6, 190},  {Skill.ANTOMIC, 7, 200},
-                {Skill.MASENKO, 1, 210}, {Skill.MASENKO, 5, 220}, {Skill.MASENKO, 6, 230},
-                {Skill.TAI_TAO_NANG_LUONG, 1, 200}, {Skill.TAI_TAO_NANG_LUONG, 3, 500}, {Skill.TAI_TAO_NANG_LUONG, 7, 700},
-            {Skill.KHIEN_NANG_LUONG, 7, 800},},//skill//skill
+                    {Skill.LIEN_HOAN, 1, 300}, {Skill.LIEN_HOAN, 2, 400}, {Skill.LIEN_HOAN, 3, 500}, {Skill.LIEN_HOAN, 4, 600}, {Skill.LIEN_HOAN, 5, 700}, {Skill.LIEN_HOAN, 6, 800}, {Skill.LIEN_HOAN, 7, 900},
+                    {Skill.KAMEJOKO, 7, 600}, {Skill.KAMEJOKO, 6, 700}, {Skill.KAMEJOKO, 5, 800}, {Skill.KAMEJOKO, 4, 900}, {Skill.KAMEJOKO, 3, 1000}, {Skill.KAMEJOKO, 2, 1100}, {Skill.KAMEJOKO, 1, 1002},
+                    {Skill.ANTOMIC, 1, 130}, {Skill.ANTOMIC, 2, 140}, {Skill.ANTOMIC, 3, 150}, {Skill.ANTOMIC, 4, 160}, {Skill.ANTOMIC, 5, 170}, {Skill.ANTOMIC, 6, 190}, {Skill.ANTOMIC, 7, 200},
+                    {Skill.MASENKO, 1, 210}, {Skill.MASENKO, 5, 220}, {Skill.MASENKO, 6, 230},
+                    },//skill//skill
             new String[]{}, //text chat 1
             new String[]{}, //text chat 2
             new String[]{}, //text chat 3
             REST_15_M
     );
-      public static final BossData KAMIRIN = new BossData(
+    public static final BossData KAMIRIN = new BossData(
             "Touchi", //name
             ConstPlayer.TRAI_DAT, //gender
             new short[]{356, 357, 358, -1, -1, -1}, //outfit {head, body, leg, bag, aura, eff}
             20000, //dame
-            new int[]{50000000}, //hp
+            new int[]{50_000_000}, //hp
             new int[]{38}, //map join
-     
-            (int[][]) Util.addArray(FULL_GALICK, FULL_KAMEJOKO,FULL_LIENHOAN,FULL_ANTOMIC,FULL_DEMON,FULL_MASENKO,FULL_DRAGON), //skill
-             new String[]{"|-1|Sôn..gôku",
+
+            (int[][]) Util.addArray(FULL_GALICK, FULL_KAMEJOKO, FULL_LIENHOAN, FULL_ANTOMIC, FULL_DEMON, FULL_MASENKO, FULL_DRAGON), //skill
+            new String[]{"|-1|Sôn..gôku",
                     "|-2|Lại là Soome à.. rốt cuộc ông ta đã tạo ra bao nhiêu Anhrin nhân tạo thế nhỉ?",
                     "|-1|Bọn ta là rôbốt sát thủ, sinh ra từ máy tính ngài Soome,..",
                     "|-1|..cho một mục tiêu duy nhất là giết Sôngôku!",
@@ -1764,19 +1765,19 @@ public class BossesData {
     );
 
     public static final BossData KAMILOC = new BossData(
-            "LiuLiu", //name
+            "Liu Liu", //name
             ConstPlayer.TRAI_DAT, //gender
             new short[]{397, 398, 399, -1, -1, -1}, //outfit {head, body, leg, bag, aura, eff}
             25000, //dame
             new int[]{1500000000}, //hp
             new int[]{38}, //map join
             new int[][]{
-                    {Skill.TAI_TAO_NANG_LUONG, 7, 300},
-                    {Skill.DICH_CHUYEN_TUC_THOI, 7, 1000},
+                    {Skill.TAI_TAO_NANG_LUONG, 7, 3000},
+                    {Skill.DICH_CHUYEN_TUC_THOI, 7, 10000},
                     {Skill.DE_TRUNG, 7, 1000},
-                    {Skill.THAI_DUONG_HA_SAN, 7, 500},
+                    {Skill.THAI_DUONG_HA_SAN, 1, 5000},
                     {Skill.LIEN_HOAN, 7, 100},},//skill
-             new String[]{"|-2|Các ngươi là ai?",
+            new String[]{"|-2|Các ngươi là ai?",
                     "|-2|Ta không thể cảm nhận được khí của các ngươi, các ngươi không phải là con người đúng chứ?",
                     "|-2|Ta hiểu rồi, các ngươi là rôbốt sát thủ do tiến sĩ Kôrê tạo ra chứ gì?"
             }, //text chat 1
@@ -1791,64 +1792,58 @@ public class BossesData {
             ConstPlayer.TRAI_DAT, //gender
             new short[]{409, 410, 411, -1, -1, -1}, //outfit {head, body, leg, bag, aura, eff}
             10000, //dame
-            new int[]{2000000000}, //hp
+            new int[]{2_000_000_000}, //hp
             new int[]{38}, //map join
             new int[][]{
-                {Skill.LIEN_HOAN, 1, 300},{Skill.LIEN_HOAN, 2, 400},{Skill.LIEN_HOAN, 3, 500},{Skill.LIEN_HOAN, 4, 600},{Skill.LIEN_HOAN, 5, 700},{Skill.LIEN_HOAN, 6, 800},{Skill.LIEN_HOAN, 7, 900},
-                {Skill.KAMEJOKO, 7, 600}, {Skill.KAMEJOKO, 6, 700}, {Skill.KAMEJOKO, 5, 800}, {Skill.KAMEJOKO, 4, 900}, {Skill.KAMEJOKO, 3, 1000}, {Skill.KAMEJOKO, 2, 1100},{Skill.KAMEJOKO, 1, 1002},
-              {Skill.ANTOMIC, 1, 130},  {Skill.ANTOMIC, 2, 140},  {Skill.ANTOMIC, 3, 150},{Skill.ANTOMIC, 4, 160},  {Skill.ANTOMIC, 5, 170},{Skill.ANTOMIC, 6, 190},  {Skill.ANTOMIC, 7, 200},
-                {Skill.MASENKO, 1, 210}, {Skill.MASENKO, 5, 220}, {Skill.MASENKO, 6, 230},
-                {Skill.TAI_TAO_NANG_LUONG, 1, 200}, {Skill.TAI_TAO_NANG_LUONG, 3, 500}, {Skill.TAI_TAO_NANG_LUONG, 7, 700},
-            {Skill.KHIEN_NANG_LUONG, 7, 900},},//skill//skill
-             new String[]{}, //text chat 1
+                    {Skill.LIEN_HOAN, 1, 300}, {Skill.LIEN_HOAN, 2, 400}, {Skill.LIEN_HOAN, 3, 500}, {Skill.LIEN_HOAN, 4, 600}, {Skill.LIEN_HOAN, 5, 700}, {Skill.LIEN_HOAN, 6, 800}, {Skill.LIEN_HOAN, 7, 900},
+                    {Skill.KAMEJOKO, 7, 600}, {Skill.KAMEJOKO, 6, 700}, {Skill.KAMEJOKO, 5, 800}, {Skill.KAMEJOKO, 4, 900}, {Skill.KAMEJOKO, 3, 1000}, {Skill.KAMEJOKO, 2, 1100}, {Skill.KAMEJOKO, 1, 1002},
+                    {Skill.ANTOMIC, 1, 130}, {Skill.ANTOMIC, 2, 140}, {Skill.ANTOMIC, 3, 150}, {Skill.ANTOMIC, 4, 160}, {Skill.ANTOMIC, 5, 170}, {Skill.ANTOMIC, 6, 190}, {Skill.ANTOMIC, 7, 200},
+                    {Skill.MASENKO, 1, 210}, {Skill.MASENKO, 5, 220}, {Skill.MASENKO, 6, 230},},//skill//skill
+            new String[]{}, //text chat 1
             new String[]{}, //text chat 2
             new String[]{"|-2|Thì ra vẫn chỉ là một đống sắt vụn!"}, //text chat 3
             TypeAppear.APPEAR_WITH_ANOTHER
     );
     public static final BossData CUMBERBLACK = new BossData(
-            "CumBer Ids Black", //name
+            "CumBer Black", //name
             ConstPlayer.TRAI_DAT, //gender
             new short[]{907, 908, 909, -1, -1, -1}, //outfit {head, body, leg, bag, aura, eff}
             25000, //dame
-            new int[]{2000000000}, //hp
-            new int[]{98,99,100,96,92,93}, //map join
+            new int[]{1_500_000_000}, //hp
+            new int[]{98, 99, 100, 96, 92, 93}, //map join
             new int[][]{
-            {Skill.LIEN_HOAN, 1, 300},{Skill.LIEN_HOAN, 2, 400},{Skill.LIEN_HOAN, 3, 500},{Skill.LIEN_HOAN, 4, 600},{Skill.LIEN_HOAN, 5, 700},{Skill.LIEN_HOAN, 6, 800},{Skill.LIEN_HOAN, 7, 900},
-            {Skill.KAMEJOKO, 7, 600}, {Skill.KAMEJOKO, 6, 700}, {Skill.KAMEJOKO, 5, 800}, {Skill.KAMEJOKO, 4, 900}, {Skill.KAMEJOKO, 3, 1000}, {Skill.KAMEJOKO, 2, 1100},{Skill.KAMEJOKO, 1, 1002},
-            {Skill.ANTOMIC, 1, 130},  {Skill.ANTOMIC, 2, 140},  {Skill.ANTOMIC, 3, 150},{Skill.ANTOMIC, 4, 160},  {Skill.ANTOMIC, 5, 170},{Skill.ANTOMIC, 6, 190},  {Skill.ANTOMIC, 7, 200},
-            {Skill.MASENKO, 1, 210}, {Skill.MASENKO, 5, 220}, {Skill.MASENKO, 6, 230},
-            {Skill.DE_TRUNG, 7, 1000},
-             {Skill.DICH_CHUYEN_TUC_THOI, 7, 30000},
-            {Skill.TAI_TAO_NANG_LUONG, 1, 200}, {Skill.TAI_TAO_NANG_LUONG, 3, 500}, {Skill.TAI_TAO_NANG_LUONG, 7, 700},
-            {Skill.KHIEN_NANG_LUONG, 7, 800},},//skill//skill
+                    {Skill.LIEN_HOAN, 1, 300}, {Skill.LIEN_HOAN, 2, 400}, {Skill.LIEN_HOAN, 3, 500}, {Skill.LIEN_HOAN, 4, 600}, {Skill.LIEN_HOAN, 5, 700}, {Skill.LIEN_HOAN, 6, 800}, {Skill.LIEN_HOAN, 7, 900},
+                    {Skill.KAMEJOKO, 7, 600}, {Skill.KAMEJOKO, 6, 700}, {Skill.KAMEJOKO, 5, 800}, {Skill.KAMEJOKO, 4, 900}, {Skill.KAMEJOKO, 3, 1000}, {Skill.KAMEJOKO, 2, 1100}, {Skill.KAMEJOKO, 1, 1002},
+                    {Skill.ANTOMIC, 1, 130}, {Skill.ANTOMIC, 2, 140}, {Skill.ANTOMIC, 3, 150}, {Skill.ANTOMIC, 4, 160}, {Skill.ANTOMIC, 5, 170}, {Skill.ANTOMIC, 6, 190}, {Skill.ANTOMIC, 7, 200},
+                    {Skill.MASENKO, 1, 210}, {Skill.MASENKO, 5, 220}, {Skill.MASENKO, 6, 230},
+                    {Skill.DE_TRUNG, 5, 1000},
+                    {Skill.DICH_CHUYEN_TUC_THOI, 7, 30000},},//skill//skill
             new String[]{}, //text chat 1
             new String[]{}, //text chat 2
             new String[]{}, //text chat 3
             REST_15_M,
             new int[]{BossID.CUMBERYELLOW}
     );
-     public static final BossData CUMBERYELLOW = new BossData(
-            "Mai iu idol IU", //name
+    public static final BossData CUMBERYELLOW = new BossData(
+            "Cumber Yellow", //name
             ConstPlayer.TRAI_DAT, //gender
             new short[]{888, 889, 890, -1, -1, -1}, //outfit {head, body, leg, bag, aura, eff}
             25000, //dame
-            new int[]{2000000000}, //hp
-            new int[]{98,99,100,96,92,93}, //map join
+            new int[]{1_600_000_000}, //hp
+            new int[]{98, 99, 100, 96, 92, 93}, //map join
             new int[][]{
-                {Skill.LIEN_HOAN, 1, 300},{Skill.LIEN_HOAN, 2, 400},{Skill.LIEN_HOAN, 3, 500},{Skill.LIEN_HOAN, 4, 600},{Skill.LIEN_HOAN, 5, 700},{Skill.LIEN_HOAN, 6, 800},{Skill.LIEN_HOAN, 7, 900},
-                {Skill.KAMEJOKO, 7, 600}, {Skill.KAMEJOKO, 6, 700}, {Skill.KAMEJOKO, 5, 800}, {Skill.KAMEJOKO, 4, 900}, {Skill.KAMEJOKO, 3, 1000}, {Skill.KAMEJOKO, 2, 1100},{Skill.KAMEJOKO, 1, 1002},
-              {Skill.ANTOMIC, 1, 130},  {Skill.ANTOMIC, 2, 140},  {Skill.ANTOMIC, 3, 150},{Skill.ANTOMIC, 4, 160},  {Skill.ANTOMIC, 5, 170},{Skill.ANTOMIC, 6, 190},  {Skill.ANTOMIC, 7, 200},
-                {Skill.MASENKO, 1, 210}, {Skill.MASENKO, 5, 220}, {Skill.MASENKO, 6, 230},
-               {Skill.DE_TRUNG, 7, 1000},
-                {Skill.THAI_DUONG_HA_SAN, 5, 500},
-            {Skill.TAI_TAO_NANG_LUONG, 1, 200}, {Skill.TAI_TAO_NANG_LUONG, 3,500}, {Skill.TAI_TAO_NANG_LUONG, 7, 700},
-            {Skill.KHIEN_NANG_LUONG, 7, 900},},//skill//skill
+                    {Skill.LIEN_HOAN, 1, 300}, {Skill.LIEN_HOAN, 2, 400}, {Skill.LIEN_HOAN, 3, 500}, {Skill.LIEN_HOAN, 4, 600}, {Skill.LIEN_HOAN, 5, 700}, {Skill.LIEN_HOAN, 6, 800}, {Skill.LIEN_HOAN, 7, 900},
+                    {Skill.KAMEJOKO, 7, 600}, {Skill.KAMEJOKO, 6, 700}, {Skill.KAMEJOKO, 5, 800}, {Skill.KAMEJOKO, 4, 900}, {Skill.KAMEJOKO, 3, 1000}, {Skill.KAMEJOKO, 2, 1100}, {Skill.KAMEJOKO, 1, 1002},
+                    {Skill.ANTOMIC, 1, 130}, {Skill.ANTOMIC, 2, 140}, {Skill.ANTOMIC, 3, 150}, {Skill.ANTOMIC, 4, 160}, {Skill.ANTOMIC, 5, 170}, {Skill.ANTOMIC, 6, 190}, {Skill.ANTOMIC, 7, 200},
+                    {Skill.MASENKO, 1, 210}, {Skill.MASENKO, 5, 220}, {Skill.MASENKO, 6, 230},
+                    {Skill.DE_TRUNG, 7, 1000},
+                    {Skill.THAI_DUONG_HA_SAN, 5, 30000},},//skill//skill
             new String[]{}, //text chat 1
             new String[]{}, //text chat 2
             new String[]{}, //text chat 3
             TypeAppear.APPEAR_WITH_ANOTHER
     );
-       public static final BossData SOI_HEC_QUYN = BossData.builder()
+    public static final BossData SOI_HEC_QUYN = BossData.builder()
             .name("Sói Hẹc Quyn")
             .gender(ConstPlayer.TRAI_DAT)
             .dame(20000)
@@ -2049,7 +2044,7 @@ public class BossesData {
                     "|-1|Mày nhớ đi mừng cho anh nhé"
             }, //text chat 2
             new String[]{"|-2|Đẹp trai nó phải thế"}, //text chat 3
-            REST_5_M, //second rest
+            REST_10_M, //second rest
             new int[]{BossID.THUY_TINH}
     );
     public static final BossData THUY_TINH = new BossData(
@@ -2076,7 +2071,7 @@ public class BossesData {
             }, //text chat 2
             new String[]{"|-2|thấy anh gắt chưa"}, //text chat 3
 
-              TypeAppear.APPEAR_WITH_ANOTHER //type appear
+            TypeAppear.APPEAR_WITH_ANOTHER //type appear
     );
-     
+
 }

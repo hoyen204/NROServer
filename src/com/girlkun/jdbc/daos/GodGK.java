@@ -52,25 +52,27 @@ import org.json.simple.JSONValue;
 
 
 public class GodGK {
-    public static List<OptionCard> loadOptionCard(JSONArray json){
+    public static List<OptionCard> loadOptionCard(JSONArray json) {
         List<OptionCard> ops = new ArrayList<>();
-        try{
-            for(int i = 0 ; i  < json.size() ;i++){
-                JSONObject ob = (JSONObject)json.get(i);
-                if(ob != null){
-                    ops.add(new OptionCard(Integer.parseInt(ob.get("id").toString()) , Integer.parseInt(ob.get("param").toString()), Byte.parseByte(ob.get("active").toString())));
+        try {
+            for (int i = 0; i < json.size(); i++) {
+                JSONObject ob = (JSONObject) json.get(i);
+                if (ob != null) {
+                    ops.add(new OptionCard(Integer.parseInt(ob.get("id").toString()), Integer.parseInt(ob.get("param").toString()), Byte.parseByte(ob.get("active").toString())));
                 }
             }
-        }catch(Exception e){
+        } catch (Exception e) {
         }
         return ops;
     }
-public static Boolean baotri = false;
+
+    public static Boolean baotri = false;
+
     public static synchronized Player login(MySession session, AntiLogin al) {
         Player player = null;
         GirlkunResultSet rs = null;
         try {
-            rs = GirlkunDB.executeQuery("select * from account where username = ? and password = ?", session.uu,(session.pp));
+            rs = GirlkunDB.executeQuery("select * from account where username = ? and password = ?", session.uu, (session.pp));
             if (rs.first()) {
                 session.userId = rs.getInt("account.id");
                 session.isAdmin = rs.getBoolean("is_admin");
@@ -84,7 +86,7 @@ public static Boolean baotri = false;
                 int secondsPass1 = (int) ((System.currentTimeMillis() - lastTimeLogin) / 1000);
                 long lastTimeLogout = rs.getTimestamp("last_time_logout").getTime();
                 int secondsPass = (int) ((System.currentTimeMillis() - lastTimeLogout) / 1000);
-              
+
 
 //                if (!session.isAdmin) {
 //                    Service.gI().sendThongBaoOK(session, "Chi danh cho admin");
@@ -93,16 +95,20 @@ public static Boolean baotri = false;
 
                 if (rs.getBoolean("ban")) {
                     Service.gI().sendThongBaoOK(session, "Tài khoản đã bị khóa, do liên tục thực hiện hành vi xấu!");
-                }else if (baotri && session.isAdmin){
+                } else if (baotri && !session.isAdmin) {
                     Service.gI().sendThongBaoOK(session, "Máy chủ đang bảo trì, vào con cặc!");
-                } else if (secondsPass1 < Manager.SECOND_WAIT_LOGIN) {
-                    if (secondsPass < secondsPass1) {
-                        Service.gI().sendThongBaoOK(session, "Vui lòng chờ " + (Manager.SECOND_WAIT_LOGIN - secondsPass) + "s");
+                }
+                if (Manager.SECOND_WAIT_LOGIN > 0) {
+                    if (secondsPass1 < Manager.SECOND_WAIT_LOGIN) {
+                        if (secondsPass < secondsPass1) {
+                            Service.gI().sendThongBaoOK(session, "Vui lòng chờ " + (Manager.SECOND_WAIT_LOGIN - secondsPass) + "s");
+                            return null;
+                        }
+                        Service.gI().sendThongBaoOK(session, "Vui lòng chờ " + (Manager.SECOND_WAIT_LOGIN - secondsPass1) + "s");
                         return null;
                     }
-                    Service.gI().sendThongBaoOK(session, "Vui lòng chờ " + (Manager.SECOND_WAIT_LOGIN - secondsPass1) + "s");
-                    return null;
-                } else if (rs.getTimestamp("last_time_login").getTime() > session.lastTimeLogout) {
+                }
+                if (rs.getTimestamp("last_time_login").getTime() > session.lastTimeLogout) {
                     Player plInGame = Client.gI().getPlayerByUser(session.userId);
                     if (plInGame != null) {
                         Client.gI().kickSession(plInGame.getSession());
@@ -113,7 +119,8 @@ public static Boolean baotri = false;
                 } else {
                     if (secondsPass < Manager.SECOND_WAIT_LOGIN) {
                         Service.gI().sendThongBaoOK(session, "Vui lòng chờ " + (Manager.SECOND_WAIT_LOGIN - secondsPass) + "s");
-                    } else {//set time logout trước rồi đọc data player
+                    } else {
+                        //set time logout trước rồi đọc data player
                         rs = GirlkunDB.executeQuery("select * from player where account_id = ? limit 1", session.userId);
                         if (!rs.first()) {
                             Service.gI().switchToCreateChar(session);
@@ -142,7 +149,6 @@ public static Boolean baotri = false;
                             player.haveTennisSpaceShip = rs.getBoolean("have_tennis_space_ship");
                             player.violate = rs.getInt("violate");
                             player.pointPvp = rs.getInt("pointPvp");
-                            player.pointPvp = rs.getInt("NguHanhSonPoint");
                             player.totalPlayerViolate = 0;
                             int clanId = rs.getInt("clan_id_sv" + Manager.SERVER);
                             if (clanId != -1) {
@@ -168,18 +174,18 @@ public static Boolean baotri = false;
                             } else {
                                 player.inventory.coupon = 0;
                             }
-                            if (dataArray.size() >= 5 && false) {
+                            if (dataArray.size() >= 5) {
                                 player.inventory.event = Integer.parseInt(String.valueOf(dataArray.get(4)));
                             } else {
                                 player.inventory.event = 0;
                             }
                             dataArray.clear();
-                            
+
                             // data rada card
                             dataArray = (JSONArray) jv.parse(rs.getString("data_card"));
-                            for(int i = 0 ; i < dataArray.size();i++){
-                                JSONObject obj = (JSONObject)dataArray.get(i);
-                                player.Cards.add(new Card(Short.parseShort(obj.get("id").toString()) ,Byte.parseByte(obj.get("amount").toString()), Byte.parseByte(obj.get("max").toString()) , Byte.parseByte(obj.get("level").toString()) , loadOptionCard((JSONArray)JSONValue.parse(obj.get("option").toString())), Byte.parseByte(obj.get("used").toString())));
+                            for (int i = 0; i < dataArray.size(); i++) {
+                                JSONObject obj = (JSONObject) dataArray.get(i);
+                                player.Cards.add(new Card(Short.parseShort(obj.get("id").toString()), Byte.parseByte(obj.get("amount").toString()), Byte.parseByte(obj.get("max").toString()), Byte.parseByte(obj.get("level").toString()), loadOptionCard((JSONArray) JSONValue.parse(obj.get("option").toString())), Byte.parseByte(obj.get("used").toString())));
                             }
                             dataArray.clear();
 
@@ -402,14 +408,12 @@ public static Boolean baotri = false;
 
                             int timeMeal = Integer.parseInt(String.valueOf(dataArray.get(8)));
                             int iconMeal = Integer.parseInt(String.valueOf(dataArray.get(9)));
-                            
-                            
-                            
-                            
+
+
                             int timeUseTDLT = 0;
                             if (dataArray.size() == 11) {
                                 timeUseTDLT = Integer.parseInt(String.valueOf(dataArray.get(10)));
-                           }
+                            }
 
                             player.itemTime.lastTimeBoHuyet = System.currentTimeMillis() - (ItemTime.TIME_ITEM - timeBoHuyet);
                             player.itemTime.lastTimeBoKhi = System.currentTimeMillis() - (ItemTime.TIME_ITEM - timeBoKhi);
@@ -459,8 +463,8 @@ public static Boolean baotri = false;
                                 player.playerTask.sideTask.level = Integer.parseInt(String.valueOf(dataArray.get(5)));
                                 player.playerTask.sideTask.receivedTime = receivedTime;
                             }
-                            
-                             //                              data item time siêu cấp
+
+                            //                              data item time siêu cấp
                             dataArray = (JSONArray) jv.parse(rs.getString("data_item_time_sieu_cap"));
                             int timeBoHuyetSC = Integer.parseInt(String.valueOf(dataArray.get(0)));
                             int timeBoKhiSC = Integer.parseInt(String.valueOf(dataArray.get(1)));
@@ -472,14 +476,14 @@ public static Boolean baotri = false;
                             player.itemTime.lastTimeGiapXenSC = System.currentTimeMillis() - (ItemTime.TIME_ITEM - timeGiapXenSC);
                             player.itemTime.lastTimeCuongNoSC = System.currentTimeMillis() - (ItemTime.TIME_ITEM - timeCuongNoSC);
                             player.itemTime.lastTimeAnDanhSC = System.currentTimeMillis() - (ItemTime.TIME_ITEM - timeAnDanhSC);
-                          
+
                             player.itemTime.isUseBoHuyetSC = timeBoHuyetSC != 0;
                             player.itemTime.isUseBoKhiSC = timeBoKhiSC != 0;
                             player.itemTime.isUseGiapXenSC = timeGiapXenSC != 0;
                             player.itemTime.isUseCuongNoSC = timeCuongNoSC != 0;
                             player.itemTime.isUseAnDanhSC = timeAnDanhSC != 0;
                             dataArray.clear();
-                            
+
 
                             //data trứng bư
                             dataArray = (JSONArray) jv.parse(rs.getString("data_mabu_egg"));
@@ -488,8 +492,8 @@ public static Boolean baotri = false;
                                         Long.parseLong(String.valueOf(dataArray.get(1))));
                             }
                             dataArray.clear();
-                            
-                          //data trứng bill
+
+                            //data trứng bill
                             dataArray = (JSONArray) jv.parse(rs.getString("bill_data"));
                             if (dataArray.size() != 0) {
                                 player.billEgg = new BillEgg(player, Long.parseLong(String.valueOf(dataArray.get(0))),
@@ -559,9 +563,9 @@ public static Boolean baotri = false;
                                         - (Fusion.TIME_FUSION - Integer.parseInt(String.valueOf(dataArray.get(4))));
                                 pet.status = Byte.parseByte(String.valueOf(dataArray.get(5)));
                                 try {
-                                
+
                                 } catch (Exception e) {
-                //                    throw new RuntimeException(e);
+                                    //                    throw new RuntimeException(e);
                                 }
 
                                 //data chỉ số
@@ -622,11 +626,14 @@ public static Boolean baotri = false;
                                         case Skill.ANTOMIC:
                                             skill.coolDown = 1000;
                                             break;
+                                        case Skill.QUA_CAU_KENH_KHI:
+                                            skill.coolDown = 35000;
+                                            break;
                                     }
                                     pet.playerSkill.skills.add(skill);
                                 }
-                                if(pet.playerSkill.skills.size() < 5){
-                                    pet.playerSkill.skills.add(4,SkillUtil.createSkillLevel0(-1));
+                                if (pet.playerSkill.skills.size() < 5) {
+                                    pet.playerSkill.skills.add(4, SkillUtil.createSkillLevel0(-1));
                                 }
                                 pet.nPoint.hp = hp;
                                 pet.nPoint.mp = mp;
@@ -1025,11 +1032,11 @@ public static Boolean baotri = false;
             Logger.logException(Manager.class, e, "Lỗi load database");
         }
     }
-    
-     public static Player loadById(int id) {
+
+    public static Player loadById(int id) {
         Player player = null;
         GirlkunResultSet rs = null;
-        if(Client.gI().getPlayer(id) != null){
+        if (Client.gI().getPlayer(id) != null) {
             player = Client.gI().getPlayer(id);
             return player;
         }
@@ -1082,7 +1089,7 @@ public static Boolean baotri = false;
                         player.location.x = 300;
                         player.location.y = 336;
                     }
-                    player.zone = MapService.gI().getMapCanJoin(player, mapId,-1);
+                    player.zone = MapService.gI().getMapCanJoin(player, mapId, -1);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -1222,39 +1229,41 @@ public static Boolean baotri = false;
 
                 //data friends
                 dataArray = (JSONArray) jv.parse(rs.getString("friends"));
-                if(dataArray != null){
-                for (int i = 0;i < dataArray.size(); i++) {
-                    JSONArray dataFE = (JSONArray) jv.parse(String.valueOf(dataArray.get(i)));
-                    Friend friend = new Friend();
-                    friend.id = Integer.parseInt(String.valueOf(dataFE.get(0)));
-                    friend.name = String.valueOf(dataFE.get(1));
-                    friend.head = Short.parseShort(String.valueOf(dataFE.get(2)));
-                    friend.body = Short.parseShort(String.valueOf(dataFE.get(3)));
-                    friend.leg = Short.parseShort(String.valueOf(dataFE.get(4)));
-                    friend.bag = Byte.parseByte(String.valueOf(dataFE.get(5)));
-                    friend.power = Long.parseLong(String.valueOf(dataFE.get(6)));
-                    player.friends.add(friend);
-                    dataFE.clear();
+                if (dataArray != null) {
+                    for (int i = 0; i < dataArray.size(); i++) {
+                        JSONArray dataFE = (JSONArray) jv.parse(String.valueOf(dataArray.get(i)));
+                        Friend friend = new Friend();
+                        friend.id = Integer.parseInt(String.valueOf(dataFE.get(0)));
+                        friend.name = String.valueOf(dataFE.get(1));
+                        friend.head = Short.parseShort(String.valueOf(dataFE.get(2)));
+                        friend.body = Short.parseShort(String.valueOf(dataFE.get(3)));
+                        friend.leg = Short.parseShort(String.valueOf(dataFE.get(4)));
+                        friend.bag = Byte.parseByte(String.valueOf(dataFE.get(5)));
+                        friend.power = Long.parseLong(String.valueOf(dataFE.get(6)));
+                        player.friends.add(friend);
+                        dataFE.clear();
+                    }
+                    dataArray.clear();
                 }
-                dataArray.clear();}
 
                 //data enemies
                 dataArray = (JSONArray) jv.parse(rs.getString("enemies"));
-                if(dataArray != null){
-                for (int i = 0; i < dataArray.size(); i++) {
-                    JSONArray dataFE = (JSONArray) jv.parse(String.valueOf(dataArray.get(i)));
-                    Enemy enemy = new Enemy();
-                    enemy.id = Integer.parseInt(String.valueOf(dataFE.get(0)));
-                    enemy.name = String.valueOf(dataFE.get(1));
-                    enemy.head = Short.parseShort(String.valueOf(dataFE.get(2)));
-                    enemy.body = Short.parseShort(String.valueOf(dataFE.get(3)));
-                    enemy.leg = Short.parseShort(String.valueOf(dataFE.get(4)));
-                    enemy.bag = Byte.parseByte(String.valueOf(dataFE.get(5)));
-                    enemy.power = Long.parseLong(String.valueOf(dataFE.get(6)));
-                    player.enemies.add(enemy);
-                    dataFE.clear();
+                if (dataArray != null) {
+                    for (int i = 0; i < dataArray.size(); i++) {
+                        JSONArray dataFE = (JSONArray) jv.parse(String.valueOf(dataArray.get(i)));
+                        Enemy enemy = new Enemy();
+                        enemy.id = Integer.parseInt(String.valueOf(dataFE.get(0)));
+                        enemy.name = String.valueOf(dataFE.get(1));
+                        enemy.head = Short.parseShort(String.valueOf(dataFE.get(2)));
+                        enemy.body = Short.parseShort(String.valueOf(dataFE.get(3)));
+                        enemy.leg = Short.parseShort(String.valueOf(dataFE.get(4)));
+                        enemy.bag = Byte.parseByte(String.valueOf(dataFE.get(5)));
+                        enemy.power = Long.parseLong(String.valueOf(dataFE.get(6)));
+                        player.enemies.add(enemy);
+                        dataFE.clear();
+                    }
+                    dataArray.clear();
                 }
-                dataArray.clear();}
 
                 //data nội tại
                 dataArray = (JSONArray) jv.parse(rs.getString("data_intrinsic"));
@@ -1267,18 +1276,17 @@ public static Boolean baotri = false;
 
                 //data item time
                 dataArray = (JSONArray) jv.parse(rs.getString("data_item_time"));
-                            int timeBoHuyet = Integer.parseInt(String.valueOf(dataArray.get(0)));
-                            int timeBoKhi = Integer.parseInt(String.valueOf(dataArray.get(1)));
-                            int timeGiapXen = Integer.parseInt(String.valueOf(dataArray.get(2)));
-                            int timeCuongNo = Integer.parseInt(String.valueOf(dataArray.get(3)));
-                            int timeAnDanh = Integer.parseInt(String.valueOf(dataArray.get(4)));
-                            int timeOpenPower = Integer.parseInt(String.valueOf(dataArray.get(5)));
-                            int timeMayDo = Integer.parseInt(String.valueOf(dataArray.get(6)));
-                            int timeMayDo2 = Integer.parseInt(String.valueOf(dataArray.get(7)));
+                int timeBoHuyet = Integer.parseInt(String.valueOf(dataArray.get(0)));
+                int timeBoKhi = Integer.parseInt(String.valueOf(dataArray.get(1)));
+                int timeGiapXen = Integer.parseInt(String.valueOf(dataArray.get(2)));
+                int timeCuongNo = Integer.parseInt(String.valueOf(dataArray.get(3)));
+                int timeAnDanh = Integer.parseInt(String.valueOf(dataArray.get(4)));
+                int timeOpenPower = Integer.parseInt(String.valueOf(dataArray.get(5)));
+                int timeMayDo = Integer.parseInt(String.valueOf(dataArray.get(6)));
+                int timeMayDo2 = Integer.parseInt(String.valueOf(dataArray.get(7)));
 
-                            int timeMeal = Integer.parseInt(String.valueOf(dataArray.get(8)));
-                            int iconMeal = Integer.parseInt(String.valueOf(dataArray.get(9)));
-                            
+                int timeMeal = Integer.parseInt(String.valueOf(dataArray.get(8)));
+                int iconMeal = Integer.parseInt(String.valueOf(dataArray.get(9)));
 
 
                 player.itemTime.lastTimeBoHuyet = System.currentTimeMillis() - (ItemTime.TIME_ITEM - timeBoHuyet);
@@ -1286,7 +1294,7 @@ public static Boolean baotri = false;
                 player.itemTime.lastTimeGiapXen = System.currentTimeMillis() - (ItemTime.TIME_ITEM - timeGiapXen);
                 player.itemTime.lastTimeCuongNo = System.currentTimeMillis() - (ItemTime.TIME_ITEM - timeCuongNo);
                 player.itemTime.lastTimeAnDanh = System.currentTimeMillis() - (ItemTime.TIME_ITEM - timeAnDanh);
-               
+
                 player.itemTime.lastTimeOpenPower = System.currentTimeMillis() - (ItemTime.TIME_OPEN_POWER - timeOpenPower);
                 player.itemTime.lastTimeUseMayDo = System.currentTimeMillis() - (ItemTime.TIME_MAY_DO - timeMayDo);
                 player.itemTime.lastTimeUseMayDo2 = System.currentTimeMillis() - (ItemTime.TIME_MAY_DO2 - timeMayDo2);
@@ -1324,7 +1332,7 @@ public static Boolean baotri = false;
                     player.playerTask.sideTask.level = Integer.parseInt(String.valueOf(dataArray.get(5)));
                     player.playerTask.sideTask.receivedTime = receivedTime;
                 }
-                    
+
                 //data trứng bư
                 dataArray = (JSONArray) jv.parse(rs.getString("data_mabu_egg"));
                 if (dataArray.size() != 0) {
@@ -1333,7 +1341,7 @@ public static Boolean baotri = false;
                 }
                 dataArray.clear();
                 //data trứng Berus
-                
+
 
                 //data bùa
                 dataArray = (JSONArray) jv.parse(rs.getString("data_charm"));
@@ -1431,7 +1439,8 @@ public static Boolean baotri = false;
                                 item = ItemService.gI().createItemNull();
                             }
                         } else {
-                            item = ItemService.gI().createItemNull();;
+                            item = ItemService.gI().createItemNull();
+                            ;
                         }
                         pet.inventory.itemsBody.add(item);
                     }
@@ -1453,6 +1462,9 @@ public static Boolean baotri = false;
                             case Skill.MASENKO:
                             case Skill.ANTOMIC:
                                 skill.coolDown = 1000;
+                                break;
+                            case Skill.QUA_CAU_KENH_KHI:
+                                skill.coolDown = 35000;
                                 break;
                         }
                         pet.playerSkill.skills.add(skill);

@@ -244,6 +244,7 @@ public class PetService {
                 }
                 Thread.sleep(1000);
                 Service.getInstance().chatJustForMe(player, player.pet, "Sư Phụ Ids hiện thân tụi m quỳ xuống...");
+                Service.gI().sendHavePet(player);
             } catch (Exception e) {
             }
         }).start();
@@ -258,12 +259,13 @@ public class PetService {
                 }
                 Thread.sleep(1000);
                 Service.getInstance().chatJustForMe(player, player.pet, "Sư Phụ Ids hiện thân tụi m quỳ xuống...");
+                Service.gI().sendHavePet(player);
             } catch (Exception e) {
             }
         }).start();
     }
     private void createNewPet4(Player player, byte... gender){
-        int[] data = getDataPetMabu();
+        int[] data = getDataPetPic();
         Pet pet = new Pet(player);
         pet.name = "$Cell";
         pet.gender = (gender != null && gender.length != 0) ? gender[0] : (byte) Util.nextInt(0, 2);
@@ -281,14 +283,15 @@ public class PetService {
             pet.inventory.itemsBody.add(ItemService.gI().createItemNull());
         }
         pet.playerSkill.skills.add(SkillUtil.createSkill(Util.nextInt(0, 2) * 2, 1));
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < 4; i++) {
             pet.playerSkill.skills.add(SkillUtil.createEmptySkill());
         }
         pet.nPoint.setFullHpMp();
         player.pet = pet;
+        player.pet.cFlag = player.cFlag;
     }
     private void createNewPet5(Player player, byte... gender){
-        int[] data = getDataPetMabu();
+        int[] data = getDataPetPic();
         Pet pet = new Pet(player);
         pet.name = "$Semi Cell";
         pet.gender = (gender != null && gender.length != 0) ? gender[0] : (byte) Util.nextInt(0, 2);
@@ -306,14 +309,15 @@ public class PetService {
             pet.inventory.itemsBody.add(ItemService.gI().createItemNull());
         }
         pet.playerSkill.skills.add(SkillUtil.createSkill(Util.nextInt(0, 2) * 2, 1));
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < 4; i++) {
             pet.playerSkill.skills.add(SkillUtil.createEmptySkill());
         }
         pet.nPoint.setFullHpMp();
         player.pet = pet;
+        player.pet.cFlag = player.cFlag;
     }
     private void createNewPet6(Player player, byte... gender){
-        int[] data = getDataPetMabu();
+        int[] data = getDataPetPic();
         Pet pet = new Pet(player);
         pet.name = "$Perfect Cell";
         pet.gender = (gender != null && gender.length != 0) ? gender[0] : (byte) Util.nextInt(0, 2);
@@ -331,14 +335,15 @@ public class PetService {
             pet.inventory.itemsBody.add(ItemService.gI().createItemNull());
         }
         pet.playerSkill.skills.add(SkillUtil.createSkill(Util.nextInt(0, 2) * 2, 1));
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < 4; i++) {
             pet.playerSkill.skills.add(SkillUtil.createEmptySkill());
         }
         pet.nPoint.setFullHpMp();
         player.pet = pet;
+        player.pet.cFlag = player.cFlag;
     }
     private void createNewPet7(Player player, byte... gender){
-        int[] data = getDataPetMabu();
+        int[] data = getDataPetPic();
         Pet pet = new Pet(player);
         pet.name = "$Super Perfect Cell";
         pet.gender = (gender != null && gender.length != 0) ? gender[0] : (byte) Util.nextInt(0, 2);
@@ -356,7 +361,7 @@ public class PetService {
             pet.inventory.itemsBody.add(ItemService.gI().createItemNull());
         }
         pet.playerSkill.skills.add(SkillUtil.createSkill(Util.nextInt(0, 2) * 2, 1));
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < 4; i++) {
             pet.playerSkill.skills.add(SkillUtil.createEmptySkill());
         }
         pet.nPoint.setFullHpMp();
@@ -366,7 +371,7 @@ public class PetService {
     
     
     private void createNewPet8(Player player, byte... gender){
-        int[] data = getDataPetMabu();
+        int[] data = getDataPetPic();
         Pet pet = new Pet(player);
         pet.name = "$Gojo Satoru";
         pet.gender = (gender != null && gender.length != 0) ? gender[0] : (byte) Util.nextInt(0, 2);
@@ -384,11 +389,12 @@ public class PetService {
             pet.inventory.itemsBody.add(ItemService.gI().createItemNull());
         }
         pet.playerSkill.skills.add(SkillUtil.createSkill(Util.nextInt(0, 2) * 2, 1));
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < 4; i++) {
             pet.playerSkill.skills.add(SkillUtil.createEmptySkill());
         }
         pet.nPoint.setFullHpMp();
         player.pet = pet;
+        player.pet.cFlag = player.cFlag;
     }
     public void changeNormalPet(Player player, int gender) {
         byte limitPower = player.pet.nPoint.limitPower;
@@ -473,7 +479,7 @@ public class PetService {
         player.pet.dispose();
         player.pet = null;
         createPicPet(player, gender, limitPower);
-    } public void changeBillPet(Player player) {
+    } public void changeToPet4(Player player) {
         byte limitPower = player.pet.nPoint.limitPower;
         if (player.fusion.typeFusion != ConstPlayer.NON_FUSION) {
             player.pet.unFusion();
@@ -484,7 +490,7 @@ public class PetService {
         createPet4(player, limitPower);
     }
 
-    public void changeBillPet(Player player, int gender) {
+    public void changeToPet4(Player player, int gender) {
         byte limitPower = player.pet.nPoint.limitPower;
         if (player.fusion.typeFusion != ConstPlayer.NON_FUSION) {
             player.pet.unFusion();
@@ -494,7 +500,7 @@ public class PetService {
         player.pet = null;
         createPet4(player, gender, limitPower);
     }
-     public void changeWhisPet(Player player) {
+     public void changeToPet5(Player player) {
         byte limitPower = player.pet.nPoint.limitPower;
         if (player.fusion.typeFusion != ConstPlayer.NON_FUSION) {
             player.pet.unFusion();
@@ -505,7 +511,7 @@ public class PetService {
         createPet5(player, limitPower);
     }
 
-    public void changeWhisPet(Player player, int gender) {
+    public void changeToPet5(Player player, int gender) {
         byte limitPower = player.pet.nPoint.limitPower;
         if (player.fusion.typeFusion != ConstPlayer.NON_FUSION) {
             player.pet.unFusion();
@@ -515,7 +521,7 @@ public class PetService {
         player.pet = null;
         createPet5(player, gender, limitPower);
     }
-     public void changeGokuPet(Player player) {
+     public void changeToPet6(Player player) {
         byte limitPower = player.pet.nPoint.limitPower;
         if (player.fusion.typeFusion != ConstPlayer.NON_FUSION) {
             player.pet.unFusion();
@@ -526,7 +532,7 @@ public class PetService {
         createPet6(player, limitPower);
     }
 
-    public void changeGokuPet(Player player, int gender) {
+    public void changeToPet6(Player player, int gender) {
         byte limitPower = player.pet.nPoint.limitPower;
         if (player.fusion.typeFusion != ConstPlayer.NON_FUSION) {
             player.pet.unFusion();
@@ -536,7 +542,7 @@ public class PetService {
         player.pet = null;
         createPet6(player, gender, limitPower);
     }
-     public void changeCumberPet(Player player) {
+     public void changeToPet7(Player player) {
         byte limitPower = player.pet.nPoint.limitPower;
         if (player.fusion.typeFusion != ConstPlayer.NON_FUSION) {
             player.pet.unFusion();
@@ -547,7 +553,7 @@ public class PetService {
         createPet7(player, limitPower);
     }
 
-    public void changeCumberPet(Player player, int gender) {
+    public void changeToPet7(Player player, int gender) {
         byte limitPower = player.pet.nPoint.limitPower;
         if (player.fusion.typeFusion != ConstPlayer.NON_FUSION) {
             player.pet.unFusion();
@@ -558,7 +564,7 @@ public class PetService {
         createPet7(player, gender, limitPower);
     }
     
-   public void changezamatPet(Player player) {
+   public void changeToPet8(Player player) {
         byte limitPower = player.pet.nPoint.limitPower;
         if (player.fusion.typeFusion != ConstPlayer.NON_FUSION) {
             player.pet.unFusion();
@@ -569,7 +575,7 @@ public class PetService {
         createPet8(player, limitPower);
     }
 
-    public void changezamatPet(Player player, int gender) {
+    public void changeToPet8(Player player, int gender) {
         byte limitPower = player.pet.nPoint.limitPower;
         if (player.fusion.typeFusion != ConstPlayer.NON_FUSION) {
             player.pet.unFusion();
@@ -579,15 +585,13 @@ public class PetService {
         player.pet = null;
         createPet8(player, gender, limitPower);
     }
+
     public void changeNamePet(Player player, String name) {
         try {
             if (!InventoryServiceNew.gI().isExistItemBag(player, 400)) {
                 Service.getInstance().sendThongBao(player, "Bạn cần thẻ đặt tên đệ tử, mua tại Santa");
                 return;
-            } else if (Util.haveSpecialCharacter(name)) {
-                Service.getInstance().sendThongBao(player, "Tên không được chứa ký tự đặc biệt");
-                return;
-            } else if (name.length() > 10) {
+            } else if (name.length() > 12) {
                 Service.getInstance().sendThongBao(player, "Tên quá dài");
                 return;
             }
@@ -613,28 +617,28 @@ public class PetService {
         petData[1] = Util.nextInt(40, 105) * 20; //mp
         petData[2] = Util.nextInt(20, 45); //dame
         petData[3] = Util.nextInt(9, 50); //def
-        petData[4] = Util.nextInt(0, 2); //crit
+        petData[4] = Util.nextInt(0, 3); //crit
         return petData;
     }
 
     private int[] getDataPetMabu() {
         int[] hpmp = {1700, 1800, 1900, 2000, 2100, 2200};
         int[] petData = new int[5];
-        petData[0] = Util.nextInt(40, 105) * 20; //hp
-        petData[1] = Util.nextInt(40, 105) * 20; //mp
+        petData[0] = Util.nextInt(40, 115) * 20; //hp
+        petData[1] = Util.nextInt(40, 115) * 20; //mp
         petData[2] = Util.nextInt(50, 120); //dame
-        petData[3] = Util.nextInt(9, 50); //def
-        petData[4] = Util.nextInt(0, 2); //crit
+        petData[3] = Util.nextInt(25, 100); //def
+        petData[4] = Util.nextInt(1, 5); //crit
         return petData;
     }
      private int[] getDataPetPic() {
         int[] hpmp = {1800, 1900, 2000, 2100, 2200,2300};
         int[] petData = new int[5];
-        petData[0] = Util.nextInt(40, 115) * 20; //hp
-        petData[1] = Util.nextInt(40, 115) * 20; //mp
-        petData[2] = Util.nextInt(70, 140); //dame
-        petData[3] = Util.nextInt(9, 50); //def
-        petData[4] = Util.nextInt(0, 2); //crit
+        petData[0] = Util.nextInt(40, 125) * 20; //hp
+        petData[1] = Util.nextInt(40, 125) * 20; //mp
+        petData[2] = Util.nextInt(70, 130); //dame
+        petData[3] = Util.nextInt(40, 150); //def
+        petData[4] = Util.nextInt(2, 7); //crit
         return petData;
     }
     private void createNewPet(Player player, boolean isMabu, boolean isBerus,boolean isPic, byte... gender) {
@@ -656,11 +660,12 @@ public class PetService {
             pet.inventory.itemsBody.add(ItemService.gI().createItemNull());
         }
         pet.playerSkill.skills.add(SkillUtil.createSkill(Util.nextInt(0, 2) * 2, 1));
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < 4; i++) {
             pet.playerSkill.skills.add(SkillUtil.createEmptySkill());
         }
         pet.nPoint.setFullHpMp();
         player.pet = pet;
+        player.pet.cFlag = player.cFlag;
     }
 
     public static void Pet2(Player pl, int h, int b, int l) {

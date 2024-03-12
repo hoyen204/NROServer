@@ -35,13 +35,16 @@ public class Maintenance extends Thread {
     public void run() {
         while (this.min > 0) {
             this.min--;
-            Service.gI().sendThongBaoAllPlayer("Hệ thống sẽ bảo trì sau " + min
-                    + " giây nữa, vui lòng thoát game để tránh mất vật phẩm");
+            int timeMaintance = min > 60 ? min / 60 : min % 60;
+            String time = timeMaintance + " " + (min >= 60 ? "phút" : "giây");
+            if (min % 20 == 0 || min < 15)
+                Service.gI().sendThongBaoAllPlayer("Hệ thống sẽ bảo trì sau " + time
+                        + " nữa, vui lòng thoát game để tránh mất vật phẩm");
             try {
                 Thread.sleep(1000);
             } catch (Exception e) {
             }
-          
+
         }
         Logger.error("BEGIN MAINTENANCE...............................\n");
         ServerManager.gI().close(100);

@@ -20,7 +20,7 @@ public class Cooler extends Boss {
 
     @Override
     public void reward(Player plKill) {
-        int[] itemDos = new int[]{233, 237, 241,245, 249, 253,257, 261, 265,269, 273, 277,281};
+        Short[] itemDos = Manager.itemIds_TL;
         int[] itemtime = new int[]{381,382,383,384,385};
         int randomDo = new Random().nextInt(itemDos.length);
         int randomitem = new Random().nextInt(itemtime.length);
@@ -39,9 +39,9 @@ public class Cooler extends Boss {
     @Override
     public void active() {
         super.active(); //To change body of generated methods, choose Tools | Templates.
-        if (Util.canDoWithTime(st, 300000)) {
-            this.changeStatus(BossStatus.LEAVE_MAP);
-        }
+//        if (Util.canDoWithTime(st, 300000)) {
+//            this.changeStatus(BossStatus.LEAVE_MAP);
+//        }
     }
     @Override
     public int injured(Player plAtt, int damage, boolean piercing, boolean isMobAttack) {
@@ -50,7 +50,7 @@ public class Cooler extends Boss {
                 this.chat("Xí hụt");
                 return 0;
             }
-            damage = this.nPoint.subDameInjureWithDeff(damage%3);
+            damage = this.nPoint.subDameInjureWithDeff(damage);
             if (!piercing && effectSkill.isShielding) {
                 if (damage > nPoint.hpMax) {
                     EffectSkillService.gI().breakShield(this);

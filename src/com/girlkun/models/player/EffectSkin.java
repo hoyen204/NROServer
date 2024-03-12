@@ -277,6 +277,7 @@ public class EffectSkin {
                 isVoHinh = false;
             }
         }
+        else isVoHinh = false;
     }
 
     public void dispose() {
