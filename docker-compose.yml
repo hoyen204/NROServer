@@ -9,7 +9,7 @@ services:
     ports:
       - 14445:14445
     volumes:
-      - ./data/:/data
+      - ./data/:/app/data
     networks:
       - mysql-network
 
