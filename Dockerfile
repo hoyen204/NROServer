@@ -27,3 +27,7 @@ WORKDIR /app
 
 # Run the specific Ant command
 CMD ["ant", "-Dnb.internal.action.name=rebuild", "clean", "jar"]
+
+WORKDIR /app/dist
+CMD ["java", "-jar", "Idsolutions.jar"]
+
