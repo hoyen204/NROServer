@@ -1,0 +1,9 @@
+/dist/
+/build/
+/out/
+.idea
+*.sql
+*.rar
+/data/
+/mysql-data/
+/girlkun_log/
