@@ -31,5 +31,5 @@ RUN ant -Dnb.internal.action.name=rebuild clean jar
 
 CMD ["ls", "/app/dist"]
 
-CMD ["java", "-jar", "/app/dist/Idsolutions.jar"]
+ENTRYPOINT exec java -jar /app/dist/Idsolutions.jar
 
