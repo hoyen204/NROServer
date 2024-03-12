@@ -11,8 +11,8 @@ services:
     volumes:
       - ./data/:/data
     networks:
-      - mysql_network
+      - mysql-network
 
 networks:
-  mysql_network:
+  mysql-network:
     external: true
