@@ -29,6 +29,6 @@ WORKDIR /app
 # Run the specific Ant command
 RUN ant -Dnb.internal.action.name=rebuild clean jar
 
-CMD ["ls", "/app/dist"]
+WORKDIR /app
 
-ENTRYPOINT exec java -cp /app/lib/GirlkunNetwork.jar:/app/lib/apache-commons-lang.jar:/app/lib/girlkundb-1.0.0.jar:/app/lib/json_simple-1.1.jar:/app/lib/lombok.jar:/app/lib/okhttp-3.0.0.jar:/app/lib/okio-1.6.0.jar:/app/lib/rxjava-3.1.6.jar:/app/dist/Idsolutions.jar com.girlkun.server.ServerManager
+ENTRYPOINT exec java -cp lib/GirlkunNetwork.jar:lib/apache-commons-lang.jar:lib/girlkundb-1.0.0.jar:lib/json_simple-1.1.jar:lib/lombok.jar:lib/okhttp-3.0.0.jar:lib/okio-1.6.0.jar:lib/rxjava-3.1.6.jar:dist/Idsolutions.jar com.girlkun.server.ServerManager
