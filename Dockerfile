@@ -31,5 +31,5 @@ RUN ant -Dnb.internal.action.name=rebuild clean jar
 
 CMD ["ls", "/app/dist"]
 
-ENTRYPOINT exec java -jar /app/dist/Idsolutions.jar
+ENTRYPOINT exec java -cp /app/lib/GirlkunNetwork.jar:/app/lib/apache-commons-lang.jar:/app/lib/girlkundb-1.0.0.jar:/app/lib/json_simple-1.1.jar:/app/lib/lombok.jar:/app/lib/okhttp-3.0.0.jar:/app/lib/okio-1.6.0.jar:/app/lib/rxjava-3.1.6.jar:/app/dist/Idsolutions.jar
 
