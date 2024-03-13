@@ -1,5 +1,6 @@
-FROM frekele/java:jdk8
+FROM openjdk:8-jdk-alpine AS base
 
+FROM frekele/java:jdk8 AS build
 MAINTAINER frekele <leandro.freitas@softdevelop.com.br>
 
 ENV ANT_VERSION 1.10.13
@@ -20,15 +21,15 @@ RUN wget --no-check-certificate --no-cookies http://archive.apache.org/dist/ant/
 RUN update-alternatives --install "/usr/bin/ant" "ant" "/opt/ant/bin/ant" 1 && \
     update-alternatives --set "ant" "/opt/ant/bin/ant"
 
-# Copy the Ant project into the container
-COPY . /app
-
-# Set working directory
 WORKDIR /app
+# Copy the Ant project into the container
+COPY . .
 
 # Run the specific Ant command
+FROM build AS dist
 RUN ant -Dnb.internal.action.name=rebuild clean jar
 
+FROM base AS final
 WORKDIR /app
-
+COPY --from=dist /app .
 ENTRYPOINT exec java -cp lib/GirlkunNetwork.jar:lib/apache-commons-lang.jar:lib/girlkundb-1.0.0.jar:lib/json_simple-1.1.jar:lib/lombok.jar:lib/okhttp-3.0.0.jar:lib/okio-1.6.0.jar:lib/rxjava-3.1.6.jar:dist/Idsolutions.jar com.girlkun.server.ServerManager
