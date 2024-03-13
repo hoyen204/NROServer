@@ -1,10 +1,9 @@
 /dist/
 /build/
 /out/
-.idea
+/.idea/
 *.sql
 *.rar
 /data/
-/lib/
 /mysql-data/
 /girlkun_log/
