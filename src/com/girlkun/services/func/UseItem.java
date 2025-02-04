@@ -4,22 +4,20 @@ import com.arriety.card.Card;
 import com.arriety.card.RadarCard;
 import com.arriety.card.RadarService;
 import com.girlkun.consts.ConstMap;
-import com.girlkun.models.item.Item;
 import com.girlkun.consts.ConstNpc;
 import com.girlkun.consts.ConstPlayer;
+import com.girlkun.models.item.Item;
 import com.girlkun.models.item.Item.ItemOption;
 import com.girlkun.models.map.Zone;
-import com.girlkun.models.player.Inventory;
-import com.girlkun.services.*;
 import com.girlkun.models.player.Player;
 import com.girlkun.models.skill.Skill;
 import com.girlkun.network.io.Message;
+import com.girlkun.server.io.MySession;
+import com.girlkun.services.*;
+import com.girlkun.utils.Logger;
 import com.girlkun.utils.SkillUtil;
 import com.girlkun.utils.TimeUtil;
 import com.girlkun.utils.Util;
-import com.girlkun.server.io.MySession;
-import com.girlkun.utils.Logger;
-import lombok.var;
 
 import java.util.Date;
 
@@ -527,43 +525,43 @@ public class UseItem {
     }
 
     public void UseCard(Player pl, Item item) {
-        RadarCard radarTemplate = RadarService.gI().RADAR_TEMPLATE.stream().filter(c -> c.Id == item.template.id).findFirst().orElse(null);
+        RadarCard radarTemplate = RadarService.gI().RADAR_TEMPLATE.stream().filter(c -> c.id == item.template.id).findFirst().orElse(null);
         if (radarTemplate == null) return;
-        if (radarTemplate.Require != -1) {
-            RadarCard radarRequireTemplate = RadarService.gI().RADAR_TEMPLATE.stream().filter(r -> r.Id == radarTemplate.Require).findFirst().orElse(null);
+        if (radarTemplate.require != -1) {
+            RadarCard radarRequireTemplate = RadarService.gI().RADAR_TEMPLATE.stream().filter(r -> r.id == radarTemplate.require).findFirst().orElse(null);
             if (radarRequireTemplate == null) return;
-            Card cardRequire = pl.Cards.stream().filter(r -> r.Id == radarRequireTemplate.Id).findFirst().orElse(null);
-            if (cardRequire == null || cardRequire.Level < radarTemplate.RequireLevel) {
-                Service.gI().sendThongBao(pl, "Bạn cần sưu tầm " + radarRequireTemplate.Name + " ở cấp độ " + radarTemplate.RequireLevel + " mới có thể sử dụng thẻ này");
+            Card cardRequire = pl.Cards.stream().filter(r -> r.id == radarRequireTemplate.id).findFirst().orElse(null);
+            if (cardRequire == null || cardRequire.level < radarTemplate.requireLevel) {
+                Service.gI().sendThongBao(pl, "Bạn cần sưu tầm " + radarRequireTemplate.name + " ở cấp độ " + radarTemplate.requireLevel + " mới có thể sử dụng thẻ này");
                 return;
             }
         }
-        Card card = pl.Cards.stream().filter(r -> r.Id == item.template.id).findFirst().orElse(null);
+        Card card = pl.Cards.stream().filter(r -> r.id == item.template.id).findFirst().orElse(null);
         if (card == null) {
-            Card newCard = new Card(item.template.id, (byte) 1, radarTemplate.Max, (byte) -1, radarTemplate.Options);
+            Card newCard = new Card(item.template.id, (byte) 1, radarTemplate.max, (byte) -1, radarTemplate.options);
             if (pl.Cards.add(newCard)) {
-                RadarService.gI().RadarSetAmount(pl, newCard.Id, newCard.Amount, newCard.MaxAmount);
-                RadarService.gI().RadarSetLevel(pl, newCard.Id, newCard.Level);
+                RadarService.gI().RadarSetAmount(pl, newCard.id, newCard.amount, newCard.maxAmount);
+                RadarService.gI().RadarSetLevel(pl, newCard.id, newCard.level);
                 InventoryServiceNew.gI().subQuantityItemsBag(pl, item, 1);
                 InventoryServiceNew.gI().sendItemBags(pl);
             }
         } else {
-            if (card.Level >= 2) {
+            if (card.level >= 2) {
                 Service.gI().sendThongBao(pl, "Thẻ này đã đạt cấp tối đa");
                 return;
             }
-            card.Amount++;
-            if (card.Amount >= card.MaxAmount) {
-                card.Amount = 0;
-                if (card.Level == -1) {
-                    card.Level = 1;
+            card.amount++;
+            if (card.amount >= card.maxAmount) {
+                card.amount = 0;
+                if (card.level == -1) {
+                    card.level = 1;
                 } else {
-                    card.Level++;
+                    card.level++;
                 }
                 Service.gI().point(pl);
             }
-            RadarService.gI().RadarSetAmount(pl, card.Id, card.Amount, card.MaxAmount);
-            RadarService.gI().RadarSetLevel(pl, card.Id, card.Level);
+            RadarService.gI().RadarSetAmount(pl, card.id, card.amount, card.maxAmount);
+            RadarService.gI().RadarSetLevel(pl, card.id, card.level);
             InventoryServiceNew.gI().subQuantityItemsBag(pl, item, 1);
             InventoryServiceNew.gI().sendItemBags(pl);
         }

@@ -113,9 +113,8 @@ public class GodGK {
                     if (plInGame != null) {
                         Client.gI().kickSession(plInGame.getSession());
                         Service.gI().sendThongBaoOK(session, "Ai đó đã vô acc bạn :3");
-                    } else {
                     }
-//                    Service.gI().sendThongBaoOK(session, "Tài khoản đang được đăng nhập tại máy chủ khác");
+                    //                    Service.gI().sendThongBaoOK(session, "Tài khoản đang được đăng nhập tại máy chủ khác");
                 } else {
                     if (secondsPass < Manager.SECOND_WAIT_LOGIN) {
                         Service.gI().sendThongBaoOK(session, "Vui lòng chờ " + (Manager.SECOND_WAIT_LOGIN - secondsPass) + "s");

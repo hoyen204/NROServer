@@ -14,9 +14,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 
-/**
- * @author Administrator
- */
 public class GiftCode {
     int id;
     String code;

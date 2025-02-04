@@ -210,10 +210,10 @@ public class NPoint {
                 if (item.template.id >= 592 && item.template.id <= 594) {
                     teleport = true;
                 }
-                Card card = player.Cards.stream().filter(r -> r != null && r.Used == 1).findFirst().orElse(null);
+                Card card = player.Cards.stream().filter(r -> r != null && r.used == 1).findFirst().orElse(null);
                 if (card != null) {
-                    for (OptionCard io : card.Options) {
-                        if (io.active == card.Level || (card.Level == -1 && io.active == 0)) {
+                    for (OptionCard io : card.options) {
+                        if (io.active == card.level || (card.level == -1 && io.active == 0)) {
                             switch (io.id) {
                                 case 0: //Tấn công +#
                                     this.dameAdd += io.param;

@@ -7,7 +7,6 @@ import com.girlkun.database.GirlkunDB;
 import com.girlkun.consts.ConstPlayer;
 import com.girlkun.consts.ConstMap;
 import com.girlkun.data.DataGame;
-import com.girlkun.jdbc.daos.GodGK;
 import com.girlkun.jdbc.daos.ShopDAO;
 import com.girlkun.models.Template.*;
 import com.girlkun.models.clan.Clan;
@@ -19,7 +18,6 @@ import com.girlkun.models.matches.TOP;
 import com.girlkun.models.matches.pvp.DaiHoiVoThuat;
 import com.girlkun.models.npc.Npc;
 import com.girlkun.models.npc.NpcFactory;
-import com.girlkun.models.player.Player;
 import com.girlkun.models.player.Referee;
 import com.girlkun.models.player.Referee1;
 import com.girlkun.models.reward.ItemMobReward;
@@ -238,13 +236,13 @@ public class Manager {
         PreparedStatement ps = null;
         ResultSet rs = null;
         try (Connection con = GirlkunDB.getConnection();) {
-            ps = con.prepareStatement("select * from black_ip");
-            rs = ps.executeQuery();
-            while (rs.next()) {
-                if (!rs.getString("ip").isEmpty())
-                    listIPBanned.add(rs.getString("ip"));
-            }
-            Logger.success("Load Black IP thành công (" + listIPBanned.size() + ")\n");
+//            ps = con.prepareStatement("select * from black_ip");
+//            rs = ps.executeQuery();
+//            while (rs.next()) {
+//                if (!rs.getString("ip").isEmpty())
+//                    listIPBanned.add(rs.getString("ip"));
+//            }
+//            Logger.success("Load Black IP thành công (" + listIPBanned.size() + ")\n");
 
             //load part
             ps = con.prepareStatement("select * from part");
@@ -855,35 +853,35 @@ public class Manager {
             rs = ps.executeQuery();
             while (rs.next()) {
                 RadarCard rd = new RadarCard();
-                rd.Id = rs.getShort("id");
-                rd.IconId = rs.getShort("iconId");
-                rd.Rank = rs.getByte("rank");
-                rd.Max = rs.getByte("max");
-                rd.Type = rs.getByte("type");
-                rd.Template = rs.getShort("template");
-                rd.Name = rs.getString("name");
-                rd.Info = rs.getString("info");
+                rd.id = rs.getShort("id");
+                rd.iconId = rs.getShort("iconId");
+                rd.rank = rs.getByte("rank");
+                rd.max = rs.getByte("max");
+                rd.type = rs.getByte("type");
+                rd.template = rs.getShort("template");
+                rd.name = rs.getString("name");
+                rd.info = rs.getString("info");
                 JSONArray arr = (JSONArray) JSONValue.parse(rs.getString("body"));
                 for (Object value : arr) {
                     JSONObject ob = (JSONObject) value;
                     if (ob != null) {
-                        rd.Head = Short.parseShort(ob.get("head").toString());
-                        rd.Body = Short.parseShort(ob.get("body").toString());
-                        rd.Leg = Short.parseShort(ob.get("leg").toString());
-                        rd.Bag = Short.parseShort(ob.get("bag").toString());
+                        rd.head = Short.parseShort(ob.get("head").toString());
+                        rd.body = Short.parseShort(ob.get("body").toString());
+                        rd.leg = Short.parseShort(ob.get("leg").toString());
+                        rd.bag = Short.parseShort(ob.get("bag").toString());
                     }
                 }
-                rd.Options.clear();
+                rd.options.clear();
                 arr = (JSONArray) JSONValue.parse(rs.getString("options"));
                 for (Object o : arr) {
                     JSONObject ob = (JSONObject) o;
                     if (ob != null) {
-                        rd.Options.add(new OptionCard(Integer.parseInt(ob.get("id").toString()), Short.parseShort(ob.get("param").toString()), Byte.parseByte(ob.get("activeCard").toString())));
+                        rd.options.add(new OptionCard(Integer.parseInt(ob.get("id").toString()), Short.parseShort(ob.get("param").toString()), Byte.parseByte(ob.get("activeCard").toString())));
                     }
                 }
-                rd.Require = rs.getShort("require");
-                rd.RequireLevel = rs.getShort("require_level");
-                rd.AuraId = rs.getShort("aura_id");
+                rd.require = rs.getShort("require");
+                rd.requireLevel = rs.getShort("require_level");
+                rd.auraId = rs.getShort("aura_id");
                 RadarService.gI().RADAR_TEMPLATE.add(rd);
             }
             Logger.success("Load radar template thành công (" + RadarService.gI().RADAR_TEMPLATE.size() + ")\n");

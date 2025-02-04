@@ -3,41 +3,37 @@ package com.arriety.card;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- *
- * @author Dev Duy Peo
- */
 public class RadarCard {
-    public short Id;
-    public short IconId;
-    public byte Rank;
-    public byte Max;
-    public byte Type;
-    public short Template;
-    public short Head;
-    public short Body;
-    public short Leg;
-    public short Bag;
-    public String Name;
-    public String Info;
-    public List<OptionCard> Options;
-    public short Require;
-    public short RequireLevel;
-    public short AuraId;
+    public short id;
+    public short iconId;
+    public byte rank;
+    public byte max;
+    public byte type;
+    public short template;
+    public short head;
+    public short body;
+    public short leg;
+    public short bag;
+    public String name;
+    public String info;
+    public List<OptionCard> options;
+    public short require;
+    public short requireLevel;
+    public short auraId;
 
     public RadarCard()
     {
-        Id = -1;
-        IconId = -1;
-        Rank = 0;
-        Max = 0;
-        Type = 0;
-        Template = 1;
-        Name = "";
-        Info = "";
-        Options = new ArrayList<>();
-        Require = -1;
-        RequireLevel = 0;
-        AuraId = -1;
+        id = -1;
+        iconId = -1;
+        rank = 0;
+        max = 0;
+        type = 0;
+        template = 1;
+        name = "";
+        info = "";
+        options = new ArrayList<>();
+        require = -1;
+        requireLevel = 0;
+        auraId = -1;
     }
 }

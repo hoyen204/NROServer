@@ -8,54 +8,54 @@ import java.util.List;
  * @author Dev Duy Peo
  */
 public class Card {
-    public short Id;
-    public byte Amount;
-    public byte MaxAmount;
-    public byte Level;
-    public byte Used;
-    public List<OptionCard> Options;
+    public short id;
+    public byte amount;
+    public byte maxAmount;
+    public byte level;
+    public byte used;
+    public List<OptionCard> options;
 
     public Card(){
-        Id = -1;
-        Amount = 0;
-        MaxAmount = 0;
-        Level = 0;
-        Used = 0;
-        Options = new ArrayList<>();
+        id = -1;
+        amount = 0;
+        maxAmount = 0;
+        level = 0;
+        used = 0;
+        options = new ArrayList<>();
     }
     
     public Card(byte m , List<OptionCard> o){
-        MaxAmount = m;
-        Options = o;
+        maxAmount = m;
+        options = o;
     }
     
     public Card(short i ,byte a,byte ma , byte le, List<OptionCard> o){
-        Id = i;
-        Amount = a;
-        MaxAmount = ma;
-        Level = le;
-        Options = o;
+        id = i;
+        amount = a;
+        maxAmount = ma;
+        level = le;
+        options = o;
     }
     
     public Card(short i ,byte a,byte ma , byte le, List<OptionCard> o,byte u){
-        Id = i;
-        Amount = a;
-        MaxAmount = ma;
-        Level = le;
-        Options = o;
-        Used = u;
+        id = i;
+        amount = a;
+        maxAmount = ma;
+        level = le;
+        options = o;
+        used = u;
     }
-    
+
     @Override
     public String toString() {
-        final String n = "\"";
-        return "{"
-                + n + "id" + n + ":" + n + Id + n + ","
-                + n + "amount" + n + ":" + n + Amount + n + ","
-                + n + "max" + n + ":"+ n + MaxAmount + n + ","
-                + n + "option" + n + ":" +Options + ","
-                + n + "level" + n + ":" + n+ Level + n + ","
-                + n + "used" + n + ":"+ n + Used + n
-                + "}";
+        return "{\"id\":\"" + id +
+                "\",\"amount\":\"" + amount +
+                "\",\"max\":\"" + maxAmount +
+                "\",\"option\":" + options +
+                ",\"level\":\"" + level +
+                "\",\"used\":\"" + used +
+                "\"}";
     }
+
+
 }
